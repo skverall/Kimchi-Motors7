@@ -1,7 +1,7 @@
 import React from 'react';
 import { Facebook, Instagram, Twitter, MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
 
-const Footer = ({ onOpenLocation }) => {
+const Footer = ({ onNavigate }) => {
   return (
     <footer className="bg-primary text-white pt-20 pb-10 border-t border-white/10">
       <div className="container mx-auto px-4">
@@ -33,12 +33,17 @@ const Footer = ({ onOpenLocation }) => {
           <div>
             <h3 className="text-lg font-bold mb-6 font-serif">Quick Links</h3>
             <ul className="space-y-4">
-              {['Inventory', 'Services', 'About Us', 'Contact', 'Privacy Policy'].map(item => (
-                <li key={item}>
-                  <a href="#" className="text-slate-400 hover:text-accent transition-colors flex items-center gap-2 group">
+              {[
+                { label: 'Inventory', path: 'inventory' },
+                { label: 'Services', path: 'services' },
+                { label: 'About Us', path: 'about' },
+                { label: 'Contact', path: 'contact' }
+              ].map(item => (
+                <li key={item.label}>
+                  <button onClick={() => onNavigate(item.path)} className="text-slate-400 hover:text-accent transition-colors flex items-center gap-2 group">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                    {item}
-                  </a>
+                    {item.label}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -55,7 +60,7 @@ const Footer = ({ onOpenLocation }) => {
                 <div>
                   <p className="font-bold text-white">Main Showroom</p>
                   <p className="text-slate-400 text-sm">123 Gangnam-daero, Seoul, South Korea</p>
-                  <button onClick={onOpenLocation} className="text-accent text-xs font-bold mt-1 hover:underline">View on Map</button>
+                  <button onClick={() => onNavigate('contact')} className="text-accent text-xs font-bold mt-1 hover:underline">View Location</button>
                 </div>
               </li>
               <li className="flex gap-4">

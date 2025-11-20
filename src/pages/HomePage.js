@@ -7,7 +7,7 @@ const HeroSection = ({ onSearch }) => {
   const [searchParams, setSearchParams] = useState({ make: '', model: '', maxPrice: '' });
 
   return (
-    <div className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-primary">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-primary">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img
@@ -19,49 +19,54 @@ const HeroSection = ({ onSearch }) => {
         <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent"></div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10 pt-20">
-        <div className="max-w-4xl">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white mb-6 tracking-tight leading-tight">
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-5xl mx-auto text-center">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white mb-8 tracking-tight leading-tight">
             Excellence in <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-white">Motion</span>
           </h1>
-          <p className="text-slate-300 text-lg md:text-xl max-w-xl mb-12 font-light leading-relaxed border-l-2 border-accent pl-6">
+          <p className="text-slate-300 text-xl md:text-2xl max-w-3xl mx-auto mb-16 font-light leading-relaxed">
             Discover a curated collection of the world's finest vehicles.
             Where luxury meets performance, and service meets perfection.
           </p>
 
           {/* Search Box */}
-          <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-2xl max-w-3xl flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <label className="text-xs text-slate-400 font-bold uppercase tracking-wider ml-2 mb-1 block">Brand</label>
-              <select
-                className="w-full bg-white/5 text-white rounded-xl p-3 text-sm border border-white/10 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors"
-                value={searchParams.make}
-                onChange={(e) => setSearchParams({ ...searchParams, make: e.target.value })}
-              >
-                <option value="" className="text-slate-900">All Brands</option>
-                {BRANDS.map(b => <option key={b.name} value={b.name} className="text-slate-900">{b.name}</option>)}
-              </select>
+          <div className="bg-white/10 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-white/20 shadow-2xl max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-left">
+                <label className="text-sm text-slate-300 font-bold uppercase tracking-wider mb-3 block">Brand</label>
+                <select
+                  className="w-full bg-white/10 text-white rounded-xl p-4 border border-white/20 focus:border-accent focus:ring-2 focus:ring-accent/50 outline-none transition-all text-lg"
+                  value={searchParams.make}
+                  onChange={(e) => setSearchParams({ ...searchParams, make: e.target.value })}
+                >
+                  <option value="" className="text-slate-900">All Brands</option>
+                  {BRANDS.map(b => <option key={b.name} value={b.name} className="text-slate-900">{b.name}</option>)}
+                </select>
+              </div>
+              <div className="text-left">
+                <label className="text-sm text-slate-300 font-bold uppercase tracking-wider mb-3 block">Max Price</label>
+                <select
+                  className="w-full bg-white/10 text-white rounded-xl p-4 border border-white/20 focus:border-accent focus:ring-2 focus:ring-accent/50 outline-none transition-all text-lg"
+                  value={searchParams.maxPrice}
+                  onChange={(e) => setSearchParams({ ...searchParams, maxPrice: e.target.value })}
+                >
+                  <option value="" className="text-slate-900">Any Price</option>
+                  <option value="500000" className="text-slate-900">Up to $500k</option>
+                  <option value="1000000" className="text-slate-900">Up to $1M</option>
+                  <option value="2000000" className="text-slate-900">Up to $2M</option>
+                </select>
+              </div>
+              <div className="text-left">
+                <label className="text-sm text-slate-300 font-bold uppercase tracking-wider mb-3 block opacity-0 md:opacity-100">Action</label>
+                <button
+                  onClick={() => onSearch(searchParams)}
+                  className="w-full bg-accent text-primary px-8 py-4 rounded-xl font-bold hover:bg-white transition-all flex items-center justify-center gap-3 shadow-lg shadow-accent/30 hover:shadow-accent/50 text-lg"
+                >
+                  <Search className="w-6 h-6" /> Search Inventory
+                </button>
+              </div>
             </div>
-            <div className="flex-1">
-              <label className="text-xs text-slate-400 font-bold uppercase tracking-wider ml-2 mb-1 block">Max Price</label>
-              <select
-                className="w-full bg-white/5 text-white rounded-xl p-3 text-sm border border-white/10 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors"
-                value={searchParams.maxPrice}
-                onChange={(e) => setSearchParams({ ...searchParams, maxPrice: e.target.value })}
-              >
-                <option value="" className="text-slate-900">Any Price</option>
-                <option value="500000" className="text-slate-900">Up to $500k</option>
-                <option value="1000000" className="text-slate-900">Up to $1M</option>
-                <option value="2000000" className="text-slate-900">Up to $2M</option>
-              </select>
-            </div>
-            <button
-              onClick={() => onSearch(searchParams)}
-              className="bg-accent text-primary px-8 py-3 rounded-xl font-bold hover:bg-white transition-all flex items-center justify-center gap-2 mt-auto md:h-[66px] shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(212,175,55,0.4)]"
-            >
-              <Search className="w-5 h-5" /> Search
-            </button>
           </div>
         </div>
       </div>

@@ -5,16 +5,17 @@ import { useCars } from './hooks/useCars';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
-import LocationModal from './components/LocationModal';
 import HomePage from './pages/HomePage';
 import ListingPage from './pages/ListingPage';
 import CarDetailsPage from './pages/CarDetailsPage';
 import AdminPage from './pages/AdminPage';
+import ContactPage from './pages/ContactPage';
+import ServicesPage from './pages/ServicesPage';
+import AboutPage from './pages/AboutPage';
 
 export default function App() {
   const { cars, isLoading, addCar, deleteCar } = useCars();
   const [filteredCars, setFilteredCars] = useState([]);
-  const [isLocationModalOpen, setLocationModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,10 +23,6 @@ export default function App() {
   // --- Navigation Logic ---
 
   const handleNavigate = (target) => {
-    if (target === 'contact') {
-      setLocationModalOpen(true);
-      return;
-    }
     navigate(target === 'home' ? '/' : `/${target}`);
     window.scrollTo(0, 0);
   };
@@ -74,13 +71,15 @@ export default function App() {
         <Route path="/" element={<HomePage onSearch={handleSearch} cars={cars} onCarClick={handleCarClick} onNavigate={handleNavigate} />} />
         <Route path="/inventory" element={<ListingPage cars={filteredCars} onCarClick={handleCarClick} onFilter={handleFilter} />} />
         <Route path="/inventory/:id" element={<CarDetailsPage cars={cars} onBack={() => navigate('/inventory')} />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/admin" element={<AdminPage onBack={() => navigate('/')} cars={cars} onAdd={addCar} onDelete={deleteCar} />} />
         <Route path="*" element={<HomePage onSearch={handleSearch} cars={cars} onCarClick={handleCarClick} onNavigate={handleNavigate} />} />
       </Routes>
 
       <FloatingWhatsApp />
-      <LocationModal isOpen={isLocationModalOpen} onClose={() => setLocationModalOpen(false)} />
-      <Footer onOpenLocation={() => setLocationModalOpen(true)} />
+      <Footer onNavigate={handleNavigate} />
     </div>
   );
 }
