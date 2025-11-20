@@ -1,90 +1,112 @@
 import React from 'react';
-import { MapPin, Phone, MessageCircle, ArrowRight } from 'lucide-react';
+import { Facebook, Instagram, Twitter, MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
 
-const Footer = ({ onOpenLocation }) => (
-  <footer className="bg-slate-900 text-white pt-16 pb-8">
-    <div className="container mx-auto px-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-        <div>
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-               <span className="text-white font-black text-xs">KM</span>
+const Footer = ({ onOpenLocation }) => {
+  return (
+    <footer className="bg-primary text-white pt-20 pb-10 border-t border-white/10">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          {/* Brand */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
+                <span className="text-primary font-serif font-bold text-xl">K</span>
+              </div>
+              <div>
+                <h2 className="text-2xl font-serif font-bold tracking-tight">KIMCHI <span className="text-accent">MOTORS</span></h2>
+                <p className="text-[0.65rem] text-slate-400 uppercase tracking-widest font-medium">Premium Korean Imports</p>
+              </div>
             </div>
-            <h3 className="text-xl font-bold">KIMCHI<span className="text-blue-400">MOTORS</span></h3>
+            <p className="text-slate-400 leading-relaxed">
+              Premier destination for luxury Korean vehicles. We bring the finest automotive engineering directly to you with white-glove service.
+            </p>
+            <div className="flex gap-4">
+              {[Facebook, Instagram, Twitter].map((Icon, i) => (
+                <a key={i} href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-accent hover:text-primary transition-all duration-300">
+                  <Icon className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
           </div>
-          <p className="text-slate-400 text-sm leading-relaxed mb-6">
-            The premier destination for luxury and exotic vehicles. We provide an unmatched buying experience and a curated selection of the world's finest cars.
-          </p>
-          <div className="flex gap-4">
-            {[1,2,3,4].map(i => (
-              <div key={i} className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 transition cursor-pointer">
-                <ArrowRight className="w-3 h-3 -rotate-45" />
-              </div>
-            ))}
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-lg font-bold mb-6 font-serif">Quick Links</h3>
+            <ul className="space-y-4">
+              {['Inventory', 'Services', 'About Us', 'Contact', 'Privacy Policy'].map(item => (
+                <li key={item}>
+                  <a href="#" className="text-slate-400 hover:text-accent transition-colors flex items-center gap-2 group">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-lg font-bold mb-6 font-serif">Visit Showroom</h3>
+            <ul className="space-y-6">
+              <li className="flex gap-4">
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center shrink-0 text-accent">
+                  <MapPin className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="font-bold text-white">Main Showroom</p>
+                  <p className="text-slate-400 text-sm">123 Gangnam-daero, Seoul, South Korea</p>
+                  <button onClick={onOpenLocation} className="text-accent text-xs font-bold mt-1 hover:underline">View on Map</button>
+                </div>
+              </li>
+              <li className="flex gap-4">
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center shrink-0 text-accent">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="font-bold text-white">Call Us</p>
+                  <p className="text-slate-400 text-sm">+82 2-1234-5678</p>
+                </div>
+              </li>
+              <li className="flex gap-4">
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center shrink-0 text-accent">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="font-bold text-white">Email Us</p>
+                  <p className="text-slate-400 text-sm">concierge@kimchimotors.com</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          {/* Newsletter */}
+          <div>
+            <h3 className="text-lg font-bold mb-6 font-serif">Newsletter</h3>
+            <p className="text-slate-400 mb-6">Subscribe to receive updates on new arrivals and exclusive offers.</p>
+            <div className="relative">
+              <input
+                type="email"
+                placeholder="Your email address"
+                className="w-full bg-white/5 border border-white/10 rounded-full py-3 px-6 text-white placeholder-slate-500 focus:outline-none focus:border-accent transition-colors"
+              />
+              <button className="absolute right-1.5 top-1.5 w-10 h-10 bg-accent rounded-full flex items-center justify-center text-primary hover:bg-white transition-colors">
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
 
-        <div>
-          <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
-          <ul className="space-y-3 text-slate-400 text-sm">
-            <li className="hover:text-white cursor-pointer transition">Latest Inventory</li>
-            <li className="hover:text-white cursor-pointer transition">Sell Your Car</li>
-            <li className="hover:text-white cursor-pointer transition">Financing</li>
-            <li className="hover:text-white cursor-pointer transition">Our Showrooms</li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-lg font-semibold mb-6">Contact Us</h4>
-          <ul className="space-y-4 text-slate-400 text-sm">
-            <li 
-              className="flex items-start gap-3 cursor-pointer hover:text-blue-400 transition group"
-              onClick={onOpenLocation}
-            >
-              <div className="bg-slate-800 p-1.5 rounded group-hover:bg-blue-600 transition">
-                <MapPin className="w-4 h-4 text-blue-500 group-hover:text-white shrink-0" />
-              </div>
-              <span>
-                <span className="block font-bold text-white mb-0.5 group-hover:underline">Find Our Showrooms</span>
-                Sheikh Zayed Road, Dubai & others
-              </span>
-            </li>
-            <li className="flex items-center gap-3">
-              <div className="bg-slate-800 p-1.5 rounded">
-                <Phone className="w-4 h-4 text-blue-500 shrink-0" />
-              </div>
-              <span>+971 4 123 4567</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <div className="bg-slate-800 p-1.5 rounded">
-                <MessageCircle className="w-4 h-4 text-blue-500 shrink-0" />
-              </div>
-              <span>info@kimchimotors.ae</span>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-lg font-semibold mb-6">Newsletter</h4>
-          <p className="text-slate-400 text-sm mb-4">Subscribe to get the latest updates on new arrivals.</p>
-          <div className="flex">
-            <input type="email" placeholder="Email address" className="bg-slate-800 text-white px-4 py-2 rounded-l-md focus:outline-none w-full text-sm" />
-            <button className="bg-blue-600 px-4 py-2 rounded-r-md hover:bg-blue-700 transition">
-              <ArrowRight className="w-4 h-4" />
-            </button>
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-slate-500 text-sm">© 2024 Kimchi Motors. All rights reserved.</p>
+          <div className="flex gap-8 text-sm text-slate-500">
+            <a href="#" className="hover:text-white transition-colors">Terms</a>
+            <a href="#" className="hover:text-white transition-colors">Privacy</a>
+            <a href="#" className="hover:text-white transition-colors">Cookies</a>
           </div>
         </div>
       </div>
-      <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500">
-        <p>© 2025 Kimchi Motors. All rights reserved.</p>
-        <div className="flex gap-6 mt-4 md:mt-0">
-          <span>Privacy Policy</span>
-          <span>Terms of Service</span>
-          <span>Cookie Settings</span>
-        </div>
-      </div>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
 
 export default Footer;

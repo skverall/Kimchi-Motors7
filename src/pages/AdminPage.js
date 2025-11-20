@@ -1,63 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Settings, Plus, Trash2, X } from 'lucide-react';
+import { supabase } from '../supabase/config';
 import { BRANDS } from '../data/mockData';
 
-const AdminLogin = ({ onLogin, onBack }) => {
-  const [user, setUser] = useState('');
-  const [pass, setPass] = useState('');
-  const [error, setError] = useState('');
+const AdminLogin = ({ onBack }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if(user === 'admin' && pass === 'password') {
-        onLogin();
-    } else {
-        setError('Invalid credentials');
-    }
-  }
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
 
-  return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md relative">
-        {/* ADDED BACK BUTTON */}
-         <button 
-            onClick={onBack}
-            className="absolute top-4 left-4 p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-full transition"
-            title="Back to Home"
-         >
-            <ArrowLeft className="w-5 h-5" />
-         </button>
+        const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
 
-         <div className="text-center mb-8 pt-4">
-             <div className="w-16 h-16 bg-blue-600 rounded-xl mx-auto flex items-center justify-center mb-4">
-                 {/* REPLACED SVG WITH BRAND INITIALS */}
-                 <span className="text-white font-black text-xl">KM</span>
-             </div>
-             <h2 className="text-2xl font-bold text-slate-900">Admin Access</h2>
-             <p className="text-slate-500">Enter credentials to manage showroom</p>
-         </div>
-         <form onSubmit={handleLogin} className="space-y-4">
-             <div>
-                 <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Username</label>
-                 <input value={user} onChange={e=>setUser(e.target.value)} className="w-full p-3 rounded-lg border border-gray-200 focus:border-blue-500 outline-none" type="text" placeholder="admin" />
-             </div>
-             <div>
-                 <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Password</label>
-                 <input value={pass} onChange={e=>setPass(e.target.value)} className="w-full p-3 rounded-lg border border-gray-200 focus:border-blue-500 outline-none" type="password" placeholder="password" />
-             </div>
-             {error && <p className="text-red-500 text-sm">{error}</p>}
-             <button className="w-full bg-slate-900 text-white py-3 rounded-lg font-bold hover:bg-slate-800 transition">Login Dashboard</button>
-         </form>
-      </div>
-    </div>
-  );
+        if (error) {
+            setError(error.message);
+        }
+        setLoading(false);
+    };
+
+    return (
+        <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+            <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md relative">
+                <button
+                    onClick={onBack}
+                    className="absolute top-4 left-4 p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-full transition"
+                    title="Back to Home"
+                >
+                    <ArrowLeft className="w-5 h-5" />
+                </button>
+
+                <div className="text-center mb-8 pt-4">
+                    <div className="w-16 h-16 bg-blue-600 rounded-xl mx-auto flex items-center justify-center mb-4">
+                        <span className="text-white font-black text-xl">KM</span>
+                    </div>
+                    <h2 className="text-2xl font-bold text-slate-900">Admin Access</h2>
+                    <p className="text-slate-500">Enter credentials to manage showroom</p>
+                </div>
+                <form onSubmit={handleLogin} className="space-y-4">
+                    <div>
+                        <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Email</label>
+                        <input value={email} onChange={e => setEmail(e.target.value)} className="w-full p-3 rounded-lg border border-gray-200 focus:border-blue-500 outline-none" type="email" placeholder="admin@kimchimotors.com" required />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Password</label>
+                        <input value={password} onChange={e => setPassword(e.target.value)} className="w-full p-3 rounded-lg border border-gray-200 focus:border-blue-500 outline-none" type="password" placeholder="••••••••" required />
+                    </div>
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                    <button disabled={loading} className="w-full bg-slate-900 text-white py-3 rounded-lg font-bold hover:bg-slate-800 transition disabled:opacity-50">
+                        {loading ? 'Logging in...' : 'Login Dashboard'}
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
 };
 
-const AdminDashboard = ({ cars, onAdd, onDelete, onLogout }) => {
+const AdminDashboard = ({ cars, onAdd, onDelete }) => {
     const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [formData, setFormData] = useState({
-        make: 'Mercedes-Benz', model: '', year: 2024, price: 0, mileage: 0, 
-        fuel: 'Petrol', transmission: 'Automatic', image: '', type: 'Sedan', 
+        make: 'Mercedes-Benz', model: '', year: 2024, price: 0, mileage: 0,
+        fuel: 'Petrol', transmission: 'Automatic', image: '', type: 'Sedan',
         description: '', featured: false, mostWanted: false
     });
 
@@ -68,14 +77,18 @@ const AdminDashboard = ({ cars, onAdd, onDelete, onLogout }) => {
         setFormData({ ...formData, model: '', price: 0 }); // Reset key fields
     };
 
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="bg-slate-900 text-white p-4 flex justify-between items-center sticky top-0 z-10 shadow-lg">
                 <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center"><Settings className="w-4 h-4"/></div>
+                    <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center"><Settings className="w-4 h-4" /></div>
                     <h1 className="font-bold text-lg">Showroom Manager</h1>
                 </div>
-                <button onClick={onLogout} className="text-sm hover:text-red-400 transition">Logout</button>
+                <button onClick={handleLogout} className="text-sm hover:text-red-400 transition">Logout</button>
             </div>
 
             <div className="container mx-auto px-4 py-8">
@@ -136,43 +149,43 @@ const AdminDashboard = ({ cars, onAdd, onDelete, onLogout }) => {
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="label">Make</label>
-                                <select className="input" value={formData.make} onChange={e => setFormData({...formData, make: e.target.value})}>
+                                <select className="input" value={formData.make} onChange={e => setFormData({ ...formData, make: e.target.value })}>
                                     {BRANDS.map(b => <option key={b.name} value={b.name}>{b.name}</option>)}
                                 </select>
                             </div>
                             <div>
                                 <label className="label">Model</label>
-                                <input className="input" required type="text" value={formData.model} onChange={e => setFormData({...formData, model: e.target.value})} />
+                                <input className="input" required type="text" value={formData.model} onChange={e => setFormData({ ...formData, model: e.target.value })} />
                             </div>
                             <div>
                                 <label className="label">Year</label>
-                                <input className="input" type="number" value={formData.year} onChange={e => setFormData({...formData, year: parseInt(e.target.value)})} />
+                                <input className="input" type="number" value={formData.year} onChange={e => setFormData({ ...formData, year: parseInt(e.target.value) })} />
                             </div>
                             <div>
                                 <label className="label">Price ($)</label>
-                                <input className="input" type="number" value={formData.price} onChange={e => setFormData({...formData, price: parseInt(e.target.value)})} />
+                                <input className="input" type="number" value={formData.price} onChange={e => setFormData({ ...formData, price: parseInt(e.target.value) })} />
                             </div>
                             <div className="md:col-span-2">
                                 <label className="label">Image URL</label>
-                                <input className="input" type="url" required placeholder="https://..." value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} />
+                                <input className="input" type="url" required placeholder="https://..." value={formData.image} onChange={e => setFormData({ ...formData, image: e.target.value })} />
                             </div>
-                             <div>
+                            <div>
                                 <label className="label">Mileage (km)</label>
-                                <input className="input" type="number" value={formData.mileage} onChange={e => setFormData({...formData, mileage: parseInt(e.target.value)})} />
+                                <input className="input" type="number" value={formData.mileage} onChange={e => setFormData({ ...formData, mileage: parseInt(e.target.value) })} />
                             </div>
-                             <div>
+                            <div>
                                 <label className="label">Fuel</label>
-                                <select className="input" value={formData.fuel} onChange={e => setFormData({...formData, fuel: e.target.value})}>
+                                <select className="input" value={formData.fuel} onChange={e => setFormData({ ...formData, fuel: e.target.value })}>
                                     <option>Petrol</option><option>Diesel</option><option>Electric</option><option>Hybrid</option>
                                 </select>
                             </div>
                             <div className="flex gap-4 mt-4">
                                 <label className="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" checked={formData.featured} onChange={e => setFormData({...formData, featured: e.target.checked})} />
+                                    <input type="checkbox" checked={formData.featured} onChange={e => setFormData({ ...formData, featured: e.target.checked })} />
                                     <span className="text-sm font-medium">Featured</span>
                                 </label>
                                 <label className="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" checked={formData.mostWanted} onChange={e => setFormData({...formData, mostWanted: e.target.checked})} />
+                                    <input type="checkbox" checked={formData.mostWanted} onChange={e => setFormData({ ...formData, mostWanted: e.target.checked })} />
                                     <span className="text-sm font-medium">Most Wanted</span>
                                 </label>
                             </div>
@@ -192,9 +205,34 @@ const AdminDashboard = ({ cars, onAdd, onDelete, onLogout }) => {
     );
 };
 
-const AdminPage = ({ isAdmin, onLogin, onBack, cars, onAdd, onDelete, onLogout }) => {
-    if (!isAdmin) return <AdminLogin onLogin={onLogin} onBack={onBack} />;
-    return <AdminDashboard cars={cars} onAdd={onAdd} onDelete={onDelete} onLogout={onLogout} />;
+const AdminPage = ({ onBack, cars, onAdd, onDelete }) => {
+    const [session, setSession] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+            setLoading(false);
+        });
+
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    if (loading) {
+        return <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">Loading...</div>;
+    }
+
+    if (!session) {
+        return <AdminLogin onBack={onBack} />;
+    }
+
+    return <AdminDashboard cars={cars} onAdd={onAdd} onDelete={onDelete} />;
 }
 
 export default AdminPage;
