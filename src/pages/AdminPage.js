@@ -100,7 +100,7 @@ const AdminDashboard = ({ cars, onAdd, onDelete, onLogout }) => {
                             {cars.map(car => (
                                 <tr key={car.id} className="hover:bg-gray-50 transition">
                                     <td className="p-4 flex items-center gap-3">
-                                        <img src={car.image} className="w-10 h-10 rounded object-cover" />
+                                        <img src={car.image} alt={`${car.make} ${car.model}`} className="w-10 h-10 rounded object-cover" />
                                         <div>
                                             <div className="font-bold text-slate-900">{car.make} {car.model}</div>
                                             <div className="text-xs text-slate-500">{car.year} • {car.mileage}km</div>

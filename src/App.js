@@ -46,7 +46,7 @@ export default function App() {
   useEffect(() => {
     if (!user) return;
 
-    const carsRef = collection(db, 'artifacts', appId, 'public', 'data', 'cars');
+    const carsRef = collection(db, 'cars');
     const unsubscribe = onSnapshot(query(carsRef, orderBy('timestamp', 'desc')), (snapshot) => {
         const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
@@ -101,13 +101,13 @@ export default function App() {
 
   const handleAddCar = async (carData) => {
       if (!user) return;
-      const carsRef = collection(db, 'artifacts', appId, 'public', 'data', 'cars');
+      const carsRef = collection(db, 'cars');
       await addDoc(carsRef, { ...carData, timestamp: serverTimestamp() });
   };
 
   const handleDeleteCar = async (id) => {
       if (!user) return;
-      await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'cars', id));
+      await deleteDoc(doc(db, 'cars', id));
   };
 
   // --- Rendering ---

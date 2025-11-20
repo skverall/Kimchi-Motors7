@@ -23,7 +23,7 @@ const CarDetailsPage = ({ car, onBack }) => (
              {/* Mock Gallery */}
              {[1,2,3].map(i => (
                  <div key={i} className="aspect-video rounded-lg overflow-hidden bg-gray-100 cursor-pointer opacity-70 hover:opacity-100 transition">
-                     <img src={car.image} className="w-full h-full object-cover grayscale hover:grayscale-0 transition" />
+                     <img src={car.image} alt={`${car.model} gallery image ${i}`} className="w-full h-full object-cover grayscale hover:grayscale-0 transition" />
                  </div>
              ))}
           </div>
