@@ -19,10 +19,13 @@ export default function App() {
   const [filteredCars, setFilteredCars] = useState([]);
   const [isLocationModalOpen, setLocationModalOpen] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   // --- Supabase Logic ---
 
   useEffect(() => {
     const fetchAndSeedCars = async () => {
+      setIsLoading(true);
       // 1. Fetch data
       const { data: carsData, error } = await supabase
         .from('cars')
@@ -31,6 +34,7 @@ export default function App() {
 
       if (error) {
         console.error("Supabase fetch error:", error);
+        setIsLoading(false);
         return;
       }
 
@@ -54,6 +58,7 @@ export default function App() {
         setCars(carsData);
         setFilteredCars(carsData);
       }
+      setIsLoading(false);
     };
 
     fetchAndSeedCars();
@@ -138,10 +143,21 @@ export default function App() {
     }
   }
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading Kimchi Motors...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900">
       <Header onNavigate={handleNavigate} page={page} />
-      
+
       {renderPage()}
 
       <FloatingWhatsApp />
