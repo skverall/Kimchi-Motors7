@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged, signInAnonymously, signInWithCustomToken } from 'firebase/auth';
-import { collection, onSnapshot, query, orderBy, serverTimestamp, addDoc, deleteDoc, doc } from 'firebase/firestore';
-
-import { auth, db, appId } from './firebase/config';
+import { supabase } from './supabase/config';
 import { INITIAL_CARS } from './data/mockData';
 
 import Header from './components/Header';
@@ -20,94 +17,107 @@ export default function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [cars, setCars] = useState([]);
   const [filteredCars, setFilteredCars] = useState([]);
-  const [user, setAuthUser] = useState(null);
   const [isLocationModalOpen, setLocationModalOpen] = useState(false);
 
-  // --- Firebase Logic ---
+  // --- Supabase Logic ---
 
-  // 1. Auth Init
   useEffect(() => {
-    const initAuth = async () => {
-        const initialAuthToken = process.env.REACT_APP_INITIAL_AUTH_TOKEN;
-        if (initialAuthToken) {
-            await signInWithCustomToken(auth, initialAuthToken);
+    const fetchAndSeedCars = async () => {
+      // 1. Fetch data
+      const { data: carsData, error } = await supabase
+        .from('cars')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error("Supabase fetch error:", error);
+        return;
+      }
+
+      // 2. Check if seeding is needed
+      if (carsData && carsData.length === 0) {
+        console.log("No cars found, seeding database...");
+        // Remove Firebase-specific serverTimestamp from mock data before inserting
+        const carsToSeed = INITIAL_CARS.map(({ timestamp, ...car }) => car);
+        const { error: insertError } = await supabase.from('cars').insert(carsToSeed);
+        if (insertError) {
+          console.error("Supabase seed error:", insertError);
         } else {
-            await signInAnonymously(auth);
+          // After seeding, refetch the data to get IDs and created_at timestamps
+          const { data: newCarsData } = await supabase.from('cars').select('*').order('created_at', { ascending: false });
+          if (newCarsData) {
+            setCars(newCarsData);
+            setFilteredCars(newCarsData);
+          }
         }
+      } else if (carsData) {
+        setCars(carsData);
+        setFilteredCars(carsData);
+      }
     };
-    initAuth();
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
-        setAuthUser(u);
-    });
-    return () => unsubscribe();
+
+    fetchAndSeedCars();
+
+    // 3. Set up real-time subscription
+    const channel = supabase
+      .channel('public:cars')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'cars' }, (payload) => {
+        console.log('Change received!', payload);
+        fetchAndSeedCars(); // Refetch data on any change
+      })
+      .subscribe();
+
+    // Cleanup function to remove the channel subscription
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
-
-  // 2. Data Fetching & Seeding
-  useEffect(() => {
-    if (!user) return;
-
-    const carsRef = collection(db, 'cars');
-    const unsubscribe = onSnapshot(query(carsRef, orderBy('timestamp', 'desc')), (snapshot) => {
-        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        if (data.length === 0) {
-            // Auto-seed if empty
-            INITIAL_CARS.forEach(async (car) => {
-                await addDoc(carsRef, { ...car, timestamp: serverTimestamp() });
-            });
-        } else {
-            setCars(data);
-            setFilteredCars(data);
-        }
-    }, (error) => console.error("Firestore error:", error));
-
-    return () => unsubscribe();
-  }, [user]);
 
   // --- Navigation Logic ---
 
   const handleNavigate = (target) => {
-      if (target === 'contact') {
-        setLocationModalOpen(true); // Open modal instead of navigating to empty page
-        return;
-      }
-      window.scrollTo(0,0);
-      setPage(target);
-      if(target !== 'detail') setSelectedCar(null);
+    if (target === 'contact') {
+      setLocationModalOpen(true);
+      return;
+    }
+    window.scrollTo(0, 0);
+    setPage(target);
+    if (target !== 'detail') setSelectedCar(null);
   };
 
   const handleCarClick = (car) => {
-      setSelectedCar(car);
-      setPage('detail');
-      window.scrollTo(0,0);
+    setSelectedCar(car);
+    setPage('detail');
+    window.scrollTo(0, 0);
   };
 
   const handleSearch = (params) => {
-      handleNavigate('listing');
-      let result = cars;
-      if (params.make) result = result.filter(c => c.make === params.make);
-      if (params.maxPrice) result = result.filter(c => c.price <= parseInt(params.maxPrice));
-      setFilteredCars(result);
+    handleNavigate('listing');
+    let result = cars;
+    if (params.make) result = result.filter(c => c.make === params.make);
+    if (params.maxPrice) result = result.filter(c => c.price <= parseInt(params.maxPrice));
+    setFilteredCars(result);
   };
-  
+
   const handleFilter = (params) => {
     let result = cars;
     if (params.make) result = result.filter(c => c.make === params.make);
     if (params.maxPrice) result = result.filter(c => c.price <= parseInt(params.maxPrice));
     setFilteredCars(result);
-};
+  };
 
-  // --- Admin Actions ---
+  // --- Admin Actions (Supabase) ---
 
   const handleAddCar = async (carData) => {
-      if (!user) return;
-      const carsRef = collection(db, 'cars');
-      await addDoc(carsRef, { ...carData, timestamp: serverTimestamp() });
+    // Remove Firebase-specific timestamp if it exists
+    const { timestamp, ...restOfCarData } = carData;
+    const { error } = await supabase.from('cars').insert([restOfCarData]);
+    if (error) console.error("Error adding car:", error);
   };
 
   const handleDeleteCar = async (id) => {
-      if (!user) return;
-      await deleteDoc(doc(db, 'cars', id));
+    const { error } = await supabase.from('cars').delete().eq('id', id);
+    if (error) console.error("Error deleting car:", error);
   };
 
   // --- Rendering ---
@@ -119,9 +129,10 @@ export default function App() {
       case 'listing':
         return <ListingPage cars={filteredCars} onCarClick={handleCarClick} onFilter={handleFilter} />;
       case 'detail':
-        return <CarDetailsPage car={selectedCar} onBack={() => setPage('listing')} />;
+        // Ensure selectedCar is not null before rendering details page
+        return selectedCar ? <CarDetailsPage car={selectedCar} onBack={() => setPage('listing')} /> : <ListingPage cars={filteredCars} onCarClick={handleCarClick} onFilter={handleFilter} />;
       case 'admin':
-        return <AdminPage isAdmin={isAdmin} onLogin={() => setIsAdmin(true)} onBack={() => setPage('home')} cars={cars} onAdd={handleAddCar} onDelete={handleDeleteCar} onLogout={() => {setIsAdmin(false); setPage('home')}} />;
+        return <AdminPage isAdmin={isAdmin} onLogin={() => setIsAdmin(true)} onBack={() => setPage('home')} cars={cars} onAdd={handleAddCar} onDelete={handleDeleteCar} onLogout={() => { setIsAdmin(false); setPage('home') }} />;
       default:
         return <HomePage onSearch={handleSearch} cars={cars} onCarClick={handleCarClick} onNavigate={handleNavigate} />;
     }
