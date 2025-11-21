@@ -12,6 +12,9 @@ export interface CarItem {
   description?: string;
   featured?: boolean;
   mostWanted?: boolean;
+  engine?: string; // e.g., "3500 cc"
+  shipping?: string; // e.g., "By Sea Shipping"
+  status?: "Available" | "Sold" | "In Transit";
   // Optional client-only field to force image reloads after updates
   imageVersion?: number;
 }

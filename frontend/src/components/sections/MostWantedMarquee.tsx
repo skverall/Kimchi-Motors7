@@ -28,7 +28,7 @@ export const MostWantedMarquee: React.FC<MostWantedMarqueeProps> = ({
       <div className="relative">
         <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-slate-900 to-transparent z-10" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-slate-900 to-transparent z-10" />
-        <div className="flex gap-6 animate-[marquee_45s_linear_infinite] hover:[animation-play-state:paused]">
+        <div className="flex gap-6 animate-[marquee_25s_linear_infinite]">
           {[...cars, ...cars].map((car, idx) => (
             <button
               key={`${car.make}-${car.model}-${idx}`}

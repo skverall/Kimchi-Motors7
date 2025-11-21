@@ -22,9 +22,12 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => (
       <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-slate-900">
         {car.year}
       </div>
-      {car.featured && (
-        <div className="absolute top-3 left-3 bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold">
-          Featured
+      {car.status && (
+        <div className={`absolute top-3 left-3 px-2 py-1 rounded text-xs font-bold text-white ${car.status === 'Sold' ? 'bg-red-500' :
+            car.status === 'In Transit' ? 'bg-orange-500' :
+              'bg-emerald-500'
+          }`}>
+          {car.status}
         </div>
       )}
     </div>
@@ -39,19 +42,23 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => (
         ${car.price.toLocaleString()}
       </div>
 
-      <div className="grid grid-cols-3 gap-2 border-t border-gray-100 pt-4 mt-auto text-xs text-slate-500">
-        <div className="flex flex-col items-center gap-1">
-          <Gauge className="w-4 h-4 text-slate-400" />
-          <span>{car.mileage.toLocaleString()} km</span>
+      <div className="space-y-2 border-t border-gray-100 pt-4 mt-auto">
+        <div className="grid grid-cols-2 gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-2">
+            <Fuel className="w-4 h-4 text-slate-400" />
+            <span>{car.fuel} {car.engine}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Gauge className="w-4 h-4 text-slate-400" />
+            <span>{car.mileage.toLocaleString()} km</span>
+          </div>
         </div>
-        <div className="flex flex-col items-center gap-1 border-l border-gray-100">
-          <Settings className="w-4 h-4 text-slate-400" />
-          <span>{car.transmission}</span>
-        </div>
-        <div className="flex flex-col items-center gap-1 border-l border-gray-100">
-          <Fuel className="w-4 h-4 text-slate-400" />
-          <span>{car.fuel}</span>
-        </div>
+        {car.shipping && (
+          <div className="flex items-center gap-2 text-xs text-slate-400">
+            <span className="w-2 h-2 rounded-full bg-blue-400" />
+            {car.shipping}
+          </div>
+        )}
       </div>
     </div>
   </div>

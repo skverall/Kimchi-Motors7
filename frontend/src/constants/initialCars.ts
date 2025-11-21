@@ -14,6 +14,9 @@ export const INITIAL_CARS: Omit<CarItem, "id">[] = [
     featured: true,
     mostWanted: true,
     description: "The legendary G-Wagon with ultimate luxury and performance.",
+    engine: "4000 cc",
+    shipping: "By Sea Shipping",
+    status: "Available",
   },
   {
     make: "Porsche",
@@ -28,6 +31,9 @@ export const INITIAL_CARS: Omit<CarItem, "id">[] = [
     featured: true,
     mostWanted: true,
     description: "Track weapon for the road. Weissach package included.",
+    engine: "4000 cc",
+    shipping: "By Air Shipping",
+    status: "In Transit",
   },
   {
     make: "Rolls-Royce",
@@ -42,6 +48,9 @@ export const INITIAL_CARS: Omit<CarItem, "id">[] = [
     featured: false,
     mostWanted: true,
     description: "The architecture of luxury. Bespoke interior.",
+    engine: "6750 cc",
+    shipping: "By Sea Shipping",
+    status: "Available",
   },
   {
     make: "Lamborghini",
@@ -56,5 +65,8 @@ export const INITIAL_CARS: Omit<CarItem, "id">[] = [
     featured: false,
     mostWanted: false,
     description: "V10 naturally aspirated engine. Emotional sound.",
+    engine: "5200 cc",
+    shipping: "By Sea Shipping",
+    status: "Sold",
   },
 ];
