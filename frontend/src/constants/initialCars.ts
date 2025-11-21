@@ -1,4 +1,4 @@
-import type { CarItem } from "@/components/cars/CarCard";
+import type { CarItem } from "@/types/car";
 
 export const INITIAL_CARS: Omit<CarItem, "id">[] = [
   {
@@ -58,4 +58,3 @@ export const INITIAL_CARS: Omit<CarItem, "id">[] = [
     description: "V10 naturally aspirated engine. Emotional sound.",
   },
 ];
-

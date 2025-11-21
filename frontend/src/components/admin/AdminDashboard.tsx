@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { CarItem } from "@/components/cars/CarCard";
+import type { CarItem } from "@/types/car";
 import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info } from "lucide-react";
 
 interface AdminDashboardProps {
@@ -475,4 +475,3 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 };
 
 export default AdminDashboard;
-

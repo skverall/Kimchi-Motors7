@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import type { CarItem } from "@/components/cars/CarCard";
+import type { CarItem } from "@/types/car";
 
 interface MostWantedMarqueeProps {
   cars: CarItem[];
@@ -63,4 +63,3 @@ export const MostWantedMarquee: React.FC<MostWantedMarqueeProps> = ({
 };
 
 export default MostWantedMarquee;
-

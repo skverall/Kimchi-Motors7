@@ -14,12 +14,10 @@ import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
 import { LocationModal } from "@/components/modals/LocationModal";
 import { MostWantedMarquee } from "@/components/sections/MostWantedMarquee";
 import { BRANDS } from "@/constants/brands";
-import { INITIAL_CARS } from "@/constants/initialCars";
 
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
-import type { CarItem } from "@/components/cars/CarCard";
-import { supabase } from "@/lib/supabaseClient";
+import type { CarItem } from "@/types/car";
 
 export default function Home() {
   const [page, setPage] = useState<PageName>("home");
@@ -46,40 +44,23 @@ export default function Home() {
     }
   }, [page]);
 
-  // Load cars from Supabase on mount
+  // Load cars from Supabase via server API on mount
   useEffect(() => {
     const loadCars = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        const { data, error } = await supabase
-          .from("cars")
-          .select("*")
-          .order("id", { ascending: false });
 
-        if (error) throw error;
+        const response = await fetch("/api/cars", { cache: "no-store" });
+        const body = await response.json().catch(() => ({}));
 
-        if (data && data.length > 0) {
-          setCars(data as CarItem[]);
-          setFilteredCars(data as CarItem[]);
-        } else {
-          // If table is empty, seed with INITIAL_CARS
-          const { error: seedError } = await supabase
-            .from("cars")
-            .insert(INITIAL_CARS);
-
-          if (seedError) throw seedError;
-
-          const { data: seeded } = await supabase
-            .from("cars")
-            .select("*")
-            .order("id", { ascending: false });
-
-          if (seeded) {
-            setCars(seeded as CarItem[]);
-            setFilteredCars(seeded as CarItem[]);
-          }
+        if (!response.ok) {
+          throw new Error(body?.error || "Failed to load cars");
         }
+
+        const fetchedCars = (body?.cars as CarItem[]) || [];
+        setCars(fetchedCars);
+        setFilteredCars(fetchedCars);
       } catch (err) {
         console.error("Error loading cars from Supabase", err);
         setError("Failed to load cars. Please try again later.");
@@ -105,7 +86,7 @@ export default function Home() {
     if (target !== "detail") setSelectedCar(null);
   };
 
-  const handleCarClick = (car: (typeof INITIAL_CARS)[number]) => {
+  const handleCarClick = (car: CarItem) => {
     setSelectedCar(car);
     setPage("detail");
     window.scrollTo(0, 0);
@@ -129,59 +110,73 @@ export default function Home() {
 
   // Admin Handlers
   const handleAddCar = async (newCar: Omit<CarItem, "id">) => {
-    const { data, error } = await supabase
-      .from("cars")
-      .insert(newCar)
-      .select("*")
-      .single();
+    try {
+      const response = await fetch("/api/cars", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newCar),
+      });
+      const body = await response.json().catch(() => ({}));
 
-    if (error) {
-      console.error("Error adding car", error);
-      return;
-    }
+      if (!response.ok || !body?.car) {
+        throw new Error(body?.error || "Failed to add car");
+      }
 
-    if (data) {
-      const carWithId = data as CarItem;
+      const carWithId = body.car as CarItem;
       setCars([carWithId, ...cars]);
       setFilteredCars([carWithId, ...cars]);
+    } catch (err) {
+      console.error("Error adding car", err);
+      setError("Failed to add car. Please try again later.");
     }
   };
 
   const handleDeleteCar = async (id: string) => {
-    const numericId = Number(id);
-    const { error } = await supabase.from("cars").delete().eq("id", numericId);
+    try {
+      const response = await fetch(`/api/cars/${id}`, { method: "DELETE" });
+      const body = await response.json().catch(() => ({}));
 
-    if (error) {
-      console.error("Error deleting car", error);
-      return;
+      if (!response.ok) {
+        throw new Error(body?.error || "Failed to delete car");
+      }
+
+      const updated = cars.filter((c) => String(c.id) !== String(id));
+      setCars(updated);
+      setFilteredCars(updated);
+    } catch (err) {
+      console.error("Error deleting car", err);
+      setError("Failed to delete car. Please try again later.");
     }
-
-    const updated = cars.filter((c) => String(c.id) !== String(id));
-    setCars(updated);
-    setFilteredCars(updated);
   };
 
   const handleUpdateCar = async (id: string, updates: Partial<CarItem>) => {
-    const numericId = Number(id);
-    const { data, error } = await supabase
-      .from("cars")
-      .update(updates)
-      .eq("id", numericId)
-      .select("*")
-      .single();
+    try {
+      const response = await fetch(`/api/cars/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+      const body = await response.json().catch(() => ({}));
 
-    if (error) {
-      console.error("Error updating car", error);
-      return;
-    }
+      if (!response.ok || !body?.car) {
+        throw new Error(body?.error || "Failed to update car");
+      }
 
-    if (data) {
-      const updatedCar = data as CarItem;
+      const updatedCar = body.car as CarItem;
       const updated = cars.map((c) =>
-        String(c.id) === String(id) ? { ...c, ...updatedCar } : c
+        String(c.id) === String(id)
+          ? {
+              ...c,
+              ...updatedCar,
+              imageVersion: updates.image ? Date.now() : c.imageVersion,
+            }
+          : c
       );
       setCars(updated);
       setFilteredCars(updated);
+    } catch (err) {
+      console.error("Error updating car", err);
+      setError("Failed to update car. Please try again later.");
     }
   };
 
@@ -226,6 +221,16 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900">
       <Header onNavigate={handleNavigate} page={page} />
+      {isLoading && (
+        <div className="bg-blue-50 text-blue-700 border border-blue-100 px-4 py-3 text-sm text-center">
+          Loading inventory...
+        </div>
+      )}
+      {error && (
+        <div className="bg-red-50 text-red-700 border border-red-100 px-4 py-3 text-sm text-center">
+          {error}
+        </div>
+      )}
 
       {page === "home" && (
         <>

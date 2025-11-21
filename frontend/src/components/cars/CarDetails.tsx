@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, Gauge, Fuel, Settings, MessageCircle, Phone } from "lucide-react";
-import type { CarItem } from "./CarCard";
+import type { CarItem } from "@/types/car";
 
 interface CarDetailsProps {
   car: CarItem;
@@ -123,4 +123,3 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => (
 );
 
 export default CarDetails;
-

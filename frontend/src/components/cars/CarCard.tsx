@@ -1,24 +1,7 @@
 "use client";
 
 import { Gauge, Settings, Fuel } from "lucide-react";
-
-export interface CarItem {
-  id?: string;
-  make: string;
-  model: string;
-  year: number;
-  price: number;
-  mileage: number;
-  fuel: string;
-  transmission: string;
-  image: string;
-  type: string;
-  description?: string;
-  featured?: boolean;
-  mostWanted?: boolean;
-  // Local-only field used to force image reloads in the UI when a photo changes
-  imageVersion?: number;
-}
+import type { CarItem } from "@/types/car";
 
 interface CarCardProps {
   car: CarItem;
@@ -75,4 +58,3 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => (
 );
 
 export default CarCard;
-
