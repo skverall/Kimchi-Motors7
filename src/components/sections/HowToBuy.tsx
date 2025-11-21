@@ -1,4 +1,4 @@
-import { Globe, File, Window } from 'lucide-react'
+import { Globe, File, PanelsTopLeft } from 'lucide-react'
 
 const steps = [
   {
@@ -14,7 +14,7 @@ const steps = [
       'Нашли подходящий автомобиль? Оставьте заявку в защищённой форме — мы свяжемся с вами в течение 24 часов.',
   },
   {
-    icon: <Window className="w-12 h-12 text-blue-500" />,
+    icon: <PanelsTopLeft className="w-12 h-12 text-blue-500" />,
     title: 'Получите автомобиль',
     description:
       'После одобрения организуем доставку до дверей или самовывоз из ближайшего партнёрского центра.',
