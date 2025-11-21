@@ -15,7 +15,10 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (user === "admin" && pass === "password") {
+    const adminUser = process.env.NEXT_PUBLIC_ADMIN_USERNAME || "admin";
+    const adminPass = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin";
+
+    if (user === adminUser && pass === adminPass) {
       onLogin();
     } else {
       setError("Invalid credentials");
@@ -80,6 +83,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
         </form>
 
         <button
+          type="button"
           onClick={onBack}
           className="w-full mt-4 text-slate-500 text-sm font-semibold hover:text-slate-900 transition flex items-center justify-center gap-2"
         >

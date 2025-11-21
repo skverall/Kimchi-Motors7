@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Car } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -18,11 +18,61 @@ import { INITIAL_CARS } from "@/constants/initialCars";
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import type { CarItem } from "@/components/cars/CarCard";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function Home() {
   const [page, setPage] = useState<"home" | "listing" | "detail" | "admin" | "admin-dashboard">("home");
-  const [cars, setCars] = useState<CarItem[]>(INITIAL_CARS as CarItem[]);
-  const [filteredCars, setFilteredCars] = useState<CarItem[]>(INITIAL_CARS as CarItem[]);
+  const [cars, setCars] = useState<CarItem[]>([]);
+  const [filteredCars, setFilteredCars] = useState<CarItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load cars from Supabase on mount
+  useEffect(() => {
+    const loadCars = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const { data, error } = await supabase
+          .from("cars")
+          .select("*")
+          .order("id", { ascending: false });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          setCars(data as CarItem[]);
+          setFilteredCars(data as CarItem[]);
+        } else {
+          // If table is empty, seed with INITIAL_CARS
+          const { error: seedError } = await supabase
+            .from("cars")
+            .insert(INITIAL_CARS);
+
+          if (seedError) throw seedError;
+
+          const { data: seeded } = await supabase
+            .from("cars")
+            .select("*")
+            .order("id", { ascending: false });
+
+          if (seeded) {
+            setCars(seeded as CarItem[]);
+            setFilteredCars(seeded as CarItem[]);
+          }
+        }
+      } catch (err) {
+        console.error("Error loading cars from Supabase", err);
+        setError("Failed to load cars. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCars();
+  }, []);
+
+
   const [selectedCar, setSelectedCar] = useState<CarItem | null>(null);
   const [isLocationModalOpen, setLocationModalOpen] = useState(false);
 
@@ -59,27 +109,61 @@ export default function Home() {
   };
 
   // Admin Handlers
-  const handleAddCar = (newCar: Omit<CarItem, "id">) => {
-    const carWithId = { ...newCar, id: Date.now().toString() };
-    setCars([carWithId, ...cars]);
-    setFilteredCars([carWithId, ...cars]);
+  const handleAddCar = async (newCar: Omit<CarItem, "id">) => {
+    const { data, error } = await supabase
+      .from("cars")
+      .insert(newCar)
+      .select("*")
+      .single();
+
+    if (error) {
+      console.error("Error adding car", error);
+      return;
+    }
+
+    if (data) {
+      const carWithId = data as CarItem;
+      setCars([carWithId, ...cars]);
+      setFilteredCars([carWithId, ...cars]);
+    }
   };
 
-  const handleDeleteCar = (id: string) => {
-    const updated = cars.filter((c) => (c.id || c.model) !== id);
+  const handleDeleteCar = async (id: string) => {
+    const numericId = Number(id);
+    const { error } = await supabase.from("cars").delete().eq("id", numericId);
+
+    if (error) {
+      console.error("Error deleting car", error);
+      return;
+    }
+
+    const updated = cars.filter((c) => String(c.id) !== String(id));
     setCars(updated);
     setFilteredCars(updated);
   };
 
-  const handleUpdateCar = (id: string, updates: Partial<CarItem>) => {
-    const updated = cars.map((c) => {
-      if ((c.id || c.model) === id) {
-        return { ...c, ...updates };
-      }
-      return c;
-    });
-    setCars(updated);
-    setFilteredCars(updated);
+  const handleUpdateCar = async (id: string, updates: Partial<CarItem>) => {
+    const numericId = Number(id);
+    const { data, error } = await supabase
+      .from("cars")
+      .update(updates)
+      .eq("id", numericId)
+      .select("*")
+      .single();
+
+    if (error) {
+      console.error("Error updating car", error);
+      return;
+    }
+
+    if (data) {
+      const updatedCar = data as CarItem;
+      const updated = cars.map((c) =>
+        String(c.id) === String(id) ? { ...c, ...updatedCar } : c
+      );
+      setCars(updated);
+      setFilteredCars(updated);
+    }
   };
 
   if (page === "admin") {
