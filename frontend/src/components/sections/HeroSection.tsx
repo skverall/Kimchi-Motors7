@@ -4,8 +4,6 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { BRANDS } from "@/constants/brands";
 
-import { DualRangeSlider } from "@/components/ui/DualRangeSlider";
-
 export interface SearchParams {
   make: string;
   model?: string;
@@ -17,13 +15,64 @@ interface HeroSectionProps {
   onSearch: (params: SearchParams) => void;
 }
 
+const MIN_PRICE = 0;
+const MAX_PRICE = 2000000;
+
 export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
   const [searchParams, setSearchParams] = useState<SearchParams>({
     make: "",
     model: "",
-    minPrice: 0,
-    maxPrice: 2000000,
+    minPrice: MIN_PRICE,
+    maxPrice: MAX_PRICE,
   });
+
+  const formatPriceValue = (value?: number) =>
+    value !== undefined && value !== null ? value.toLocaleString() : "";
+
+  const formatRangeLabel = (min?: number, max?: number) => {
+    const minLabel = min !== undefined ? `$${min.toLocaleString()}` : "No min";
+    const maxLabel = max !== undefined ? `$${max.toLocaleString()}` : "No max";
+    return `${minLabel} — ${maxLabel}`;
+  };
+
+  const clampPrice = (value?: number) => {
+    if (value === undefined) return undefined;
+    return Math.min(Math.max(value, MIN_PRICE), MAX_PRICE);
+  };
+
+  const handleMinPriceChange = (rawInput: string) => {
+    const numericOnly = rawInput.replace(/[^\d]/g, "");
+    const parsed = numericOnly ? clampPrice(Number(numericOnly)) : undefined;
+
+    setSearchParams((prev) => {
+      const minPrice = parsed;
+      const maxPrice =
+        prev.maxPrice !== undefined &&
+        parsed !== undefined &&
+        parsed > prev.maxPrice
+          ? parsed
+          : prev.maxPrice;
+
+      return { ...prev, minPrice, maxPrice };
+    });
+  };
+
+  const handleMaxPriceChange = (rawInput: string) => {
+    const numericOnly = rawInput.replace(/[^\d]/g, "");
+    const parsed = numericOnly ? clampPrice(Number(numericOnly)) : undefined;
+
+    setSearchParams((prev) => {
+      const maxPrice = parsed;
+      const minPrice =
+        prev.minPrice !== undefined &&
+        parsed !== undefined &&
+        parsed < prev.minPrice
+          ? parsed
+          : prev.minPrice;
+
+      return { ...prev, minPrice, maxPrice };
+    });
+  };
 
   return (
     <div className="relative h-[600px] flex items-center justify-center overflow-hidden bg-slate-900">
@@ -85,24 +134,65 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
             </select>
           </div>
 
-          {/* Price Slider */}
+          {/* Price Range */}
           <div className="flex-[2] w-full px-2">
-            <label className="text-sm text-white font-medium mb-4 block text-center">
-              Price
+            <label className="text-sm text-white font-semibold mb-3 block text-left">
+              Price range
             </label>
-            <DualRangeSlider
-              min={0}
-              max={2000000}
-              step={10000}
-              value={[searchParams.minPrice || 0, searchParams.maxPrice || 2000000]}
-              onChange={(value) =>
-                setSearchParams({
-                  ...searchParams,
-                  minPrice: value[0],
-                  maxPrice: value[1],
-                })
-              }
-            />
+
+            <div className="bg-white/10 border border-white/20 rounded-2xl p-4 shadow-xl shadow-blue-500/15 backdrop-blur-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="group relative">
+                  <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.16em] text-white/60 mb-1">
+                    <span>Min</span>
+                    <span className="text-white/40">Entry price</span>
+                  </div>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-blue-100/80">$</span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      placeholder="0"
+                      value={formatPriceValue(searchParams.minPrice)}
+                      onChange={(e) => handleMinPriceChange(e.target.value)}
+                      className="w-full bg-white/5 border border-white/20 rounded-xl pl-7 pr-3 py-3 text-white font-semibold placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/70 focus:border-transparent transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="group relative">
+                  <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.16em] text-white/60 mb-1">
+                    <span>Max</span>
+                    <span className="text-white/40">Dream cap</span>
+                  </div>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-blue-100/80">$</span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      placeholder={MAX_PRICE.toLocaleString()}
+                      value={formatPriceValue(searchParams.maxPrice)}
+                      onChange={(e) => handleMaxPriceChange(e.target.value)}
+                      className="w-full bg-white/5 border border-white/20 rounded-xl pl-7 pr-3 py-3 text-white font-semibold placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/70 focus:border-transparent transition-all"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-3 flex items-center justify-between bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80">
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 animate-pulse" />
+                  <span className="uppercase tracking-[0.16em] text-[10px]">
+                    Selected range
+                  </span>
+                </div>
+                <span className="text-white font-semibold">
+                  {formatRangeLabel(searchParams.minPrice, searchParams.maxPrice)}
+                </span>
+              </div>
+            </div>
           </div>
 
           {/* Search Button */}
@@ -119,4 +209,3 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
 };
 
 export default HeroSection;
-
