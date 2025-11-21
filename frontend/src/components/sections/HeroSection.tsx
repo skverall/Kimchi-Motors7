@@ -48,8 +48,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
       const minPrice = parsed;
       const maxPrice =
         prev.maxPrice !== undefined &&
-        parsed !== undefined &&
-        parsed > prev.maxPrice
+          parsed !== undefined &&
+          parsed > prev.maxPrice
           ? parsed
           : prev.maxPrice;
 
@@ -65,8 +65,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
       const maxPrice = parsed;
       const minPrice =
         prev.minPrice !== undefined &&
-        parsed !== undefined &&
-        parsed < prev.minPrice
+          parsed !== undefined &&
+          parsed < prev.minPrice
           ? parsed
           : prev.minPrice;
 
@@ -75,133 +75,154 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
   };
 
   return (
-    <div className="relative h-[600px] flex items-center justify-center overflow-hidden bg-slate-900">
+    <div className="relative min-h-[800px] flex items-center justify-center overflow-hidden bg-slate-900 py-20">
+      {/* Background Image & Gradient */}
       <div className="absolute inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1920"
           alt="Hero"
-          className="w-full h-full object-cover opacity-50"
+          className="w-full h-full object-cover opacity-60"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/40 to-slate-900" />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10 text-center mt-10">
-        <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight">
-          FIND YOUR
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-            {" "}
-            DREAM CAR
-          </span>
-        </h1>
-        <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light">
-          Explore our exclusive collection of premium vehicles. Luxury, performance,
-          and elegance in every mile.
-        </p>
-
-        <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl shadow-2xl max-w-5xl mx-auto flex flex-col lg:flex-row items-end gap-6">
-          {/* Make */}
-          <div className="flex-1 w-full">
-            <select
-              className="w-full bg-transparent border border-white/30 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all [&>option]:text-slate-900"
-              value={searchParams.make}
-              onChange={(e) =>
-                setSearchParams({ ...searchParams, make: e.target.value })
-              }
-            >
-              <option value="" className="text-slate-500">Make</option>
-              {BRANDS.map((b) => (
-                <option key={b.name} value={b.name}>
-                  {b.name}
-                </option>
-              ))}
-            </select>
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-5xl mx-auto">
+          {/* Headline */}
+          <div className="text-center mb-16">
+            <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight">
+              FIND YOUR
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
+                {" "}
+                DREAM CAR
+              </span>
+            </h1>
+            <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto font-light">
+              Explore our exclusive collection of premium vehicles. Luxury, performance,
+              and elegance in every mile.
+            </p>
           </div>
 
-          {/* Model */}
-          <div className="flex-1 w-full">
-            <select
-              className="w-full bg-transparent border border-white/30 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all [&>option]:text-slate-900"
-              value={searchParams.model}
-              onChange={(e) =>
-                setSearchParams({ ...searchParams, model: e.target.value })
-              }
-            >
-              <option value="" className="text-slate-500">Model</option>
-              {/* Placeholder for models - would typically be filtered by make */}
-              <option value="911">911</option>
-              <option value="Cullinan">Cullinan</option>
-              <option value="Huracan">Huracan</option>
-            </select>
-          </div>
+          {/* Search Container */}
+          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
 
-          {/* Price Range */}
-          <div className="flex-[2] w-full px-2">
-            <label className="text-sm text-white font-semibold mb-3 block text-left">
-              Price range
-            </label>
+              {/* Make & Model */}
+              <div className="lg:col-span-4 space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Make */}
+                  <div className="space-y-2">
+                    <div className="relative">
+                      <select
+                        className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3.5 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                        value={searchParams.make}
+                        onChange={(e) => setSearchParams({ ...searchParams, make: e.target.value })}
+                      >
+                        <option value="" className="text-slate-400">Make</option>
+                        {BRANDS.map((b) => (
+                          <option key={b.name} value={b.name} className="text-slate-900">
+                            {b.name}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
 
-            <div className="bg-white/10 border border-white/20 rounded-2xl p-4 shadow-xl shadow-blue-500/15 backdrop-blur-sm">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="group relative">
-                  <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.16em] text-white/60 mb-1">
-                    <span>Min</span>
-                    <span className="text-white/40">Entry price</span>
-                  </div>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-blue-100/80">$</span>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      placeholder="0"
-                      value={formatPriceValue(searchParams.minPrice)}
-                      onChange={(e) => handleMinPriceChange(e.target.value)}
-                      className="w-full bg-white/5 border border-white/20 rounded-xl pl-7 pr-3 py-3 text-white font-semibold placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/70 focus:border-transparent transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div className="group relative">
-                  <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.16em] text-white/60 mb-1">
-                    <span>Max</span>
-                    <span className="text-white/40">Dream cap</span>
-                  </div>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-blue-100/80">$</span>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      placeholder={MAX_PRICE.toLocaleString()}
-                      value={formatPriceValue(searchParams.maxPrice)}
-                      onChange={(e) => handleMaxPriceChange(e.target.value)}
-                      className="w-full bg-white/5 border border-white/20 rounded-xl pl-7 pr-3 py-3 text-white font-semibold placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/70 focus:border-transparent transition-all"
-                    />
+                  {/* Model */}
+                  <div className="space-y-2">
+                    <div className="relative">
+                      <select
+                        className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3.5 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                        value={searchParams.model}
+                        onChange={(e) => setSearchParams({ ...searchParams, model: e.target.value })}
+                      >
+                        <option value="" className="text-slate-400">Model</option>
+                        <option value="911" className="text-slate-900">911</option>
+                        <option value="Cullinan" className="text-slate-900">Cullinan</option>
+                        <option value="Huracan" className="text-slate-900">Huracan</option>
+                      </select>
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-3 flex items-center justify-between bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80">
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 animate-pulse" />
-                  <span className="uppercase tracking-[0.16em] text-[10px]">
-                    Selected range
-                  </span>
+              {/* Price Range */}
+              <div className="lg:col-span-6">
+                <label className="text-sm text-white font-semibold mb-3 block">Price range</label>
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    {/* Min */}
+                    <div>
+                      <div className="flex justify-between text-[10px] uppercase tracking-wider text-slate-400 mb-1">
+                        <span>Min</span>
+                        <span>Entry Price</span>
+                      </div>
+                      <div className="relative group">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-400 transition-colors">$</span>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={formatPriceValue(searchParams.minPrice)}
+                          onChange={(e) => handleMinPriceChange(e.target.value)}
+                          className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-2 pl-7 pr-3 text-sm text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                          placeholder="0"
+                        />
+                      </div>
+                    </div>
+                    {/* Max */}
+                    <div>
+                      <div className="flex justify-between text-[10px] uppercase tracking-wider text-slate-400 mb-1">
+                        <span>Max</span>
+                        <span>Dream Cap</span>
+                      </div>
+                      <div className="relative group">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-400 transition-colors">$</span>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={formatPriceValue(searchParams.maxPrice)}
+                          onChange={(e) => handleMaxPriceChange(e.target.value)}
+                          className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-2 pl-7 pr-3 text-sm text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                          placeholder="Max"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Selected Range Bar */}
+                  <div className="bg-slate-800/50 rounded-lg p-2 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                      <span className="text-[10px] uppercase tracking-wider text-slate-400">Selected Range</span>
+                    </div>
+                    <span className="text-xs font-bold text-white">{formatRangeLabel(searchParams.minPrice, searchParams.maxPrice)}</span>
+                  </div>
                 </div>
-                <span className="text-white font-semibold">
-                  {formatRangeLabel(searchParams.minPrice, searchParams.maxPrice)}
-                </span>
               </div>
+
+              {/* Search Button */}
+              <div className="lg:col-span-2">
+                <button
+                  onClick={() => onSearch(searchParams)}
+                  className="w-full h-[136px] bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-lg transition-all shadow-lg shadow-blue-600/20 flex flex-col items-center justify-center gap-2 group"
+                >
+                  <Search className="w-8 h-8 group-hover:scale-110 transition-transform" />
+                  <span>Search</span>
+                </button>
+              </div>
+
             </div>
           </div>
-
-          {/* Search Button */}
-          <button
-            onClick={() => onSearch(searchParams)}
-            className="w-full lg:w-auto bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 h-[50px] mb-1"
-          >
-            <Search className="w-5 h-5" /> Search
-          </button>
         </div>
       </div>
     </div>
