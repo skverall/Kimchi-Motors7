@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "KIMCHIMOTORS - Showroom",
   description: "Premium Luxury Car Showroom",
+  icons: {
+    icon: "/kimchi-logo-white.jpg",
+  },
 };
 
 export default function RootLayout({
