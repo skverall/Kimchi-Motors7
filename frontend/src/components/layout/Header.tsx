@@ -22,9 +22,9 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
             <img
               src="/kimchi-logo-white.jpg"
               alt="Kimchi Motors"
-              className="h-12 w-auto object-contain"
+              className="h-10 md:h-12 w-auto object-contain"
             />
-            <span className="text-xl font-bold tracking-tighter text-slate-900 uppercase group-hover:text-blue-600 transition-colors">
+            <span className="text-lg md:text-xl font-bold tracking-tighter text-slate-900 uppercase group-hover:text-blue-600 transition-colors hidden xs:block">
               Kimchi Motors
             </span>
           </Link>
@@ -74,22 +74,27 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
           </button>
 
           <button
-            className="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-full border border-slate-200 text-slate-700"
+            className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 transition"
             onClick={() => setIsMenuOpen((v) => !v)}
+            aria-label="Toggle menu"
           >
             {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {isMenuOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white px-4 pb-4 space-y-2">
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-100 shadow-lg transition-all duration-300 ease-in-out origin-top ${isMenuOpen ? "opacity-100 scale-y-100 translate-y-0" : "opacity-0 scale-y-0 -translate-y-2 pointer-events-none"
+          }`}
+      >
+        <div className="px-4 py-6 space-y-3">
           <button
             onClick={() => {
               onNavigate("home");
               setIsMenuOpen(false);
             }}
-            className="block w-full text-left p-2 rounded hover:bg-slate-50 text-sm"
+            className="block w-full text-left p-3 rounded-xl hover:bg-slate-50 text-base font-medium text-slate-700 transition"
           >
             Home
           </button>
@@ -98,7 +103,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
               onNavigate("listing");
               setIsMenuOpen(false);
             }}
-            className="block w-full text-left p-2 rounded hover:bg-slate-50 text-sm"
+            className="block w-full text-left p-3 rounded-xl hover:bg-slate-50 text-base font-medium text-slate-700 transition"
           >
             Inventory
           </button>
@@ -107,21 +112,31 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
               onNavigate("contact");
               setIsMenuOpen(false);
             }}
-            className="block w-full text-left p-2 rounded hover:bg-slate-50 text-sm"
+            className="block w-full text-left p-3 rounded-xl hover:bg-slate-50 text-base font-medium text-slate-700 transition"
           >
             Showrooms
           </button>
           <button
             onClick={() => {
+              onNavigate("contact");
+              setIsMenuOpen(false);
+            }}
+            className="block w-full text-left p-3 rounded-xl hover:bg-slate-50 text-base font-medium text-slate-700 transition"
+          >
+            Contact
+          </button>
+          <div className="h-px bg-slate-100 my-2" />
+          <button
+            onClick={() => {
               onNavigate("admin");
               setIsMenuOpen(false);
             }}
-            className="block w-full text-left p-2 rounded hover:bg-slate-50 text-sm flex items-center gap-2"
+            className="block w-full text-left p-3 rounded-xl hover:bg-slate-50 text-base font-medium text-slate-700 flex items-center gap-2 transition"
           >
             <Settings className="w-4 h-4" /> Admin Panel
           </button>
         </div>
-      )}
+      </div>
     </header>
   );
 };

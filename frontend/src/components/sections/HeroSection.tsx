@@ -89,27 +89,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
           {/* Headline */}
-          <div className="text-center mb-16">
-            <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight">
+          <div className="text-center mb-12 md:mb-16">
+            <h1 className="text-4xl md:text-7xl font-black text-white mb-4 md:mb-6 tracking-tight">
               FIND YOUR
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
                 {" "}
                 DREAM CAR
               </span>
             </h1>
-            <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto font-light">
+            <p className="text-slate-300 text-base md:text-xl max-w-2xl mx-auto font-light px-4">
               Explore our exclusive collection of premium vehicles. Luxury, performance,
               and elegance in every mile.
             </p>
           </div>
 
           {/* Search Container */}
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-4 md:p-8 shadow-2xl">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 items-end">
 
               {/* Make & Model */}
               <div className="lg:col-span-4 space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Make */}
                   <div className="space-y-2">
                     <div className="relative">
@@ -158,7 +158,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
 
               {/* Price Range */}
               <div className="lg:col-span-6">
-                <label className="text-sm text-white font-semibold mb-3 block">Price range</label>
+                <label className="text-sm text-white font-semibold mb-3 block hidden lg:block">Price range</label>
                 <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     {/* Min */}
@@ -202,7 +202,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
                   {/* Selected Range Bar */}
                   <div className="bg-slate-800/50 rounded-lg p-2 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                      <div className="w-2 h-2 rounded-full bg-blue-50 animate-pulse"></div>
                       <span className="text-[10px] uppercase tracking-wider text-slate-400">Selected Range</span>
                     </div>
                     <span className="text-xs font-bold text-white">{formatRangeLabel(searchParams.minPrice, searchParams.maxPrice)}</span>
@@ -214,9 +214,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
               <div className="lg:col-span-2">
                 <button
                   onClick={() => onSearch(searchParams)}
-                  className="w-full h-[136px] bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-lg transition-all shadow-lg shadow-blue-600/20 flex flex-col items-center justify-center gap-2 group"
+                  className="w-full h-14 md:h-[136px] bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-lg transition-all shadow-lg shadow-blue-600/20 flex flex-row md:flex-col items-center justify-center gap-2 group"
                 >
-                  <Search className="w-8 h-8 group-hover:scale-110 transition-transform" />
+                  <Search className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
                   <span>Search</span>
                 </button>
               </div>
