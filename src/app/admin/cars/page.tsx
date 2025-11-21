@@ -14,13 +14,13 @@ export default async function AdminCarsPage() {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">Manage Cars</h1>
+                <h1 className="text-3xl font-bold">Автомобили</h1>
                 <Link
                     href="/admin/cars/new"
                     className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
                 >
                     <Plus className="h-4 w-4" />
-                    Add New Car
+                    Добавить авто
                 </Link>
             </div>
 
@@ -29,11 +29,11 @@ export default async function AdminCarsPage() {
                     <table className="w-full caption-bottom text-sm">
                         <thead className="[&_tr]:border-b">
                             <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Make & Model</th>
-                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Year</th>
-                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Price</th>
-                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Status</th>
-                                <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
+                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Марка и модель</th>
+                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Год</th>
+                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Цена</th>
+                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Статус</th>
+                                <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Действия</th>
                             </tr>
                         </thead>
                         <tbody className="[&_tr:last-child]:border-0">
@@ -69,7 +69,7 @@ export default async function AdminCarsPage() {
                             {(!cars || cars.length === 0) && (
                                 <tr>
                                     <td colSpan={5} className="p-4 text-center text-muted-foreground">
-                                        No cars found. Add your first car!
+                                        Машин пока нет. Добавьте первую запись!
                                     </td>
                                 </tr>
                             )}

@@ -3,21 +3,21 @@ import { Globe, File, Window } from 'lucide-react'
 const steps = [
   {
     icon: <Globe className="w-12 h-12 text-blue-500" />,
-    title: 'Explore Our Inventory',
+    title: 'Изучите каталог',
     description:
-      'Browse our extensive inventory of cars from all over the world. Use our advanced search filters to find the perfect car for you.',
+      'Просматривайте наш обширный каталог автомобилей со всего мира. Используйте фильтры, чтобы быстро подобрать идеальную модель.',
   },
   {
     icon: <File className="w-12 h-12 text-blue-500" />,
-    title: 'Submit an Application',
+    title: 'Отправьте заявку',
     description:
-      'Once you have found your dream car, submit an application through our secure online portal. We will review your application and get back to you within 24 hours.',
+      'Нашли подходящий автомобиль? Оставьте заявку в защищённой форме — мы свяжемся с вами в течение 24 часов.',
   },
   {
     icon: <Window className="w-12 h-12 text-blue-500" />,
-    title: 'Receive Your Car',
+    title: 'Получите автомобиль',
     description:
-      'After your application is approved, we will arrange for your car to be delivered to your doorstep. You can also choose to pick it up from one of our partner locations.',
+      'После одобрения организуем доставку до дверей или самовывоз из ближайшего партнёрского центра.',
   },
 ]
 
@@ -26,7 +26,7 @@ export function HowToBuy() {
     <section className="py-12">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-8">
-          How to Buy Your Dream Car
+          Как купить авто мечты
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           {steps.map((step, index) => (

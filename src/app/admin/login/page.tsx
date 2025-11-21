@@ -25,15 +25,15 @@ export default function AdminLoginPage() {
                     <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                         <Lock className="h-6 w-6 text-primary" />
                     </div>
-                    <h2 className="text-3xl font-bold tracking-tight">Admin Login</h2>
+                    <h2 className="text-3xl font-bold tracking-tight">Вход в админку</h2>
                     <p className="mt-2 text-sm text-muted-foreground">
-                        Enter your credentials to access the dashboard
+                        Введите данные, чтобы попасть в панель управления
                     </p>
                 </div>
 
                 <form action={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="mb-2 block text-sm font-medium">Username</label>
+                        <label className="mb-2 block text-sm font-medium">Логин</label>
                         <input
                             name="username"
                             type="text"
@@ -42,7 +42,7 @@ export default function AdminLoginPage() {
                         />
                     </div>
                     <div>
-                        <label className="mb-2 block text-sm font-medium">Password</label>
+                        <label className="mb-2 block text-sm font-medium">Пароль</label>
                         <input
                             name="password"
                             type="password"
@@ -61,7 +61,7 @@ export default function AdminLoginPage() {
                         type="submit"
                         className="w-full rounded-md bg-primary px-4 py-3 font-medium text-white hover:bg-primary/90"
                     >
-                        Sign In
+                        Войти
                     </button>
                 </form>
             </div>

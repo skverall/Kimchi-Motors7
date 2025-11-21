@@ -67,15 +67,15 @@ export default function InventoryPage({
                     <div className="rounded-lg border bg-card p-6">
                         <div className="mb-4 flex items-center gap-2 font-semibold">
                             <Filter className="h-5 w-5" />
-                            Filters
+                            Фильтры
                         </div>
 
                         <div className="space-y-4">
                             <div>
-                                <label className="mb-2 block text-sm font-medium">Make</label>
+                                <label className="mb-2 block text-sm font-medium">Марка</label>
                                 <input
                                     type="text"
-                                    placeholder="e.g. Toyota"
+                                    placeholder="Например, Toyota"
                                     className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                                     value={filters.make}
                                     onChange={(e) => setFilters({ ...filters, make: e.target.value })}
@@ -83,18 +83,18 @@ export default function InventoryPage({
                             </div>
 
                             <div>
-                                <label className="mb-2 block text-sm font-medium">Price Range</label>
+                                <label className="mb-2 block text-sm font-medium">Бюджет</label>
                                 <div className="flex gap-2">
                                     <input
                                         type="number"
-                                        placeholder="Min"
+                                        placeholder="Мин."
                                         className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                                         value={filters.minPrice}
                                         onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
                                     />
                                     <input
                                         type="number"
-                                        placeholder="Max"
+                                        placeholder="Макс."
                                         className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                                         value={filters.maxPrice}
                                         onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
@@ -108,8 +108,8 @@ export default function InventoryPage({
                 {/* Car Grid */}
                 <div className="flex-1">
                     <div className="mb-6">
-                        <h1 className="text-3xl font-bold">Inventory</h1>
-                        <p className="text-muted-foreground">{cars.length} vehicles found</p>
+                        <h1 className="text-3xl font-bold">Каталог</h1>
+                        <p className="text-muted-foreground">{cars.length} авто найдено</p>
                     </div>
 
                     {loading ? (
@@ -146,7 +146,7 @@ export default function InventoryPage({
                                                 <h3 className="font-semibold">{car.make} {car.model}</h3>
                                                 <p className="text-sm text-muted-foreground">{car.year} • {car.mileage.toLocaleString()} km</p>
                                             </div>
-                                            <span className="rounded bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                                        <span className="rounded bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
                                                 {car.status}
                                             </span>
                                         </div>
@@ -161,7 +161,7 @@ export default function InventoryPage({
 
                     {!loading && cars.length === 0 && (
                         <div className="py-20 text-center">
-                            <p className="text-lg text-muted-foreground">No vehicles found matching your criteria.</p>
+                            <p className="text-lg text-muted-foreground">Не найдено автомобилей по заданным параметрам.</p>
                         </div>
                     )}
                 </div>

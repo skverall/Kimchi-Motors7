@@ -6,20 +6,20 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 // Static FAQs for now, will fetch from DB later
 const FAQS = [
     {
-        question: 'Do you offer financing options?',
-        answer: 'Yes, we work with leading banks to provide competitive financing rates for our customers.',
+        question: 'Предлагаете ли вы варианты финансирования?',
+        answer: 'Да, мы сотрудничаем с ведущими банками и предлагаем конкурентные ставки по кредитам.',
     },
     {
-        question: 'Can I trade in my old car?',
-        answer: 'Absolutely! We offer fair market value for trade-ins. Bring your car for an evaluation.',
+        question: 'Можно ли сдать мой автомобиль в трейд-ин?',
+        answer: 'Конечно. Мы оцениваем автомобили по рыночной стоимости — привезите машину на диагностику.',
     },
     {
-        question: 'Do the cars come with a warranty?',
-        answer: 'Most of our vehicles come with a dealer warranty. Extended warranty packages are also available.',
+        question: 'Есть ли гарантия на автомобили?',
+        answer: 'Большинство авто идут с дилерской гарантией. Мы также предлагаем расширенные пакеты.',
     },
     {
-        question: 'How can I book a test drive?',
-        answer: 'You can book a test drive by contacting us via phone, WhatsApp, or visiting our showroom directly.',
+        question: 'Как записаться на тест-драйв?',
+        answer: 'Свяжитесь с нами по телефону, в WhatsApp или посетите шоурум, чтобы выбрать время.',
     },
 ]
 
@@ -30,9 +30,9 @@ export function FAQ() {
         <section className="py-20 bg-slate-50 dark:bg-slate-900/50">
             <div className="container mx-auto px-4 max-w-3xl">
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl font-bold tracking-tight">Frequently Asked Questions</h2>
+                    <h2 className="text-3xl font-bold tracking-tight">Часто задаваемые вопросы</h2>
                     <p className="mt-2 text-muted-foreground">
-                        Find answers to common questions about buying a car from us.
+                        Ответы на популярные вопросы о покупке автомобиля у нас.
                     </p>
                 </div>
 

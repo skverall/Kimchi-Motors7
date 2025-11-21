@@ -10,7 +10,7 @@ export function Footer() {
                     <div className="space-y-4">
                         <h3 className="text-2xl font-bold text-white">KIMCHI MOTORS</h3>
                         <p className="text-sm text-slate-400">
-                            Your trusted partner in finding the perfect vehicle. Premium cars, exceptional service, and a seamless buying experience.
+                            Ваш надёжный партнер в поиске идеального автомобиля. Премиальные авто, безупречный сервис и бесшовный опыт покупки.
                         </p>
                         <div className="flex space-x-4">
                             <Link href="#" className="hover:text-white"><Facebook className="h-5 w-5" /></Link>
@@ -21,19 +21,19 @@ export function Footer() {
 
                     {/* Quick Links */}
                     <div>
-                        <h4 className="mb-4 text-lg font-semibold text-white">Quick Links</h4>
+                        <h4 className="mb-4 text-lg font-semibold text-white">Полезные ссылки</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><Link href="/" className="hover:text-white">Home</Link></li>
-                            <li><Link href="/inventory" className="hover:text-white">Inventory</Link></li>
-                            <li><Link href="/about" className="hover:text-white">About Us</Link></li>
-                            <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
+                            <li><Link href="/" className="hover:text-white">Главная</Link></li>
+                            <li><Link href="/inventory" className="hover:text-white">Каталог</Link></li>
+                            <li><Link href="/about" className="hover:text-white">О нас</Link></li>
+                            <li><Link href="/contact" className="hover:text-white">Контакты</Link></li>
                             <li><Link href="/faq" className="hover:text-white">FAQ</Link></li>
                         </ul>
                     </div>
 
                     {/* Showroom Locations */}
                     <div>
-                        <h4 className="mb-4 text-lg font-semibold text-white">Our Showrooms</h4>
+                        <h4 className="mb-4 text-lg font-semibold text-white">Наши шоурумы</h4>
                         <ul className="space-y-4 text-sm">
                             <li className="flex items-start space-x-2">
                                 <MapPin className="h-5 w-5 shrink-0 text-primary" />
@@ -48,7 +48,7 @@ export function Footer() {
 
                     {/* Contact Info */}
                     <div>
-                        <h4 className="mb-4 text-lg font-semibold text-white">Contact Us</h4>
+                        <h4 className="mb-4 text-lg font-semibold text-white">Свяжитесь с нами</h4>
                         <ul className="space-y-4 text-sm">
                             <li className="flex items-center space-x-2">
                                 <Phone className="h-5 w-5 text-primary" />
@@ -63,7 +63,7 @@ export function Footer() {
                 </div>
 
                 <div className="mt-12 border-t border-slate-800 pt-8 text-center text-sm text-slate-500">
-                    <p>&copy; {new Date().getFullYear()} Kimchi Motors. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} Kimchi Motors. Все права защищены.</p>
                 </div>
             </div>
         </footer>

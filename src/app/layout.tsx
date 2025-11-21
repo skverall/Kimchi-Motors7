@@ -7,8 +7,8 @@ import { Footer } from "@/components/layout/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Kimchi Motors - Premium Auto Showroom",
-  description: "Find your dream car at Kimchi Motors. We offer a wide selection of premium vehicles.",
+  title: "Kimchi Motors — премиальный автосалон",
+  description: "Найдите автомобиль мечты в Kimchi Motors. Мы предлагаем широкий выбор премиальных моделей.",
 };
 
 export default function RootLayout({
@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body className={inter.className}>
         <div className="flex min-h-screen flex-col">
           <Header />

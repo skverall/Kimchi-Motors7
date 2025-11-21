@@ -13,44 +13,44 @@ export default async function AdminStepsPage() {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">Manage Buying Steps</h1>
+                <h1 className="text-3xl font-bold">Этапы покупки</h1>
             </div>
 
             <div className="grid gap-8 lg:grid-cols-2">
                 {/* Add Step Form */}
                 <div className="rounded-xl border bg-card p-6 h-fit">
-                    <h2 className="mb-4 text-xl font-semibold">Add New Step</h2>
+                    <h2 className="mb-4 text-xl font-semibold">Добавить этап</h2>
                     <form action={async (formData) => { 'use server'; await createStep(formData) }} className="space-y-4">
                         <div>
-                            <label className="mb-2 block text-sm font-medium">Title</label>
+                            <label className="mb-2 block text-sm font-medium">Заголовок</label>
                             <input
                                 name="title"
                                 required
                                 className="w-full rounded-md border bg-background px-3 py-2"
-                                placeholder="e.g. Choose your car"
+                                placeholder="Например: Выберите авто"
                             />
                         </div>
                         <div>
-                            <label className="mb-2 block text-sm font-medium">Description</label>
+                            <label className="mb-2 block text-sm font-medium">Описание</label>
                             <textarea
                                 name="description"
                                 required
                                 className="h-24 w-full rounded-md border bg-background px-3 py-2"
-                                placeholder="Step description..."
+                                placeholder="Описание этапа..."
                             />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="mb-2 block text-sm font-medium">Icon Name (Lucide)</label>
+                                <label className="mb-2 block text-sm font-medium">Имя иконки (Lucide)</label>
                                 <input
                                     name="icon"
                                     required
                                     className="w-full rounded-md border bg-background px-3 py-2"
-                                    placeholder="e.g. Search"
+                                    placeholder="Например: Search"
                                 />
                             </div>
                             <div>
-                                <label className="mb-2 block text-sm font-medium">Order</label>
+                                <label className="mb-2 block text-sm font-medium">Порядок</label>
                                 <input
                                     name="step_order"
                                     type="number"
@@ -65,7 +65,7 @@ export default async function AdminStepsPage() {
                             className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
                         >
                             <Plus className="h-4 w-4" />
-                            Add Step
+                            Добавить
                         </button>
                     </form>
                 </div>
@@ -96,7 +96,7 @@ export default async function AdminStepsPage() {
                     ))}
                     {(!steps || steps.length === 0) && (
                         <div className="p-8 text-center text-muted-foreground border rounded-lg bg-card">
-                            No steps found.
+                            Этапы не найдены.
                         </div>
                     )}
                 </div>

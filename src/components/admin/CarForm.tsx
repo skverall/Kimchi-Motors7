@@ -21,7 +21,7 @@ export function CarForm({ car }: { car?: any }) {
         <form action={action} className="space-y-8 max-w-2xl">
             <div className="grid gap-6 sm:grid-cols-2">
                 <div>
-                    <label className="mb-2 block text-sm font-medium">Make</label>
+                    <label className="mb-2 block text-sm font-medium">Марка</label>
                     <input
                         name="make"
                         defaultValue={car?.make}
@@ -31,7 +31,7 @@ export function CarForm({ car }: { car?: any }) {
                     />
                 </div>
                 <div>
-                    <label className="mb-2 block text-sm font-medium">Model</label>
+                    <label className="mb-2 block text-sm font-medium">Модель</label>
                     <input
                         name="model"
                         defaultValue={car?.model}
@@ -41,7 +41,7 @@ export function CarForm({ car }: { car?: any }) {
                     />
                 </div>
                 <div>
-                    <label className="mb-2 block text-sm font-medium">Year</label>
+                    <label className="mb-2 block text-sm font-medium">Год</label>
                     <input
                         name="year"
                         type="number"
@@ -52,7 +52,7 @@ export function CarForm({ car }: { car?: any }) {
                     />
                 </div>
                 <div>
-                    <label className="mb-2 block text-sm font-medium">Price ($)</label>
+                    <label className="mb-2 block text-sm font-medium">Цена ($)</label>
                     <input
                         name="price"
                         type="number"
@@ -63,7 +63,7 @@ export function CarForm({ car }: { car?: any }) {
                     />
                 </div>
                 <div>
-                    <label className="mb-2 block text-sm font-medium">Mileage (km)</label>
+                    <label className="mb-2 block text-sm font-medium">Пробег (км)</label>
                     <input
                         name="mileage"
                         type="number"
@@ -74,32 +74,32 @@ export function CarForm({ car }: { car?: any }) {
                     />
                 </div>
                 <div>
-                    <label className="mb-2 block text-sm font-medium">Condition</label>
+                    <label className="mb-2 block text-sm font-medium">Состояние</label>
                     <select
                         name="condition"
                         defaultValue={car?.condition || 'Used'}
                         className="w-full rounded-md border bg-background px-3 py-2"
                     >
-                        <option value="New">New</option>
-                        <option value="Used">Used</option>
+                        <option value="New">Новый</option>
+                        <option value="Used">С пробегом</option>
                     </select>
                 </div>
                 <div>
-                    <label className="mb-2 block text-sm font-medium">Status</label>
+                    <label className="mb-2 block text-sm font-medium">Статус</label>
                     <select
                         name="status"
                         defaultValue={car?.status || 'available'}
                         className="w-full rounded-md border bg-background px-3 py-2"
                     >
-                        <option value="available">Available</option>
-                        <option value="reserved">Reserved</option>
-                        <option value="sold">Sold</option>
+                        <option value="available">В наличии</option>
+                        <option value="reserved">Забронирован</option>
+                        <option value="sold">Продан</option>
                     </select>
                 </div>
             </div>
 
             <div>
-                <label className="mb-2 block text-sm font-medium">Image URLs (comma separated)</label>
+                <label className="mb-2 block text-sm font-medium">Ссылки на изображения (через запятую)</label>
                 <textarea
                     name="images"
                     defaultValue={car?.images?.join(', ')}
@@ -107,17 +107,17 @@ export function CarForm({ car }: { car?: any }) {
                     placeholder="https://example.com/car1.jpg, https://example.com/car2.jpg"
                 />
                 <p className="mt-1 text-xs text-muted-foreground">
-                    For this demo, please paste direct image URLs. In a full version, we would implement file upload.
+                    Для демо используйте прямые ссылки на фото. В полноценной версии добавим загрузку файлов.
                 </p>
             </div>
 
             <div>
-                <label className="mb-2 block text-sm font-medium">Description</label>
+                <label className="mb-2 block text-sm font-medium">Описание</label>
                 <textarea
                     name="description"
                     defaultValue={car?.description}
                     className="h-32 w-full rounded-md border bg-background px-3 py-2"
-                    placeholder="Enter car description..."
+                    placeholder="Опишите автомобиль..."
                 />
             </div>
 
@@ -130,7 +130,7 @@ export function CarForm({ car }: { car?: any }) {
                     className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                 />
                 <label htmlFor="is_featured" className="text-sm font-medium">
-                    Mark as Featured (Most Wanted)
+                    Отметить как «Избранный» (Most Wanted)
                 </label>
             </div>
 
@@ -139,13 +139,13 @@ export function CarForm({ car }: { car?: any }) {
                     href="/admin/cars"
                     className="flex-1 rounded-md border px-4 py-2 text-center text-sm font-medium hover:bg-muted"
                 >
-                    Cancel
+                    Отмена
                 </Link>
                 <button
                     type="submit"
                     className="flex-1 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
                 >
-                    {isEdit ? 'Update Car' : 'Create Car'}
+                    {isEdit ? 'Обновить авто' : 'Добавить авто'}
                 </button>
             </div>
         </form>

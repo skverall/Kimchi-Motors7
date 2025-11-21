@@ -25,29 +25,29 @@ export default async function AdminLayout({
                 <nav className="p-4 space-y-2">
                     <Link href="/admin/dashboard" className="flex items-center gap-3 rounded-md px-4 py-3 hover:bg-slate-800">
                         <LayoutDashboard className="h-5 w-5" />
-                        Dashboard
+                        Панель
                     </Link>
                     <Link href="/admin/cars" className="flex items-center gap-3 rounded-md px-4 py-3 hover:bg-slate-800">
                         <Car className="h-5 w-5" />
-                        Manage Cars
+                        Автомобили
                     </Link>
                     <Link href="/admin/brands" className="flex items-center gap-3 rounded-md px-4 py-3 hover:bg-slate-800">
                         <Tag className="h-5 w-5" />
-                        Manage Brands
+                        Бренды
                     </Link>
                     <Link href="/admin/faqs" className="flex items-center gap-3 rounded-md px-4 py-3 hover:bg-slate-800">
                         <HelpCircle className="h-5 w-5" />
-                        Manage FAQs
+                        FAQ
                     </Link>
                     <Link href="/admin/steps" className="flex items-center gap-3 rounded-md px-4 py-3 hover:bg-slate-800">
                         <HelpCircle className="h-5 w-5" />
-                        Manage Steps
+                        Этапы
                     </Link>
 
                     <form action={async () => { 'use server'; await logout() }} className="mt-auto pt-8">
                         <button className="flex w-full items-center gap-3 rounded-md px-4 py-3 text-red-400 hover:bg-slate-800">
                             <LogOut className="h-5 w-5" />
-                            Logout
+                            Выйти
                         </button>
                     </form>
                 </nav>

@@ -14,25 +14,25 @@ export default async function AdminBrandsPage() {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">Manage Brands</h1>
+                <h1 className="text-3xl font-bold">Бренды</h1>
             </div>
 
             <div className="grid gap-8 lg:grid-cols-2">
                 {/* Add Brand Form */}
                 <div className="rounded-xl border bg-card p-6 h-fit">
-                    <h2 className="mb-4 text-xl font-semibold">Add New Brand</h2>
+                    <h2 className="mb-4 text-xl font-semibold">Добавить бренд</h2>
                     <form action={async (formData) => { 'use server'; await createBrand(formData) }} className="space-y-4">
                         <div>
-                            <label className="mb-2 block text-sm font-medium">Brand Name</label>
+                            <label className="mb-2 block text-sm font-medium">Название бренда</label>
                             <input
                                 name="name"
                                 required
                                 className="w-full rounded-md border bg-background px-3 py-2"
-                                placeholder="e.g. Toyota"
+                                placeholder="Например, Toyota"
                             />
                         </div>
                         <div>
-                            <label className="mb-2 block text-sm font-medium">Logo URL</label>
+                            <label className="mb-2 block text-sm font-medium">Ссылка на логотип</label>
                             <input
                                 name="logo_url"
                                 className="w-full rounded-md border bg-background px-3 py-2"
@@ -44,7 +44,7 @@ export default async function AdminBrandsPage() {
                             className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
                         >
                             <Plus className="h-4 w-4" />
-                            Add Brand
+                            Добавить бренд
                         </button>
                     </form>
                 </div>
@@ -55,8 +55,8 @@ export default async function AdminBrandsPage() {
                         <table className="w-full caption-bottom text-sm">
                             <thead className="[&_tr]:border-b">
                                 <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Name</th>
-                                    <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
+                                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Название</th>
+                                    <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Действия</th>
                                 </tr>
                             </thead>
                             <tbody className="[&_tr:last-child]:border-0">
@@ -76,7 +76,7 @@ export default async function AdminBrandsPage() {
                                 {(!brands || brands.length === 0) && (
                                     <tr>
                                         <td colSpan={2} className="p-4 text-center text-muted-foreground">
-                                            No brands found.
+                                            Бренды не найдены.
                                         </td>
                                     </tr>
                                 )}

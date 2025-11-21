@@ -30,12 +30,12 @@ export function Hero() {
         </div>
       </div>
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center">
-        <h1 className="text-4xl md:text-6xl font-bold">Find Your Dream Car</h1>
+        <h1 className="text-4xl md:text-6xl font-bold">Найдите автомобиль мечты</h1>
         <p className="mt-4 text-lg md:text-2xl">
-          The best cars from South Korea at the best prices
+          Лучшие автомобили из Южной Кореи по лучшим ценам
         </p>
         <button className="mt-8 px-8 py-3 bg-white text-black font-semibold rounded-lg">
-          Explore Inventory
+          Смотреть каталог
         </button>
       </div>
     </section>
