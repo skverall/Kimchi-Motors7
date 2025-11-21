@@ -34,7 +34,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
   });
 
   return (
-    <div className="relative min-h-[90vh] flex items-center overflow-hidden bg-[#0D0F12] pt-20">
+    <div className="relative min-h-[90vh] flex items-center overflow-hidden bg-[#0D0F12] pt-0">
       {/* Ambient Glow Effects */}
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#1A4AFF] opacity-10 blur-[150px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-[#1A4AFF] opacity-5 blur-[200px] pointer-events-none" />

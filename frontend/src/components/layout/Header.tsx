@@ -33,7 +33,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
             />
             <div className="flex items-center text-lg md:text-2xl font-black tracking-tighter uppercase">
               <span className="text-slate-900">KIMCHI</span>
-              <span className="text-blue-600">MOTORS</span>
+              <span className="text-[#1A4AFF]">MOTORS</span>
             </div>
           </Link>
         </div>
@@ -49,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
               key={item.id}
               onClick={() => onNavigate(item.id as PageName)}
               className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${page === item.id
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-600/25 scale-105"
+                ? "bg-[#1A4AFF] text-white shadow-lg shadow-[#1A4AFF]/25 scale-105"
                 : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 hover:scale-105"
                 }`}
             >
@@ -59,10 +59,11 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
         </nav>
 
         <div className="flex items-center gap-3">
-          <button className="hidden md:inline-flex items-center gap-2 text-xs font-semibold text-slate-700 border border-slate-200 rounded-full px-4 py-2 hover:border-blue-200 hover:text-blue-600 transition">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Available 24/7</span>
-          </button>
+          <div className="hidden md:flex items-center gap-3 px-4 py-2 rounded-full bg-slate-50 border border-slate-100">
+            <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+              Dubai • London • Seoul
+            </span>
+          </div>
 
           <button
             onClick={() => onNavigate("admin")}
