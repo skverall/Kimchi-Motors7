@@ -106,7 +106,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
                 <select
                   className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl px-4 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm"
                   value={searchParams.make}
-                  onChange={(e) => setSearchParams({ ...searchParams, make: e.target.value })}
+                  onChange={(e) => setSearchParams({ ...searchParams, make: e.target.value, model: "" })}
                 >
                   <option value="" className="text-slate-400">Make</option>
                   {BRANDS.map((b) => (
@@ -125,14 +125,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
               {/* Model */}
               <div className="md:col-span-3 relative">
                 <select
-                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl px-4 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm"
+                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl px-4 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   value={searchParams.model}
                   onChange={(e) => setSearchParams({ ...searchParams, model: e.target.value })}
+                  disabled={!searchParams.make}
                 >
                   <option value="" className="text-slate-400">Model</option>
-                  <option value="911" className="text-slate-900">911</option>
-                  <option value="Cullinan" className="text-slate-900">Cullinan</option>
-                  <option value="Huracan" className="text-slate-900">Huracan</option>
+                  {searchParams.make && BRANDS.find(b => b.name === searchParams.make)?.models.map((model) => (
+                    <option key={model} value={model} className="text-slate-900">
+                      {model}
+                    </option>
+                  ))}
                 </select>
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
