@@ -16,6 +16,8 @@ export interface CarItem {
   description?: string;
   featured?: boolean;
   mostWanted?: boolean;
+  // Local-only field used to force image reloads in the UI when a photo changes
+  imageVersion?: number;
 }
 
 interface CarCardProps {
@@ -30,7 +32,7 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => (
   >
     <div className="relative h-48 overflow-hidden">
       <img
-        src={car.image}
+        src={car.imageVersion && car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${car.imageVersion}` : car.image || ""}
         alt={car.model}
         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
       />

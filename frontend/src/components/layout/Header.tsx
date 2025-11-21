@@ -4,9 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, Settings } from "lucide-react";
 
+export type PageName = "home" | "listing" | "detail" | "admin" | "admin-dashboard" | "contact";
+
 interface HeaderProps {
-  page: string;
-  onNavigate: (page: string) => void;
+  page: PageName;
+  onNavigate: (page: PageName) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {

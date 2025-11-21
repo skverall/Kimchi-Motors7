@@ -38,7 +38,7 @@ export const MostWantedMarquee: React.FC<MostWantedMarqueeProps> = ({
             >
               <div className="relative w-20 h-14 rounded-xl overflow-hidden bg-slate-800 flex-shrink-0">
                 <img
-                  src={car.image}
+                  src={car.imageVersion && car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${car.imageVersion}` : car.image || ""}
                   alt={car.model}
                   className="w-full h-full object-cover"
                 />

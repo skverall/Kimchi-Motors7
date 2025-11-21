@@ -180,7 +180,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <div className="flex items-center gap-4">
                         <div className="w-16 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0">
                           <img
-                            src={car.image ? `${car.image}?t=${Date.now()}` : ""}
+                            src={car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${Date.now()}` : ""}
                             alt={car.model}
                             className="w-full h-full object-cover"
                           />

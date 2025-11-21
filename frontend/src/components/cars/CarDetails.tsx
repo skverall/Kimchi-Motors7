@@ -26,7 +26,11 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
           <div className="aspect-video rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
-            <img src={car.image} alt={car.model} className="w-full h-full object-cover" />
+            <img
+              src={car.imageVersion && car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${car.imageVersion}` : car.image || ""}
+              alt={car.model}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="grid grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => (
@@ -35,7 +39,7 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => (
                 className="aspect-video rounded-lg overflow-hidden bg-gray-100 cursor-pointer opacity-70 hover:opacity-100 transition"
               >
                 <img
-                  src={car.image}
+                  src={car.imageVersion && car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${car.imageVersion}` : car.image || ""}
                   className="w-full h-full object-cover grayscale hover:grayscale-0 transition"
                   alt={car.model}
                 />

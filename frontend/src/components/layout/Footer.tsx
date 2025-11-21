@@ -2,9 +2,11 @@
 
 import { MapPin, Phone, MessageCircle, ArrowRight } from "lucide-react";
 
+import type { PageName } from "./Header";
+
 interface FooterProps {
   onOpenLocation: () => void;
-  onNavigate: (page: string) => void;
+  onNavigate: (page: PageName) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onNavigate }) => (

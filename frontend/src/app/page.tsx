@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, Car } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import type { PageName } from "@/components/layout/Header";
 import HeroSection, { SearchParams } from "@/components/sections/HeroSection";
 import { CarCard } from "@/components/cars/CarCard";
 import { CarDetails } from "@/components/cars/CarDetails";
@@ -21,7 +22,7 @@ import type { CarItem } from "@/components/cars/CarCard";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function Home() {
-  const [page, setPage] = useState<"home" | "listing" | "detail" | "admin" | "admin-dashboard">("home");
+  const [page, setPage] = useState<PageName>("home");
   const [cars, setCars] = useState<CarItem[]>([]);
   const [filteredCars, setFilteredCars] = useState<CarItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +33,7 @@ export default function Home() {
     const params = new URLSearchParams(window.location.search);
     const view = params.get("view");
     if (view && ["home", "listing", "detail", "admin", "admin-dashboard"].includes(view)) {
-      setPage(view as any);
+      setPage(view as typeof page);
     }
   }, []);
 
@@ -94,7 +95,7 @@ export default function Home() {
   const [selectedCar, setSelectedCar] = useState<CarItem | null>(null);
   const [isLocationModalOpen, setLocationModalOpen] = useState(false);
 
-  const handleNavigate = (target: string) => {
+  const handleNavigate = (target: PageName) => {
     if (target === "contact") {
       setLocationModalOpen(true);
       return;
