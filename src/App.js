@@ -54,17 +54,17 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading Kimchi Motors...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-kimchi-red mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading Kimchi Motors...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900">
+    <div className="min-h-screen bg-black font-sans text-white">
       <Header onNavigate={handleNavigate} activePage={location.pathname} />
 
       <Routes>
