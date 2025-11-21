@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import type { CarItem } from "@/components/cars/CarCard";
-
-import { Plus, Trash2, LogOut, Star, Zap, X } from "lucide-react";
+import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info } from "lucide-react";
 
 interface AdminDashboardProps {
   cars: CarItem[];
@@ -13,6 +12,19 @@ interface AdminDashboardProps {
   onLogout: () => void;
 }
 
+// Simple Tooltip Component
+const Tooltip = ({ children, content }: { children: React.ReactNode; content: string }) => (
+  <div className="group relative flex items-center justify-center">
+    {children}
+    <div className="absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center whitespace-nowrap z-50">
+      <div className="bg-slate-900 text-white text-xs py-1.5 px-3 rounded-lg shadow-xl">
+        {content}
+      </div>
+      <div className="w-2 h-2 -mt-1 rotate-45 bg-slate-900"></div>
+    </div>
+  </div>
+);
+
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   cars,
   onAdd,
@@ -20,8 +32,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onUpdate,
   onLogout,
 }) => {
-  const [isAddModalOpen, setAddModalOpen] = useState(false);
-  const [newCar, setNewCar] = useState<Partial<Omit<CarItem, "id">>>({
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  const initialFormState = {
     make: "",
     model: "",
     year: new Date().getFullYear(),
@@ -34,27 +48,48 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     featured: false,
     mostWanted: false,
     description: "",
-  });
+  };
+
+  const [formData, setFormData] = useState<Partial<Omit<CarItem, "id">>>(initialFormState);
+
+  const handleOpenAdd = () => {
+    setEditingId(null);
+    setFormData(initialFormState);
+    setModalOpen(true);
+  };
+
+  const handleOpenEdit = (car: CarItem) => {
+    setEditingId(car.id || null); // Ensure we have an ID
+    setFormData({
+      make: car.make,
+      model: car.model,
+      year: car.year,
+      price: car.price,
+      mileage: car.mileage,
+      fuel: car.fuel,
+      transmission: car.transmission,
+      image: car.image,
+      type: car.type,
+      featured: car.featured,
+      mostWanted: car.mostWanted,
+      description: car.description,
+    });
+    setModalOpen(true);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newCar.make && newCar.model && newCar.price) {
-      onAdd(newCar as Omit<CarItem, "id">);
-      setAddModalOpen(false);
-      setNewCar({
-        make: "",
-        model: "",
-        year: new Date().getFullYear(),
-        price: 0,
-        mileage: 0,
-        fuel: "Petrol",
-        transmission: "Automatic",
-        image: "",
-        type: "Sedan",
-        featured: false,
-        mostWanted: false,
-        description: "",
-      });
+    if (formData.make && formData.model && formData.price) {
+      if (editingId) {
+        // Update existing
+        onUpdate(editingId, formData);
+      } else {
+        // Add new
+        onAdd(formData as Omit<CarItem, "id">);
+      }
+      setModalOpen(false);
+      setFormData(initialFormState);
+      setEditingId(null);
     }
   };
 
@@ -70,19 +105,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <span className="font-bold text-lg">Admin Dashboard</span>
           </div>
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => setAddModalOpen(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" /> Add Vehicle
-            </button>
-            <button
-              onClick={onLogout}
-              className="text-slate-500 hover:text-red-600 transition"
-              title="Logout"
-            >
-              <LogOut className="w-5 h-5" />
-            </button>
+            <Tooltip content="Add a new vehicle to inventory">
+              <button
+                onClick={handleOpenAdd}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" /> Add Vehicle
+              </button>
+            </Tooltip>
+            <Tooltip content="Logout">
+              <button
+                onClick={onLogout}
+                className="text-slate-500 hover:text-red-600 transition"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -127,40 +165,53 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={() =>
-                            onUpdate(car.id || `${idx}`, { featured: !car.featured })
-                          }
-                          className={`p-1.5 rounded-md transition ${car.featured
-                              ? "bg-yellow-100 text-yellow-600"
-                              : "text-slate-300 hover:bg-slate-100"
-                            }`}
-                          title="Toggle Featured"
-                        >
-                          <Star className="w-4 h-4 fill-current" />
-                        </button>
-                        <button
-                          onClick={() =>
-                            onUpdate(car.id || `${idx}`, { mostWanted: !car.mostWanted })
-                          }
-                          className={`p-1.5 rounded-md transition ${car.mostWanted
-                              ? "bg-purple-100 text-purple-600"
-                              : "text-slate-300 hover:bg-slate-100"
-                            }`}
-                          title="Toggle Most Wanted"
-                        >
-                          <Zap className="w-4 h-4 fill-current" />
-                        </button>
+                        <Tooltip content={car.featured ? "Remove from Featured" : "Add to Featured"}>
+                          <button
+                            onClick={() =>
+                              onUpdate(car.id || `${idx}`, { featured: !car.featured })
+                            }
+                            className={`p-1.5 rounded-md transition ${car.featured
+                                ? "bg-yellow-100 text-yellow-600"
+                                : "text-slate-300 hover:bg-slate-100"
+                              }`}
+                          >
+                            <Star className="w-4 h-4 fill-current" />
+                          </button>
+                        </Tooltip>
+                        <Tooltip content={car.mostWanted ? "Remove from Most Wanted" : "Add to Most Wanted"}>
+                          <button
+                            onClick={() =>
+                              onUpdate(car.id || `${idx}`, { mostWanted: !car.mostWanted })
+                            }
+                            className={`p-1.5 rounded-md transition ${car.mostWanted
+                                ? "bg-purple-100 text-purple-600"
+                                : "text-slate-300 hover:bg-slate-100"
+                              }`}
+                          >
+                            <Zap className="w-4 h-4 fill-current" />
+                          </button>
+                        </Tooltip>
                       </div>
                     </td>
                     <td className="p-4 text-right">
-                      <button
-                        onClick={() => onDelete(car.id || `${idx}`)}
-                        className="text-slate-400 hover:text-red-600 transition p-2 hover:bg-red-50 rounded-lg"
-                        title="Delete Vehicle"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        <Tooltip content="Edit Vehicle Details">
+                          <button
+                            onClick={() => handleOpenEdit(car)}
+                            className="text-slate-400 hover:text-blue-600 transition p-2 hover:bg-blue-50 rounded-lg"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                        </Tooltip>
+                        <Tooltip content="Delete Vehicle">
+                          <button
+                            onClick={() => onDelete(car.id || `${idx}`)}
+                            className="text-slate-400 hover:text-red-600 transition p-2 hover:bg-red-50 rounded-lg"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </Tooltip>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -170,14 +221,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       </div>
 
-      {/* Add Modal */}
-      {isAddModalOpen && (
+      {/* Add/Edit Modal */}
+      {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
-              <h2 className="text-xl font-bold">Add New Vehicle</h2>
+              <h2 className="text-xl font-bold">
+                {editingId ? "Edit Vehicle" : "Add New Vehicle"}
+              </h2>
               <button
-                onClick={() => setAddModalOpen(false)}
+                onClick={() => setModalOpen(false)}
                 className="p-2 hover:bg-slate-100 rounded-full transition"
               >
                 <X className="w-5 h-5" />
@@ -192,9 +245,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <input
                     required
                     className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                    value={newCar.make}
+                    value={formData.make}
                     onChange={(e) =>
-                      setNewCar({ ...newCar, make: e.target.value })
+                      setFormData({ ...formData, make: e.target.value })
                     }
                   />
                 </div>
@@ -205,9 +258,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <input
                     required
                     className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                    value={newCar.model}
+                    value={formData.model}
                     onChange={(e) =>
-                      setNewCar({ ...newCar, model: e.target.value })
+                      setFormData({ ...formData, model: e.target.value })
                     }
                   />
                 </div>
@@ -219,9 +272,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     type="number"
                     required
                     className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                    value={newCar.year}
+                    value={formData.year}
                     onChange={(e) =>
-                      setNewCar({ ...newCar, year: parseInt(e.target.value) })
+                      setFormData({ ...formData, year: parseInt(e.target.value) })
                     }
                   />
                 </div>
@@ -233,9 +286,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     type="number"
                     required
                     className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                    value={newCar.price}
+                    value={formData.price}
                     onChange={(e) =>
-                      setNewCar({ ...newCar, price: parseInt(e.target.value) })
+                      setFormData({ ...formData, price: parseInt(e.target.value) })
                     }
                   />
                 </div>
@@ -247,9 +300,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     type="number"
                     required
                     className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                    value={newCar.mileage}
+                    value={formData.mileage}
                     onChange={(e) =>
-                      setNewCar({ ...newCar, mileage: parseInt(e.target.value) })
+                      setFormData({ ...formData, mileage: parseInt(e.target.value) })
                     }
                   />
                 </div>
@@ -260,9 +313,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <input
                     required
                     className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                    value={newCar.image}
+                    value={formData.image}
                     onChange={(e) =>
-                      setNewCar({ ...newCar, image: e.target.value })
+                      setFormData({ ...formData, image: e.target.value })
                     }
                     placeholder="https://..."
                   />
@@ -274,9 +327,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </label>
                 <textarea
                   className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none h-24 resize-none"
-                  value={newCar.description}
+                  value={formData.description}
                   onChange={(e) =>
-                    setNewCar({ ...newCar, description: e.target.value })
+                    setFormData({ ...formData, description: e.target.value })
                   }
                 />
               </div>
@@ -284,9 +337,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={newCar.featured}
+                    checked={formData.featured}
                     onChange={(e) =>
-                      setNewCar({ ...newCar, featured: e.target.checked })
+                      setFormData({ ...formData, featured: e.target.checked })
                     }
                     className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
                   />
@@ -295,9 +348,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={newCar.mostWanted}
+                    checked={formData.mostWanted}
                     onChange={(e) =>
-                      setNewCar({ ...newCar, mostWanted: e.target.checked })
+                      setFormData({ ...formData, mostWanted: e.target.checked })
                     }
                     className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
                   />
@@ -307,7 +360,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="pt-4 flex justify-end gap-3">
                 <button
                   type="button"
-                  onClick={() => setAddModalOpen(false)}
+                  onClick={() => setModalOpen(false)}
                   className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition"
                 >
                   Cancel
@@ -316,7 +369,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   type="submit"
                   className="px-6 py-2.5 rounded-xl text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 transition shadow-lg shadow-blue-100"
                 >
-                  Add Vehicle
+                  {editingId ? "Save Changes" : "Add Vehicle"}
                 </button>
               </div>
             </form>
