@@ -51,6 +51,39 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   const [formData, setFormData] = useState<Partial<Omit<CarItem, "id">>>(initialFormState);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const handleImageUpload = async (file: File) => {
+    setUploadError(null);
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || "Upload failed");
+      }
+
+      const data = await res.json();
+      if (data?.url) {
+        setFormData((prev) => ({ ...prev, image: data.url }));
+      }
+    } catch (error) {
+      console.error("Image upload error", error);
+      setUploadError("Failed to upload image. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+
 
   const handleOpenAdd = () => {
     setEditingId(null);
@@ -107,6 +140,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="flex items-center gap-4">
             <Tooltip content="Add a new vehicle to inventory">
               <button
+                type="button"
                 onClick={handleOpenAdd}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition flex items-center gap-2"
               >
@@ -115,6 +149,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </Tooltip>
             <Tooltip content="Logout">
               <button
+                type="button"
                 onClick={onLogout}
                 className="text-slate-500 hover:text-red-600 transition"
               >
@@ -167,6 +202,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <div className="flex items-center gap-2">
                         <Tooltip content={car.featured ? "Remove from Featured" : "Add to Featured"}>
                           <button
+                            type="button"
                             onClick={() =>
                               onUpdate(car.id || `${idx}`, { featured: !car.featured })
                             }
@@ -180,6 +216,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </Tooltip>
                         <Tooltip content={car.mostWanted ? "Remove from Most Wanted" : "Add to Most Wanted"}>
                           <button
+                            type="button"
                             onClick={() =>
                               onUpdate(car.id || `${idx}`, { mostWanted: !car.mostWanted })
                             }
@@ -197,16 +234,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <div className="flex items-center justify-end gap-2">
                         <Tooltip content="Edit Vehicle Details">
                           <button
+                            type="button"
                             onClick={() => handleOpenEdit(car)}
                             className="text-slate-400 hover:text-blue-600 transition p-2 hover:bg-blue-50 rounded-lg"
+                            aria-label="Edit vehicle details"
                           >
                             <Pencil className="w-4 h-4" />
                           </button>
                         </Tooltip>
                         <Tooltip content="Delete Vehicle">
                           <button
+                            type="button"
                             onClick={() => onDelete(car.id || `${idx}`)}
                             className="text-slate-400 hover:text-red-600 transition p-2 hover:bg-red-50 rounded-lg"
+                            aria-label="Delete vehicle"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -230,8 +271,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 {editingId ? "Edit Vehicle" : "Add New Vehicle"}
               </h2>
               <button
+                type="button"
                 onClick={() => setModalOpen(false)}
                 className="p-2 hover:bg-slate-100 rounded-full transition"
+                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>
