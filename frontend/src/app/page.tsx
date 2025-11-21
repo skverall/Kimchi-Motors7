@@ -63,7 +63,10 @@ export default function Home() {
           isOpen={isLocationModalOpen}
           onClose={() => setLocationModalOpen(false)}
         />
-        <Footer onOpenLocation={() => setLocationModalOpen(true)} />
+        <Footer
+          onOpenLocation={() => setLocationModalOpen(true)}
+          onNavigate={handleNavigate}
+        />
       </>
     );
   }
@@ -193,7 +196,10 @@ export default function Home() {
         isOpen={isLocationModalOpen}
         onClose={() => setLocationModalOpen(false)}
       />
-      <Footer onOpenLocation={() => setLocationModalOpen(true)} />
+      <Footer
+        onOpenLocation={() => setLocationModalOpen(true)}
+        onNavigate={handleNavigate}
+      />
     </div>
   );
 }

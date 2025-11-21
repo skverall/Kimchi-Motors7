@@ -86,18 +86,20 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => (
             </div>
 
             <div className="flex flex-col gap-3">
-              <button
-                type="button"
+              <a
+                href="https://wa.me/97141234567"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-green-100"
               >
                 <MessageCircle className="w-5 h-5" /> WhatsApp Inquiry
-              </button>
-              <button
-                type="button"
+              </a>
+              <a
+                href="tel:+97141234567"
                 className="w-full bg-slate-900 hover:bg-slate-800 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-slate-200"
               >
                 <Phone className="w-5 h-5" /> Call Showroom
-              </button>
+              </a>
             </div>
           </div>
         </div>

@@ -32,22 +32,30 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-700">
           <button
             onClick={() => onNavigate("home")}
-            className={`hover:text-blue-600 transition ${
-              page === "home" ? "text-blue-600" : ""
-            }`}
+            className={`hover:text-blue-600 transition ${page === "home" ? "text-blue-600" : ""
+              }`}
           >
             Home
           </button>
           <button
             onClick={() => onNavigate("listing")}
-            className={`hover:text-blue-600 transition ${
-              page === "listing" ? "text-blue-600" : ""
-            }`}
+            className={`hover:text-blue-600 transition ${page === "listing" ? "text-blue-600" : ""
+              }`}
           >
             Inventory
           </button>
-          <button className="hover:text-blue-600 transition">Showrooms</button>
-          <button className="hover:text-blue-600 transition">Contact</button>
+          <button
+            onClick={() => onNavigate("contact")}
+            className="hover:text-blue-600 transition"
+          >
+            Showrooms
+          </button>
+          <button
+            onClick={() => onNavigate("contact")}
+            className="hover:text-blue-600 transition"
+          >
+            Contact
+          </button>
         </nav>
 
         <div className="flex items-center gap-3">
@@ -93,7 +101,13 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
           >
             Inventory
           </button>
-          <button className="block w-full text-left p-2 rounded hover:bg-slate-50 text-sm">
+          <button
+            onClick={() => {
+              onNavigate("contact");
+              setIsMenuOpen(false);
+            }}
+            className="block w-full text-left p-2 rounded hover:bg-slate-50 text-sm"
+          >
             Showrooms
           </button>
           <button

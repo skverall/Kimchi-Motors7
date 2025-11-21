@@ -4,9 +4,10 @@ import { MapPin, Phone, MessageCircle, ArrowRight } from "lucide-react";
 
 interface FooterProps {
   onOpenLocation: () => void;
+  onNavigate: (page: string) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenLocation }) => (
+export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onNavigate }) => (
   <footer className="bg-slate-900 text-white pt-16 pb-8">
     <div className="container mx-auto px-4">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
@@ -39,16 +40,28 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation }) => (
         <div>
           <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
           <ul className="space-y-3 text-slate-400 text-sm">
-            <li className="hover:text-white cursor-pointer transition">
+            <li
+              className="hover:text-white cursor-pointer transition"
+              onClick={() => onNavigate("listing")}
+            >
               Latest Inventory
             </li>
-            <li className="hover:text-white cursor-pointer transition">
+            <li
+              className="hover:text-white cursor-pointer transition"
+              onClick={() => onNavigate("contact")}
+            >
               Sell Your Car
             </li>
-            <li className="hover:text-white cursor-pointer transition">
+            <li
+              className="hover:text-white cursor-pointer transition"
+              onClick={() => onNavigate("contact")}
+            >
               Financing
             </li>
-            <li className="hover:text-white cursor-pointer transition">
+            <li
+              className="hover:text-white cursor-pointer transition"
+              onClick={onOpenLocation}
+            >
               Our Showrooms
             </li>
           </ul>
@@ -75,13 +88,20 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation }) => (
               <div className="bg-slate-800 p-1.5 rounded">
                 <Phone className="w-4 h-4 text-blue-500 shrink-0" />
               </div>
-              <span>+971 4 123 4567</span>
+              <a href="tel:+97141234567" className="hover:text-white transition">
+                +971 4 123 4567
+              </a>
             </li>
             <li className="flex items-center gap-3">
               <div className="bg-slate-800 p-1.5 rounded">
                 <MessageCircle className="w-4 h-4 text-blue-500 shrink-0" />
               </div>
-              <span>info@kimchimotors.ae</span>
+              <a
+                href="mailto:info@kimchimotors.ae"
+                className="hover:text-white transition"
+              >
+                info@kimchimotors.ae
+              </a>
             </li>
           </ul>
         </div>

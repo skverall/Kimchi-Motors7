@@ -39,21 +39,19 @@ export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose })
               <div
                 key={loc.id}
                 onClick={() => setSelectedLocation(loc)}
-                className={`p-4 rounded-xl cursor-pointer transition-all border ${
-                  selectedLocation.id === loc.id
+                className={`p-4 rounded-xl cursor-pointer transition-all border ${selectedLocation.id === loc.id
                     ? "bg-blue-600 text-white border-blue-600 shadow-lg scale-[1.02]"
                     : "bg-white hover:bg-gray-100 border-gray-100 text-slate-600"
-                }`}
+                  }`}
               >
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-bold text-lg">{loc.city}</h3>
                     <p
-                      className={`text-xs font-semibold uppercase tracking-wider opacity-80 ${
-                        selectedLocation.id === loc.id
+                      className={`text-xs font-semibold uppercase tracking-wider opacity-80 ${selectedLocation.id === loc.id
                           ? "text-blue-100"
                           : "text-slate-400"
-                      }`}
+                        }`}
                     >
                       {loc.country}
                     </p>
@@ -102,9 +100,12 @@ export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose })
                   <p className="text-xs font-bold text-slate-400 uppercase">
                     Phone
                   </p>
-                  <p className="font-semibold text-slate-900">
+                  <a
+                    href={`tel:${selectedLocation.phone.replace(/\s/g, "")}`}
+                    className="font-semibold text-slate-900 hover:text-blue-600 transition"
+                  >
                     {selectedLocation.phone}
-                  </p>
+                  </a>
                 </div>
               </div>
               <div className="bg-slate-50 p-4 rounded-xl flex items-center gap-4">
