@@ -92,7 +92,7 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
                 className="thumb thumb--right pointer-events-none absolute h-0 w-full outline-none z-40"
             />
 
-            <div className="relative">
+            <div className="relative mx-3">
                 <div className="absolute h-1.5 w-full rounded bg-slate-600 z-10 left-0"></div>
                 <div
                     ref={range}
