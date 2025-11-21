@@ -21,7 +21,7 @@ export const INITIAL_CARS = [
     mileage: 1200,
     fuel: 'Petrol',
     transmission: 'PDK',
-    image: 'https://images.unsplash.com/photo-1611821064430-0d41043318e6?auto=format&fit=crop&q=80&w=800', // Зеленый GT3 RS
+    image: '/images/porsche_911_gt3_rs.png', // Generated Green GT3 RS
     type: 'Coupe',
     featured: true,
     mostWanted: true,
@@ -35,7 +35,7 @@ export const INITIAL_CARS = [
     mileage: 500,
     fuel: 'Petrol',
     transmission: 'Automatic',
-    image: 'https://images.unsplash.com/photo-1609520505218-7421da4c3c7c?auto=format&fit=crop&q=80&w=800', // Белый Cullinan
+    image: '/images/rolls_royce_cullinan.png', // Generated White Cullinan
     type: 'SUV',
     featured: false,
     mostWanted: true,
