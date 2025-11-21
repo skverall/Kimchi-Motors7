@@ -34,136 +34,140 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
   });
 
   return (
-    <div className="relative min-h-[800px] flex items-center justify-center overflow-hidden bg-slate-900 py-20">
-      {/* Background Image & Gradient */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1920"
-          alt="Hero"
-          className="w-full h-full object-cover opacity-60"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/40 to-slate-900" />
-      </div>
+    <div className="relative min-h-[90vh] flex items-center overflow-hidden bg-[#0D0F12] pt-20">
+      {/* Ambient Glow Effects */}
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#1A4AFF] opacity-10 blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-[#1A4AFF] opacity-5 blur-[200px] pointer-events-none" />
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-5xl mx-auto">
-          {/* Headline */}
-          <div className="text-center mb-12 md:mb-16">
-            <h1 className="text-4xl md:text-7xl font-black text-white mb-4 md:mb-6 tracking-tight">
-              FIND YOUR
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-                {" "}
-                DREAM CAR
-              </span>
-            </h1>
-            <p className="text-slate-300 text-base md:text-xl max-w-2xl mx-auto font-light px-4">
-              Explore our exclusive collection of premium vehicles. Luxury, performance,
-              and elegance in every mile.
-            </p>
-          </div>
+      <div className="container mx-auto px-4 relative z-10 h-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center h-full">
 
-          {/* Search Container */}
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+          {/* Left Content */}
+          <div className="lg:col-span-7 flex flex-col justify-center pt-10 lg:pt-0">
+            <div className="mb-8 relative">
+              <div className="inline-block px-3 py-1 mb-6 border border-[#1A4AFF]/30 rounded-full bg-[#1A4AFF]/5 backdrop-blur-sm">
+                <span className="text-[#1A4AFF] text-xs font-bold tracking-widest uppercase">
+                  Premium Inventory
+                </span>
+              </div>
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[0.9] tracking-tighter mb-6">
+                DRIVE WHAT <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">
+                  DEFINES YOU
+                </span>
+              </h1>
+              <p className="text-slate-400 text-lg md:text-xl max-w-xl font-light leading-relaxed border-l-2 border-[#1A4AFF] pl-6">
+                Curated for the exceptional. Experience a collection where engineering meets art.
+              </p>
+            </div>
 
-              {/* Make */}
-              <div className="md:col-span-3 relative">
-                <select
-                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl px-4 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm"
-                  value={searchParams.make}
-                  onChange={(e) => setSearchParams({ ...searchParams, make: e.target.value, model: "" })}
-                >
-                  <option value="" className="text-slate-400">Make</option>
-                  {BRANDS.map((b) => (
-                    <option key={b.name} value={b.name} className="text-slate-900">
-                      {b.name}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
+            {/* Search Bar - Material Design */}
+            <div className="bg-[#111317] border border-white/5 rounded-2xl p-6 shadow-2xl shadow-black/50 max-w-3xl relative overflow-hidden group">
+              {/* Subtle glow on hover */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#1A4AFF]/0 via-[#1A4AFF]/5 to-[#1A4AFF]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 pointer-events-none" />
+
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 relative z-10">
+                {/* Make */}
+                <div className="md:col-span-3">
+                  <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Make</label>
+                  <div className="relative">
+                    <select
+                      className="w-full h-12 bg-[#0D0F12] border border-white/10 rounded-lg px-4 text-white appearance-none focus:border-[#1A4AFF] focus:ring-1 focus:ring-[#1A4AFF] outline-none transition-all text-sm font-medium"
+                      value={searchParams.make}
+                      onChange={(e) => setSearchParams({ ...searchParams, make: e.target.value, model: "" })}
+                    >
+                      <option value="" className="text-slate-500">All Makes</option>
+                      {BRANDS.map((b) => (
+                        <option key={b.name} value={b.name} className="text-white bg-[#0D0F12]">
+                          {b.name}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Model */}
+                <div className="md:col-span-3">
+                  <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Model</label>
+                  <div className="relative">
+                    <select
+                      className="w-full h-12 bg-[#0D0F12] border border-white/10 rounded-lg px-4 text-white appearance-none focus:border-[#1A4AFF] focus:ring-1 focus:ring-[#1A4AFF] outline-none transition-all text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                      value={searchParams.model}
+                      onChange={(e) => setSearchParams({ ...searchParams, model: e.target.value })}
+                      disabled={!searchParams.make}
+                    >
+                      <option value="" className="text-slate-500">All Models</option>
+                      {searchParams.make && BRANDS.find(b => b.name === searchParams.make)?.models.map((model) => (
+                        <option key={model} value={model} className="text-white bg-[#0D0F12]">
+                          {model}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Price Range */}
+                <div className="md:col-span-3">
+                  <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Price</label>
+                  <div className="relative">
+                    <select
+                      className="w-full h-12 bg-[#0D0F12] border border-white/10 rounded-lg px-4 text-white appearance-none focus:border-[#1A4AFF] focus:ring-1 focus:ring-[#1A4AFF] outline-none transition-all text-sm font-medium"
+                      value={searchParams.priceRange}
+                      onChange={(e) => setSearchParams({ ...searchParams, priceRange: e.target.value })}
+                    >
+                      <option value="" className="text-slate-500">Any Price</option>
+                      {PRICE_RANGES.map((range) => (
+                        <option key={range} value={range} className="text-white bg-[#0D0F12]">
+                          {range}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Search Button */}
+                <div className="md:col-span-3 flex items-end">
+                  <button
+                    onClick={() => onSearch(searchParams)}
+                    className="w-full h-12 bg-[#1A4AFF] hover:bg-[#1539cc] text-white rounded-lg font-bold text-sm transition-all shadow-lg shadow-[#1A4AFF]/25 flex items-center justify-center gap-2 group/btn"
+                  >
+                    <span>Search</span>
+                    <Search className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                  </button>
                 </div>
               </div>
-
-              {/* Model */}
-              <div className="md:col-span-3 relative">
-                <select
-                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl px-4 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                  value={searchParams.model}
-                  onChange={(e) => setSearchParams({ ...searchParams, model: e.target.value })}
-                  disabled={!searchParams.make}
-                >
-                  <option value="" className="text-slate-400">Model</option>
-                  {searchParams.make && BRANDS.find(b => b.name === searchParams.make)?.models.map((model) => (
-                    <option key={model} value={model} className="text-slate-900">
-                      {model}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-
-              {/* Price Range */}
-              <div className="md:col-span-2 relative">
-                <select
-                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl px-4 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm"
-                  value={searchParams.priceRange}
-                  onChange={(e) => setSearchParams({ ...searchParams, priceRange: e.target.value })}
-                >
-                  <option value="" className="text-slate-400">Price Range</option>
-                  {PRICE_RANGES.map((range) => (
-                    <option key={range} value={range} className="text-slate-900">
-                      {range}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-
-              {/* Year */}
-              <div className="md:col-span-2 relative">
-                <select
-                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl px-4 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm"
-                  value={searchParams.year}
-                  onChange={(e) => setSearchParams({ ...searchParams, year: e.target.value })}
-                >
-                  <option value="" className="text-slate-400">Year</option>
-                  {YEARS.map((year) => (
-                    <option key={year} value={year} className="text-slate-900">
-                      {year}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-
-              {/* Search Button */}
-              <div className="md:col-span-2">
-                <button
-                  onClick={() => onSearch(searchParams)}
-                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2"
-                >
-                  <Search className="w-4 h-4" />
-                  <span>Search</span>
-                </button>
-              </div>
-
             </div>
           </div>
+
+          {/* Right Image - Asymmetric & Overlapping */}
+          <div className="lg:col-span-5 relative h-[500px] lg:h-[800px] w-full flex items-center justify-center lg:justify-end pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0D0F12] via-transparent to-transparent z-10 lg:hidden" />
+            <div className="relative w-[140%] lg:w-[180%] max-w-none right-[-20%] lg:right-[-40%] z-0">
+              <img
+                src="https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=2070&auto=format&fit=crop"
+                alt="Luxury Car"
+                className="w-full h-auto object-contain drop-shadow-2xl"
+              />
+              {/* Reflection/Glow under the car */}
+              <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-[100px] bg-[#1A4AFF] opacity-20 blur-[80px]" />
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
