@@ -20,7 +20,7 @@ const Header = ({ onNavigate, activePage }) => {
   };
 
   return (
-    <header className="bg-black/90 backdrop-blur-md text-white sticky top-0 z-50 border-b border-white/10 shadow-lg">
+    <header className="bg-white/95 backdrop-blur-md text-slate-900 sticky top-0 z-50 border-b border-slate-100 shadow-sm">
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
@@ -37,7 +37,7 @@ const Header = ({ onNavigate, activePage }) => {
               <button
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
-                className={`text-sm font-medium tracking-wide transition-colors duration-300 relative group ${isActive(item.path) ? 'text-kimchi-red' : 'text-gray-300 hover:text-white'}`}
+                className={`text-sm font-medium tracking-wide transition-colors duration-300 relative group ${isActive(item.path) ? 'text-kimchi-red' : 'text-slate-600 hover:text-slate-900'}`}
               >
                 {item.label}
                 <span className={`absolute -bottom-2 left-0 w-full h-0.5 bg-kimchi-red transform origin-left transition-transform duration-300 ${isActive(item.path) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
@@ -47,10 +47,10 @@ const Header = ({ onNavigate, activePage }) => {
 
           {/* Actions */}
           <div className="hidden md:flex items-center gap-4">
-            <button className="p-2 text-gray-300 hover:text-kimchi-red transition-colors rounded-full hover:bg-white/5">
+            <button className="p-2 text-slate-400 hover:text-kimchi-red transition-colors rounded-full hover:bg-slate-50">
               <Search className="w-5 h-5" />
             </button>
-            <button onClick={() => onNavigate('admin')} className="p-2 text-gray-300 hover:text-kimchi-red transition-colors rounded-full hover:bg-white/5">
+            <button onClick={() => onNavigate('admin')} className="p-2 text-slate-400 hover:text-kimchi-red transition-colors rounded-full hover:bg-slate-50">
               <ShieldCheck className="w-5 h-5" />
             </button>
             <button onClick={() => onNavigate('contact')} className="bg-kimchi-red text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-red-700 transition-all duration-300 shadow-[0_0_20px_rgba(214,0,28,0.3)] hover:shadow-[0_0_30px_rgba(214,0,28,0.5)] flex items-center gap-2">
@@ -60,7 +60,7 @@ const Header = ({ onNavigate, activePage }) => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-white p-2">
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-slate-900 p-2">
             {isMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
@@ -68,10 +68,10 @@ const Header = ({ onNavigate, activePage }) => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-20 left-0 w-full bg-black border-b border-white/10 p-4 flex flex-col gap-4 shadow-xl">
-          <button onClick={() => { onNavigate('home'); setIsMenuOpen(false) }} className="text-left p-2 hover:bg-white/5 font-medium text-white">Home</button>
-          <button onClick={() => { onNavigate('listing'); setIsMenuOpen(false) }} className="text-left p-2 hover:bg-white/5 font-medium text-white">Inventory</button>
-          <button onClick={() => { onNavigate('admin'); setIsMenuOpen(false) }} className="text-left p-2 hover:bg-white/5 font-medium flex items-center gap-2 text-white"><Settings className="w-4 h-4" /> Admin Panel</button>
+        <div className="md:hidden absolute top-20 left-0 w-full bg-white border-b border-slate-100 p-4 flex flex-col gap-4 shadow-xl">
+          <button onClick={() => { onNavigate('home'); setIsMenuOpen(false) }} className="text-left p-2 hover:bg-slate-50 font-medium text-slate-900">Home</button>
+          <button onClick={() => { onNavigate('listing'); setIsMenuOpen(false) }} className="text-left p-2 hover:bg-slate-50 font-medium text-slate-900">Inventory</button>
+          <button onClick={() => { onNavigate('admin'); setIsMenuOpen(false) }} className="text-left p-2 hover:bg-slate-50 font-medium flex items-center gap-2 text-slate-900"><Settings className="w-4 h-4" /> Admin Panel</button>
         </div>
       )}
     </header>

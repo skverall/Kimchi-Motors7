@@ -1,3 +1,6 @@
+import porscheImage from '../assets/images/porsche_911_gt3_rs.png';
+import cullinanImage from '../assets/images/rolls_royce_cullinan.png';
+
 export const INITIAL_CARS = [
   {
     make: 'Mercedes-Benz',
@@ -21,7 +24,7 @@ export const INITIAL_CARS = [
     mileage: 1200,
     fuel: 'Petrol',
     transmission: 'PDK',
-    image: '/images/porsche_911_gt3_rs.png', // Generated Green GT3 RS
+    image: porscheImage, // Generated Green GT3 RS
     type: 'Coupe',
     featured: true,
     mostWanted: true,
@@ -35,7 +38,7 @@ export const INITIAL_CARS = [
     mileage: 500,
     fuel: 'Petrol',
     transmission: 'Automatic',
-    image: '/images/rolls_royce_cullinan.png', // Generated White Cullinan
+    image: cullinanImage, // Generated White Cullinan
     type: 'SUV',
     featured: false,
     mostWanted: true,

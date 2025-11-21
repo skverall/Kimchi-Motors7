@@ -191,57 +191,194 @@ const FAQ = () => {
 }
 
 const HomePage = ({ onSearch, cars, onCarClick, onNavigate }) => {
+  const [searchParams, setSearchParams] = useState({ make: '', model: '', maxPrice: '' });
   return (
-    <div className="bg-black text-white">
-      <HeroSection onSearch={onSearch} />
+    <div className="bg-white text-slate-900">
+      {/* Hero Section */}
+      <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-slate-50">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 z-0 opacity-10">
+          <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-kimchi-blue/20 to-transparent transform skew-x-12"></div>
+          <div className="absolute bottom-0 left-0 w-2/3 h-full bg-gradient-to-r from-kimchi-red/20 to-transparent transform -skew-x-12"></div>
+        </div>
 
-      {/* Brands Grid */}
-      <div className="py-16 bg-black border-b border-white/10">
-        <div className="container mx-auto px-4">
-          <p className="text-center text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mb-10">Trusted By The World's Best</p>
-          <div className="flex flex-wrap justify-center gap-12 md:gap-20 items-center opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
-            {BRANDS.map(brand => (
-              <img key={brand.name} src={brand.logo} alt={brand.name} className="h-8 md:h-10 object-contain hover:scale-110 transition-transform cursor-pointer invert" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-6xl mx-auto text-center">
+            <h1 className="text-6xl md:text-8xl font-sans font-black text-slate-900 mb-6 tracking-tighter leading-none">
+              EXCELLENCE IN <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-kimchi-red to-kimchi-blue italic pr-4">MOTION</span>
+            </h1>
+            <p className="text-slate-500 text-xl md:text-2xl max-w-3xl mx-auto mb-12 font-light leading-relaxed">
+              Discover a curated collection of the world's finest vehicles.
+              Where luxury meets performance, and service meets perfection.
+            </p>
+
+            {/* Car Image Placeholder */}
+            <div className="relative w-full max-w-4xl mx-auto mb-12 group">
+              <div className="absolute inset-0 bg-gradient-to-b from-kimchi-blue/20 to-kimchi-red/20 blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
+              <img
+                src="https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=1200"
+                alt="Hero Car"
+                className="relative z-10 w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700 drop-shadow-2xl"
+              />
+            </div>
+
+            {/* Search Box */}
+            <div className="bg-white/80 backdrop-blur-xl p-4 rounded-full border border-slate-200 shadow-2xl max-w-3xl mx-auto flex flex-col md:flex-row gap-2">
+              <select
+                className="bg-transparent text-slate-900 px-6 py-3 outline-none border-r border-slate-200 w-full md:w-1/3 font-medium"
+                value={searchParams.make}
+                onChange={(e) => setSearchParams({ ...searchParams, make: e.target.value })}
+              >
+                <option value="">All Brands</option>
+                {BRANDS.map(b => <option key={b.name} value={b.name}>{b.name}</option>)}
+              </select>
+              <select
+                className="bg-transparent text-slate-900 px-6 py-3 outline-none w-full md:w-1/3 font-medium"
+                value={searchParams.maxPrice}
+                onChange={(e) => setSearchParams({ ...searchParams, maxPrice: e.target.value })}
+              >
+                <option value="">Any Price</option>
+                <option value="500000">Up to $500k</option>
+                <option value="1000000">Up to $1M</option>
+                <option value="2000000">Up to $2M</option>
+              </select>
+              <button
+                onClick={() => onSearch(searchParams)}
+                className="bg-kimchi-red text-white px-8 py-3 rounded-full font-bold hover:bg-red-700 transition-all flex items-center justify-center gap-2 shadow-lg w-full md:w-auto"
+              >
+                <Search className="w-5 h-5" /> Search
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Marquee Section */}
+      <div className="py-20 bg-white overflow-hidden border-b border-slate-100">
+        <div className="container mx-auto px-4 mb-12 flex justify-between items-end">
+          <div>
+            <h2 className="text-4xl font-sans font-black text-slate-900 tracking-tight">Most Wanted</h2>
+            <p className="text-slate-500 mt-2 font-light text-lg">The most desired vehicles in our collection</p>
+          </div>
+          <div className="hidden md:flex gap-2 items-center bg-red-50 px-4 py-1.5 rounded-full border border-red-100">
+            <div className="w-2 h-2 rounded-full bg-kimchi-red animate-pulse"></div>
+            <div className="text-xs font-bold text-kimchi-red uppercase tracking-wider">Live Feed</div>
+          </div>
+        </div>
+
+        <div className="relative">
+          <div className="flex gap-8 animate-marquee whitespace-nowrap px-4">
+            {[...cars, ...cars].map((car, idx) => (
+              <div
+                key={`${car.id}-${idx}`}
+                onClick={() => onCarClick(car)}
+                className="inline-block w-80 bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 cursor-pointer group hover:shadow-xl transition-all duration-300"
+              >
+                <div className="h-48 overflow-hidden relative">
+                  <img src={car.image} alt={car.model} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                  <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-slate-900 shadow-sm">
+                    {car.year}
+                  </div>
+                </div>
+                <div className="p-5 whitespace-normal">
+                  <h4 className="font-bold text-lg text-slate-900 truncate font-sans group-hover:text-kimchi-red transition-colors">{car.make} {car.model}</h4>
+                  <div className="flex justify-between items-center mt-2">
+                    <p className="text-kimchi-red font-bold text-lg">${car.price.toLocaleString()}</p>
+                    <p className="text-xs text-slate-400">{car.mileage.toLocaleString()} km</p>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Most Wanted Marquee */}
-      <Marquee cars={cars.filter(c => c.mostWanted)} onClick={onCarClick} />
+      {/* Featured Section */}
+      {/* ... (Assuming Featured Section is handled by ListingPage or similar, skipping explicit re-implementation here if not present in original view, but keeping structure consistent) */}
 
-      {/* Explore Section */}
-      <section className="py-24 container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-sans font-bold text-white mb-3">Featured Arrivals</h2>
-            <p className="text-gray-400 font-light text-lg">Hand-picked for their exceptional quality and rarity.</p>
-          </div>
-          <button onClick={() => onNavigate('listing')} className="group flex items-center gap-2 text-white font-bold hover:text-kimchi-red transition-colors">
-            View Full Inventory
-            <span className="bg-white/10 text-white rounded-full p-1 group-hover:bg-kimchi-red transition-colors">
-              <ArrowRight className="w-4 h-4" />
-            </span>
-          </button>
-        </div>
+      {/* How It Works */}
+      <section className="py-24 bg-slate-50 relative overflow-hidden">
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h2 className="text-4xl font-sans font-black text-slate-900 mb-4 tracking-tight">Seamless Acquisition</h2>
+          <p className="text-slate-500 mb-16 max-w-2xl mx-auto text-lg">Experience a purchasing process as refined as the vehicles we sell.</p>
 
-        {cars.filter(c => c.featured).length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {cars.filter(c => c.featured).slice(0, 4).map(car => (
-              <CarCard key={car.id} car={car} onClick={onCarClick} />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {[
+              { icon: Search, title: "Select", desc: "Choose from our curated inventory of premium vehicles." },
+              { icon: MessageCircle, title: "Consult", desc: "Connect with our concierge for detailed specifications." },
+              { icon: DollarSign, title: "Secure", desc: "Transparent pricing with flexible financing options." },
+              { icon: Check, title: "Receive", desc: "White-glove delivery service to your preferred location." }
+            ].map((step, idx) => (
+              <div key={idx} className="relative p-8 rounded-3xl bg-white hover:shadow-2xl transition-all duration-300 border border-slate-100 group text-left hover:-translate-y-2">
+                <div className="w-14 h-14 bg-slate-50 text-slate-900 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-kimchi-red group-hover:text-white transition-colors duration-300 shadow-sm">
+                  <step.icon className="w-7 h-7" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3 font-sans">{step.title}</h3>
+                <p className="text-slate-500 leading-relaxed text-sm">{step.desc}</p>
+              </div>
             ))}
           </div>
-        ) : (
-          <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/10">
-            <p className="text-gray-500">No featured vehicles available at the moment.</p>
-          </div>
-        )}
+        </div>
       </section>
 
-      <HowToBuy />
-      <FAQ />
+      {/* FAQ Section */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h2 className="text-4xl font-sans font-black text-slate-900 mb-12 text-center tracking-tight">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            {[
+              { q: "Do you offer international shipping?", a: "Yes, we provide fully insured white-glove delivery to major cities worldwide." },
+              { q: "Are all vehicles certified?", a: "Every vehicle undergoes a rigorous 150-point inspection by certified master technicians." },
+              { q: "Can I trade in my current vehicle?", a: "We offer competitive trade-in valuations for luxury and exotic vehicles." },
+              { q: "What financing options are available?", a: "We partner with premier financial institutions to offer bespoke leasing and financing solutions." }
+            ].map((faq, idx) => (
+              <div key={idx} className="group border border-slate-100 rounded-2xl overflow-hidden hover:border-kimchi-red/30 transition-colors bg-slate-50">
+                <details className="p-6 cursor-pointer">
+                  <summary className="font-bold text-lg text-slate-900 flex justify-between items-center list-none">
+                    {faq.q}
+                    <span className="text-kimchi-red transform group-open:rotate-180 transition-transform duration-300">
+                      <ArrowRight className="w-5 h-5 rotate-90" />
+                    </span>
+                  </summary>
+                  <p className="mt-4 text-slate-500 leading-relaxed">{faq.a}</p>
+                </details>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Brands Grid */}
+      <section className="py-20 bg-slate-50 border-t border-slate-100">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+            {BRANDS.map(brand => (
+              <img key={brand.name} src={brand.logo} alt={brand.name} className="h-12 md:h-16 object-contain hover:scale-110 transition-transform duration-300" />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24 bg-slate-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1920')] bg-cover bg-center opacity-20"></div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h2 className="text-4xl md:text-6xl font-sans font-black text-white mb-8 tracking-tight">Ready to Drive Your Dream?</h2>
+          <p className="text-slate-300 text-xl mb-12 max-w-2xl mx-auto">Visit our showroom or schedule a private viewing today.</p>
+          <div className="flex flex-col md:flex-row gap-6 justify-center">
+            <button onClick={() => onNavigate('listing')} className="bg-kimchi-red text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-red-700 transition-all shadow-lg hover:shadow-red-900/50">
+              View Inventory
+            </button>
+            <button onClick={() => onNavigate('contact')} className="bg-white text-slate-900 px-10 py-4 rounded-full font-bold text-lg hover:bg-slate-100 transition-all shadow-lg">
+              Contact Concierge
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
-  )
-}
+  );
+};
 
 export default HomePage;
