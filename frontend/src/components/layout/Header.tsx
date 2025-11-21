@@ -18,7 +18,14 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
     <header className="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 shadow-sm">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link
+            href="/"
+            className="flex items-center gap-3 group"
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigate("home");
+            }}
+          >
             <img
               src="/kimchi-logo-white.jpg"
               alt="Kimchi Motors"
@@ -31,33 +38,24 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
           </Link>
         </div>
 
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-700">
-          <button
-            onClick={() => onNavigate("home")}
-            className={`hover:text-blue-600 transition ${page === "home" ? "text-blue-600" : ""
-              }`}
-          >
-            Home
-          </button>
-          <button
-            onClick={() => onNavigate("listing")}
-            className={`hover:text-blue-600 transition ${page === "listing" ? "text-blue-600" : ""
-              }`}
-          >
-            Inventory
-          </button>
-          <button
-            onClick={() => onNavigate("showrooms")}
-            className={`hover:text-blue-600 transition ${page === "showrooms" ? "text-blue-600" : ""}`}
-          >
-            Showrooms
-          </button>
-          <button
-            onClick={() => onNavigate("contact")}
-            className={`hover:text-blue-600 transition ${page === "contact" ? "text-blue-600" : ""}`}
-          >
-            Contact
-          </button>
+        <nav className="hidden md:flex items-center gap-1">
+          {[
+            { id: "home", label: "Home" },
+            { id: "listing", label: "Inventory" },
+            { id: "showrooms", label: "Showrooms" },
+            { id: "contact", label: "Contact" },
+          ].map((item) => (
+            <button
+              key={item.id}
+              onClick={() => onNavigate(item.id as PageName)}
+              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${page === item.id
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-600/25 scale-105"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 hover:scale-105"
+                }`}
+            >
+              {item.label}
+            </button>
+          ))}
         </nav>
 
         <div className="flex items-center gap-3">
@@ -138,7 +136,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
           </button>
         </div>
       </div>
-    </header>
+    </header >
   );
 };
 
