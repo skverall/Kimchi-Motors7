@@ -22,18 +22,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
   const [searchParams, setSearchParams] = useState<SearchParams>({
     make: "",
     model: "",
-    minPrice: MIN_PRICE,
-    maxPrice: MAX_PRICE,
+    minPrice: undefined,
+    maxPrice: undefined,
   });
 
   const formatPriceValue = (value?: number) =>
     value !== undefined && value !== null ? value.toLocaleString() : "";
-
-  const formatRangeLabel = (min?: number, max?: number) => {
-    const minLabel = min !== undefined ? `$${min.toLocaleString()}` : "No min";
-    const maxLabel = max !== undefined ? `$${max.toLocaleString()}` : "No max";
-    return `${minLabel} — ${maxLabel}`;
-  };
 
   const clampPrice = (value?: number) => {
     if (value === undefined) return undefined;
@@ -104,119 +98,82 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
           </div>
 
           {/* Search Container */}
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-4 md:p-8 shadow-2xl">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 items-center">
+          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
 
-              {/* Make & Model */}
-              <div className="lg:col-span-4 space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Make */}
-                  <div className="space-y-2">
-                    <div className="relative">
-                      <select
-                        className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3.5 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                        value={searchParams.make}
-                        onChange={(e) => setSearchParams({ ...searchParams, make: e.target.value })}
-                      >
-                        <option value="" className="text-slate-400">Make</option>
-                        {BRANDS.map((b) => (
-                          <option key={b.name} value={b.name} className="text-slate-900">
-                            {b.name}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Model */}
-                  <div className="space-y-2">
-                    <div className="relative">
-                      <select
-                        className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3.5 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                        value={searchParams.model}
-                        onChange={(e) => setSearchParams({ ...searchParams, model: e.target.value })}
-                      >
-                        <option value="" className="text-slate-400">Model</option>
-                        <option value="911" className="text-slate-900">911</option>
-                        <option value="Cullinan" className="text-slate-900">Cullinan</option>
-                        <option value="Huracan" className="text-slate-900">Huracan</option>
-                      </select>
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
+              {/* Make */}
+              <div className="md:col-span-3 relative">
+                <select
+                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl px-4 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm"
+                  value={searchParams.make}
+                  onChange={(e) => setSearchParams({ ...searchParams, make: e.target.value })}
+                >
+                  <option value="" className="text-slate-400">Make</option>
+                  {BRANDS.map((b) => (
+                    <option key={b.name} value={b.name} className="text-slate-900">
+                      {b.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
               </div>
 
-              {/* Price Range */}
-              <div className="lg:col-span-6">
-                <label className="text-sm text-white font-semibold mb-3 block hidden lg:block">Price range</label>
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    {/* Min */}
-                    <div>
-                      <div className="flex justify-between text-[10px] uppercase tracking-wider text-slate-400 mb-1">
-                        <span>Min</span>
-                        <span>Entry Price</span>
-                      </div>
-                      <div className="relative group">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-400 transition-colors">$</span>
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          value={formatPriceValue(searchParams.minPrice)}
-                          onChange={(e) => handleMinPriceChange(e.target.value)}
-                          className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-2 pl-7 pr-3 text-base md:text-sm text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                          placeholder="0"
-                        />
-                      </div>
-                    </div>
-                    {/* Max */}
-                    <div>
-                      <div className="flex justify-between text-[10px] uppercase tracking-wider text-slate-400 mb-1">
-                        <span>Max</span>
-                        <span>Dream Cap</span>
-                      </div>
-                      <div className="relative group">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-400 transition-colors">$</span>
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          value={formatPriceValue(searchParams.maxPrice)}
-                          onChange={(e) => handleMaxPriceChange(e.target.value)}
-                          className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-2 pl-7 pr-3 text-base md:text-sm text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                          placeholder="Max"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Selected Range Bar */}
-                  <div className="bg-slate-800/50 rounded-lg p-2 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-blue-50 animate-pulse"></div>
-                      <span className="text-[10px] uppercase tracking-wider text-slate-400">Selected Range</span>
-                    </div>
-                    <span className="text-xs font-bold text-white">{formatRangeLabel(searchParams.minPrice, searchParams.maxPrice)}</span>
-                  </div>
+              {/* Model */}
+              <div className="md:col-span-3 relative">
+                <select
+                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl px-4 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm"
+                  value={searchParams.model}
+                  onChange={(e) => setSearchParams({ ...searchParams, model: e.target.value })}
+                >
+                  <option value="" className="text-slate-400">Model</option>
+                  <option value="911" className="text-slate-900">911</option>
+                  <option value="Cullinan" className="text-slate-900">Cullinan</option>
+                  <option value="Huracan" className="text-slate-900">Huracan</option>
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
+              </div>
+
+              {/* Min Price */}
+              <div className="md:col-span-2 relative group">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-400 transition-colors text-sm">$</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={formatPriceValue(searchParams.minPrice)}
+                  onChange={(e) => handleMinPriceChange(e.target.value)}
+                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl pl-7 pr-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm placeholder-slate-400"
+                  placeholder="Min Price"
+                />
+              </div>
+
+              {/* Max Price */}
+              <div className="md:col-span-2 relative group">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-400 transition-colors text-sm">$</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={formatPriceValue(searchParams.maxPrice)}
+                  onChange={(e) => handleMaxPriceChange(e.target.value)}
+                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl pl-7 pr-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm placeholder-slate-400"
+                  placeholder="Max Price"
+                />
               </div>
 
               {/* Search Button */}
-              <div className="lg:col-span-2">
+              <div className="md:col-span-2">
                 <button
                   onClick={() => onSearch(searchParams)}
-                  className="w-full h-14 md:h-[136px] bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-lg transition-all shadow-lg shadow-blue-600/20 flex flex-row md:flex-col items-center justify-center gap-2 group"
+                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2"
                 >
-                  <Search className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
+                  <Search className="w-4 h-4" />
                   <span>Search</span>
                 </button>
               </div>
