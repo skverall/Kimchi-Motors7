@@ -24,7 +24,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
               alt="Kimchi Motors"
               className="h-10 md:h-12 w-auto object-contain"
             />
-            <div className="hidden xs:flex items-center text-xl md:text-2xl font-black tracking-tighter uppercase">
+            <div className="flex items-center text-lg md:text-2xl font-black tracking-tighter uppercase">
               <span className="text-slate-900">KIMCHI</span>
               <span className="text-blue-600">MOTORS</span>
             </div>
