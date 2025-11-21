@@ -93,17 +93,19 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
             />
 
             <div className="relative w-full">
-                <div className="absolute h-2 w-full rounded bg-slate-200 z-10"></div>
+                <div className="absolute h-1.5 w-full rounded bg-slate-200 z-10"></div>
                 <div
                     ref={range}
-                    className="absolute h-2 rounded bg-blue-600 z-20"
+                    className="absolute h-1.5 rounded bg-red-600 z-20"
                 ></div>
+            </div>
 
-                <div className="absolute top-6 left-0 text-xs font-medium text-slate-600">
-                    ${minVal.toLocaleString()}
+            <div className="flex justify-between mt-4">
+                <div className="bg-slate-100 px-3 py-1 rounded text-xs font-medium text-slate-600">
+                    {minVal.toLocaleString()}
                 </div>
-                <div className="absolute top-6 right-0 text-xs font-medium text-slate-600">
-                    ${maxVal.toLocaleString()}
+                <div className="bg-slate-100 px-3 py-1 rounded text-xs font-medium text-slate-600">
+                    {maxVal.toLocaleString()}
                 </div>
             </div>
 
@@ -112,22 +114,22 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
           -webkit-appearance: none;
           -webkit-tap-highlight-color: transparent;
           pointer-events: auto;
-          height: 20px;
-          width: 20px;
+          height: 24px;
+          width: 24px;
           border-radius: 50%;
           background-color: #fff;
-          border: 2px solid #2563eb;
+          border: 2px solid #dc2626;
           box-shadow: 0 1px 3px rgba(0,0,0,0.3);
           cursor: pointer;
-          margin-top: -8px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+          margin-top: -10px;
         }
         .thumb::-moz-range-thumb {
           pointer-events: auto;
-          height: 20px;
-          width: 20px;
+          height: 24px;
+          width: 24px;
           border-radius: 50%;
           background-color: #fff;
-          border: 2px solid #2563eb;
+          border: 2px solid #dc2626;
           box-shadow: 0 1px 3px rgba(0,0,0,0.3);
           cursor: pointer;
         }
