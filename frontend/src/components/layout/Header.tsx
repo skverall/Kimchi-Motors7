@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, Settings } from "lucide-react";
 
-export type PageName = "home" | "listing" | "detail" | "admin" | "admin-dashboard" | "contact";
+export type PageName = "home" | "listing" | "detail" | "admin" | "admin-dashboard" | "contact" | "showrooms";
 
 interface HeaderProps {
   page: PageName;
@@ -47,8 +47,8 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
             Inventory
           </button>
           <button
-            onClick={() => onNavigate("contact")}
-            className={`hover:text-blue-600 transition ${page === "contact" ? "text-blue-600" : ""}`}
+            onClick={() => onNavigate("showrooms")}
+            className={`hover:text-blue-600 transition ${page === "showrooms" ? "text-blue-600" : ""}`}
           >
             Showrooms
           </button>
@@ -110,7 +110,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
           </button>
           <button
             onClick={() => {
-              onNavigate("contact");
+              onNavigate("showrooms");
               setIsMenuOpen(false);
             }}
             className="block w-full text-left p-3 rounded-xl hover:bg-slate-50 text-base font-medium text-slate-700 transition"

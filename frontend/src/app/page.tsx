@@ -11,7 +11,8 @@ import { CarDetails } from "@/components/cars/CarDetails";
 import { HowToBuy } from "@/components/sections/HowToBuy";
 import { FAQ } from "@/components/sections/FAQ";
 import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
-import { ContactSection } from "@/components/sections/ContactSection";
+import { ShowroomsSection } from "@/components/sections/ShowroomsSection";
+import { ContactPageSection } from "@/components/sections/ContactPageSection";
 import { MostWantedMarquee } from "@/components/sections/MostWantedMarquee";
 import { BRANDS } from "@/constants/brands";
 import { INITIAL_CARS } from "@/constants/initialCars";
@@ -334,7 +335,8 @@ export default function Home() {
         </section>
       )}
 
-      {page === "contact" && <ContactSection />}
+      {page === "showrooms" && <ShowroomsSection />}
+      {page === "contact" && <ContactPageSection />}
 
       <FloatingWhatsApp />
       <Footer
