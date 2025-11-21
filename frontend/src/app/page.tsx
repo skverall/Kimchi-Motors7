@@ -54,14 +54,14 @@ export default function Home() {
     setCars(nextCars);
     setFilteredCars(nextCars);
     if (typeof window !== "undefined") {
-      localStorage.setItem("km_cached_cars", JSON.stringify(nextCars));
+      localStorage.setItem("km_cached_cars_v2", JSON.stringify(nextCars));
     }
   };
 
   // Load cars from Supabase via server API on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const cached = localStorage.getItem("km_cached_cars");
+      const cached = localStorage.getItem("km_cached_cars_v2");
       if (cached) {
         try {
           const parsed = JSON.parse(cached);
@@ -88,7 +88,16 @@ export default function Home() {
         }
 
         const fetchedCars = (body?.cars as CarItem[]) || [];
-        persistCars(fetchedCars);
+
+        // Inject missing fields for existing data
+        const enrichedCars = fetchedCars.map(car => ({
+          ...car,
+          engine: car.engine || "3500 cc",
+          shipping: car.shipping || "By Sea Shipping",
+          status: car.status || "Available"
+        }));
+
+        persistCars(enrichedCars);
       } catch (err) {
         console.error("Error loading cars from Supabase", err);
         setError("Failed to load cars. Please try again later.");
