@@ -97,11 +97,11 @@ export default function Home() {
     if (params.make) {
       result = result.filter((c) => c.make === params.make);
     }
-    if (params.maxPrice) {
-      const max = parseInt(params.maxPrice, 10);
-      if (!Number.isNaN(max)) {
-        result = result.filter((c) => c.price <= max);
-      }
+    if (params.minPrice !== undefined) {
+      result = result.filter((c) => c.price >= (params.minPrice || 0));
+    }
+    if (params.maxPrice !== undefined) {
+      result = result.filter((c) => c.price <= (params.maxPrice || Infinity));
     }
     setFilteredCars(result);
     setPage("listing");
@@ -166,10 +166,10 @@ export default function Home() {
       const updated = cars.map((c) =>
         String(c.id) === String(id)
           ? {
-              ...c,
-              ...updatedCar,
-              imageVersion: updates.image ? Date.now() : c.imageVersion,
-            }
+            ...c,
+            ...updatedCar,
+            imageVersion: updates.image ? Date.now() : c.imageVersion,
+          }
           : c
       );
       setCars(updated);
@@ -310,7 +310,7 @@ export default function Home() {
                   className="mt-1 w-full bg-white border border-slate-200 rounded-lg p-2.5 text-sm"
                   defaultValue=""
                   onChange={(e) =>
-                    handleSearch({ make: e.target.value, maxPrice: "", model: "" })
+                    handleSearch({ make: e.target.value, maxPrice: undefined, model: "" })
                   }
                 >
                   <option value="">All brands</option>

@@ -18,17 +18,13 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
     <header className="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 shadow-sm">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-            <span className="text-white font-black text-xs">KM</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold leading-none">
-              KIMCHI<span className="text-blue-600">MOTORS</span>
-            </span>
-            <span className="text-[10px] text-slate-500 uppercase tracking-widest">
-              Luxury Auto Gallery
-            </span>
-          </div>
+          <Link href="/" className="block">
+            <img
+              src="/kimchi-logo-white.jpg"
+              alt="Kimchi Motors"
+              className="h-12 w-auto object-contain"
+            />
+          </Link>
         </div>
 
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-700">
