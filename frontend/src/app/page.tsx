@@ -262,14 +262,19 @@ export default function Home() {
 
           {/* Brands grid */}
           <section className="py-16 container mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-6">Our Brands</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+            <h2 className="text-2xl font-bold mb-8 text-center md:text-left">Browse by brands</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4">
               {BRANDS.map((brand) => (
                 <div
                   key={brand.name}
-                  className="border border-slate-100 rounded-xl px-4 py-3 flex items-center justify-center bg-white/80 shadow-sm"
+                  className="group border border-slate-100 rounded-2xl p-4 flex flex-col items-center justify-center bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer h-32"
                 >
-                  <span className="text-sm font-semibold text-slate-700">
+                  <img
+                    src={brand.logo}
+                    alt={brand.name}
+                    className="h-10 w-auto object-contain mb-3 opacity-60 group-hover:opacity-100 transition-opacity grayscale group-hover:grayscale-0"
+                  />
+                  <span className="text-xs font-bold text-slate-500 group-hover:text-slate-900 transition-colors uppercase tracking-wide text-center">
                     {brand.name}
                   </span>
                 </div>
