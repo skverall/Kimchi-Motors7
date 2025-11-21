@@ -5,11 +5,10 @@ import { MapPin, Phone, MessageCircle, ArrowRight } from "lucide-react";
 import type { PageName } from "./Header";
 
 interface FooterProps {
-  onOpenLocation: () => void;
   onNavigate: (page: PageName) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onNavigate }) => (
+export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
   <footer className="bg-slate-900 text-white pt-16 pb-8">
     <div className="container mx-auto px-4">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
@@ -62,7 +61,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onNavigate }) =>
             </li>
             <li
               className="hover:text-white cursor-pointer transition"
-              onClick={onOpenLocation}
+              onClick={() => onNavigate("contact")}
             >
               Our Showrooms
             </li>
@@ -74,7 +73,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation, onNavigate }) =>
           <ul className="space-y-4 text-slate-400 text-sm">
             <li
               className="flex items-start gap-3 cursor-pointer hover:text-blue-400 transition group"
-              onClick={onOpenLocation}
+              onClick={() => onNavigate("contact")}
             >
               <div className="bg-slate-800 p-1.5 rounded group-hover:bg-blue-600 transition">
                 <MapPin className="w-4 h-4 text-blue-500 group-hover:text-white shrink-0" />

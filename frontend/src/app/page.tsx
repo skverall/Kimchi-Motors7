@@ -335,14 +335,9 @@ export default function Home() {
       )}
 
       <FloatingWhatsApp />
-      <LocationModal
-        isOpen={isLocationModalOpen}
-        onClose={() => setLocationModalOpen(false)}
-      />
       <Footer
-        onOpenLocation={() => setLocationModalOpen(true)}
         onNavigate={handleNavigate}
       />
-    </div>
+    </main>
   );
 }
