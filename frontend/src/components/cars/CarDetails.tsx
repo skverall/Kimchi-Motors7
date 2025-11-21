@@ -87,6 +87,35 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => (
                 </span>
                 <span className="font-semibold">{car.transmission}</span>
               </div>
+              {car.engine && (
+                <div className="flex justify-between py-3 border-b border-gray-100">
+                  <span className="text-slate-500 flex items-center gap-2">
+                    <Settings className="w-4 h-4" /> Engine
+                  </span>
+                  <span className="font-semibold">{car.engine}</span>
+                </div>
+              )}
+              {car.shipping && (
+                <div className="flex justify-between py-3 border-b border-gray-100">
+                  <span className="text-slate-500 flex items-center gap-2">
+                    <Settings className="w-4 h-4" /> Shipping
+                  </span>
+                  <span className="font-semibold">{car.shipping}</span>
+                </div>
+              )}
+              {car.status && (
+                <div className="flex justify-between py-3 border-b border-gray-100">
+                  <span className="text-slate-500 flex items-center gap-2">
+                    <Settings className="w-4 h-4" /> Status
+                  </span>
+                  <span className={`font-bold px-2 py-0.5 rounded text-white text-xs ${car.status === 'Sold' ? 'bg-red-500' :
+                      car.status === 'In Transit' ? 'bg-orange-500' :
+                        'bg-emerald-500'
+                    }`}>
+                    {car.status}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col gap-3">

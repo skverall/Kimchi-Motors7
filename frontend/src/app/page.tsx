@@ -367,6 +367,12 @@ export default function Home() {
 
       {page === "showrooms" && <ShowroomsSection />}
       {page === "contact" && <ContactPageSection />}
+      {page === "detail" && selectedCar && (
+        <CarDetails
+          car={selectedCar}
+          onBack={() => handleNavigate("listing")}
+        />
+      )}
 
       <FloatingWhatsApp />
       <Footer
