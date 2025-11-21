@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "Premium Luxury Car Showroom",
   icons: {
     icon: "/kimchi-logo-white.jpg",
+    shortcut: "/kimchi-logo-white.jpg",
+    apple: "/kimchi-logo-white.jpg",
   },
 };
 

@@ -22,43 +22,51 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => (
       <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold text-slate-900">
         {car.year}
       </div>
-      {car.status && (
-        <div className={`absolute top-3 left-3 px-2 py-1 rounded text-xs font-bold text-white ${car.status === 'Sold' ? 'bg-red-500' :
-            car.status === 'In Transit' ? 'bg-orange-500' :
-              'bg-emerald-500'
-          }`}>
-          {car.status}
-        </div>
-      )}
+
     </div>
     <div className="p-5 flex-1 flex flex-col">
-      <div className="text-xs text-blue-600 font-semibold mb-1 uppercase tracking-wider">
+      <div className="text-xs text-blue-600 font-bold mb-1 uppercase tracking-widest">
         {car.make}
       </div>
       <h3 className="text-lg font-bold text-slate-900 mb-2 truncate">
         {car.model}
       </h3>
-      <div className="text-xl font-bold text-slate-900 mb-4">
+      <div className="text-xl font-black text-slate-900 mb-4">
         ${car.price.toLocaleString()}
       </div>
 
-      <div className="space-y-2 border-t border-gray-100 pt-4 mt-auto">
-        <div className="grid grid-cols-2 gap-2 text-xs text-slate-500">
-          <div className="flex items-center gap-2">
+      <div className="mt-auto pt-4 border-t border-gray-100">
+        <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+          {/* Engine */}
+          <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
             <Fuel className="w-4 h-4 text-slate-400" />
             <span>{car.fuel} {car.engine}</span>
           </div>
-          <div className="flex items-center gap-2">
+
+          {/* Mileage */}
+          <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
             <Gauge className="w-4 h-4 text-slate-400" />
             <span>{car.mileage.toLocaleString()} km</span>
           </div>
-        </div>
-        {car.shipping && (
-          <div className="flex items-center gap-2 text-xs text-slate-400">
-            <span className="w-2 h-2 rounded-full bg-blue-400" />
+
+          {/* Shipping */}
+          <div className="flex items-center gap-2 text-xs text-slate-500">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
             {car.shipping}
           </div>
-        )}
+
+          {/* Status Badge - Moved here */}
+          <div className="flex items-center">
+            {car.status && (
+              <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide text-white ${car.status === 'Sold' ? 'bg-red-500' :
+                car.status === 'In Transit' ? 'bg-orange-500' :
+                  'bg-emerald-500'
+                }`}>
+                {car.status}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   </div>
