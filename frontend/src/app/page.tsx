@@ -334,6 +334,8 @@ export default function Home() {
         </section>
       )}
 
+      {page === "contact" && <ContactSection />}
+
       <FloatingWhatsApp />
       <Footer
         onNavigate={handleNavigate}
