@@ -11,6 +11,7 @@ import { HowToBuy } from "@/components/sections/HowToBuy";
 import { FAQ } from "@/components/sections/FAQ";
 import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
 import { LocationModal } from "@/components/modals/LocationModal";
+import { MostWantedMarquee } from "@/components/sections/MostWantedMarquee";
 import { BRANDS } from "@/constants/brands";
 import { INITIAL_CARS } from "@/constants/initialCars";
 
@@ -92,6 +93,12 @@ export default function Home() {
             </div>
           </section>
 
+          {/* Most Wanted Marquee */}
+          <MostWantedMarquee
+            cars={cars.filter((c) => c.mostWanted)}
+            onClick={handleCarClick}
+          />
+
           {/* Featured Arrivals */}
           <section className="py-20 container mx-auto px-4">
             <div className="flex justify-between items-end mb-10">
@@ -102,6 +109,7 @@ export default function Home() {
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => handleNavigate("listing")}
                 className="text-blue-600 font-bold flex items-center gap-2 hover:gap-3 transition-all"
               >
@@ -138,6 +146,7 @@ export default function Home() {
                   Brand
                 </label>
                 <select
+                  aria-label="Filter by brand"
                   className="mt-1 w-full bg-white border border-slate-200 rounded-lg p-2.5 text-sm"
                   defaultValue=""
                   onChange={(e) =>

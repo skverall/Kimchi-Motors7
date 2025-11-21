@@ -21,7 +21,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation }) => (
           </div>
           <p className="text-slate-400 text-sm leading-relaxed mb-6">
             The premier destination for luxury and exotic vehicles. We provide an
-            unmatched buying experience and a curated selection of the world's
+            unmatched buying experience and a curated selection of the world&apos;s
             finest cars.
           </p>
           <div className="flex gap-4">
@@ -97,14 +97,20 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLocation }) => (
               placeholder="Email address"
               className="bg-slate-800 text-white px-4 py-2 rounded-l-md focus:outline-none w-full text-sm"
             />
-            <button className="bg-blue-600 px-4 py-2 rounded-r-md hover:bg-blue-700 transition">
+            <button
+              type="button"
+              aria-label="Subscribe to newsletter"
+              className="bg-blue-600 px-4 py-2 rounded-r-md hover:bg-blue-700 transition"
+            >
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
       </div>
       <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500">
-        <p>© 2025 Kimchi Motors. All rights reserved.</p>
+        <p>
+          &copy; {new Date().getFullYear()} Kimchi Motors. All rights reserved.
+        </p>
         <div className="flex gap-6 mt-4 md:mt-0">
           <span>Privacy Policy</span>
           <span>Terms of Service</span>
