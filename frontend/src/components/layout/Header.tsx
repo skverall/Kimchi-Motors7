@@ -18,12 +18,15 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
     <header className="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 shadow-sm">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <Link href="/" className="block">
+          <Link href="/" className="flex items-center gap-3 group">
             <img
               src="/kimchi-logo-white.jpg"
               alt="Kimchi Motors"
               className="h-12 w-auto object-contain"
             />
+            <span className="text-xl font-bold tracking-tighter text-slate-900 uppercase group-hover:text-blue-600 transition-colors">
+              Kimchi Motors
+            </span>
           </Link>
         </div>
 
