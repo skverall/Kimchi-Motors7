@@ -14,6 +14,7 @@ import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
 import { LocationModal } from "@/components/modals/LocationModal";
 import { MostWantedMarquee } from "@/components/sections/MostWantedMarquee";
 import { BRANDS } from "@/constants/brands";
+import { INITIAL_CARS } from "@/constants/initialCars";
 
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
@@ -21,9 +22,13 @@ import type { CarItem } from "@/types/car";
 
 export default function Home() {
   const [page, setPage] = useState<PageName>("home");
-  const [cars, setCars] = useState<CarItem[]>([]);
-  const [filteredCars, setFilteredCars] = useState<CarItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [cars, setCars] = useState<CarItem[]>(() =>
+    INITIAL_CARS.map((car, index) => ({ ...car, id: `seed-${index}` }))
+  );
+  const [filteredCars, setFilteredCars] = useState<CarItem[]>(() =>
+    INITIAL_CARS.map((car, index) => ({ ...car, id: `seed-${index}` }))
+  );
+  const [isSyncing, setIsSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Sync page with URL
@@ -44,11 +49,34 @@ export default function Home() {
     }
   }, [page]);
 
+  const persistCars = (nextCars: CarItem[]) => {
+    setCars(nextCars);
+    setFilteredCars(nextCars);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("km_cached_cars", JSON.stringify(nextCars));
+    }
+  };
+
   // Load cars from Supabase via server API on mount
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const cached = localStorage.getItem("km_cached_cars");
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length) {
+            setCars(parsed);
+            setFilteredCars(parsed);
+          }
+        } catch (err) {
+          console.warn("Failed to parse cached cars", err);
+        }
+      }
+    }
+
     const loadCars = async () => {
       try {
-        setIsLoading(true);
+        setIsSyncing(true);
         setError(null);
 
         const response = await fetch("/api/cars", { cache: "no-store" });
@@ -59,13 +87,12 @@ export default function Home() {
         }
 
         const fetchedCars = (body?.cars as CarItem[]) || [];
-        setCars(fetchedCars);
-        setFilteredCars(fetchedCars);
+        persistCars(fetchedCars);
       } catch (err) {
         console.error("Error loading cars from Supabase", err);
         setError("Failed to load cars. Please try again later.");
       } finally {
-        setIsLoading(false);
+        setIsSyncing(false);
       }
     };
 
@@ -123,8 +150,7 @@ export default function Home() {
       }
 
       const carWithId = body.car as CarItem;
-      setCars([carWithId, ...cars]);
-      setFilteredCars([carWithId, ...cars]);
+      persistCars([carWithId, ...cars]);
     } catch (err) {
       console.error("Error adding car", err);
       setError("Failed to add car. Please try again later.");
@@ -141,8 +167,7 @@ export default function Home() {
       }
 
       const updated = cars.filter((c) => String(c.id) !== String(id));
-      setCars(updated);
-      setFilteredCars(updated);
+      persistCars(updated);
     } catch (err) {
       console.error("Error deleting car", err);
       setError("Failed to delete car. Please try again later.");
@@ -172,8 +197,7 @@ export default function Home() {
           }
           : c
       );
-      setCars(updated);
-      setFilteredCars(updated);
+      persistCars(updated);
     } catch (err) {
       console.error("Error updating car", err);
       setError("Failed to update car. Please try again later.");
@@ -221,9 +245,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900">
       <Header onNavigate={handleNavigate} page={page} />
-      {isLoading && (
+      {isSyncing && (
         <div className="bg-blue-50 text-blue-700 border border-blue-100 px-4 py-3 text-sm text-center">
-          Loading inventory...
+          Syncing latest inventory...
         </div>
       )}
       {error && (
