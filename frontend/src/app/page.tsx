@@ -27,6 +27,24 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Sync page with URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const view = params.get("view");
+    if (view && ["home", "listing", "detail", "admin", "admin-dashboard"].includes(view)) {
+      setPage(view as any);
+    }
+  }, []);
+
+  // Update URL when page changes
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("view") !== page) {
+      url.searchParams.set("view", page);
+      window.history.pushState({}, "", url);
+    }
+  }, [page]);
+
   // Load cars from Supabase on mount
   useEffect(() => {
     const loadCars = async () => {

@@ -175,12 +175,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {cars.map((car, idx) => (
-                  <tr key={`${car.make}-${car.model}-${idx}`} className="hover:bg-slate-50/50">
+                  <tr key={car.id || idx} className="hover:bg-slate-50/50">
                     <td className="p-4">
                       <div className="flex items-center gap-4">
                         <div className="w-16 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0">
                           <img
-                            src={car.image}
+                            src={car.image ? `${car.image}?t=${Date.now()}` : ""}
                             alt={car.model}
                             className="w-full h-full object-cover"
                           />
@@ -207,8 +207,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               onUpdate(car.id || `${idx}`, { featured: !car.featured })
                             }
                             className={`p-1.5 rounded-md transition ${car.featured
-                                ? "bg-yellow-100 text-yellow-600"
-                                : "text-slate-300 hover:bg-slate-100"
+                              ? "bg-yellow-100 text-yellow-600"
+                              : "text-slate-300 hover:bg-slate-100"
                               }`}
                           >
                             <Star className="w-4 h-4 fill-current" />
@@ -221,8 +221,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               onUpdate(car.id || `${idx}`, { mostWanted: !car.mostWanted })
                             }
                             className={`p-1.5 rounded-md transition ${car.mostWanted
-                                ? "bg-purple-100 text-purple-600"
-                                : "text-slate-300 hover:bg-slate-100"
+                              ? "bg-purple-100 text-purple-600"
+                              : "text-slate-300 hover:bg-slate-100"
                               }`}
                           >
                             <Zap className="w-4 h-4 fill-current" />
