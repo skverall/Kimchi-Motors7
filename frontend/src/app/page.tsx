@@ -117,15 +117,45 @@ export default function Home() {
 
   const handleSearch = (params: SearchParams) => {
     let result = cars;
+
+    // Filter by Make
     if (params.make) {
       result = result.filter((c) => c.make === params.make);
     }
-    if (params.minPrice !== undefined) {
-      result = result.filter((c) => c.price >= (params.minPrice || 0));
+
+    // Filter by Model
+    if (params.model) {
+      result = result.filter((c) => c.model === params.model);
     }
-    if (params.maxPrice !== undefined) {
-      result = result.filter((c) => c.price <= (params.maxPrice || Infinity));
+
+    // Filter by Price Range
+    if (params.priceRange) {
+      const price = params.priceRange;
+      if (price === "Under $50,000") {
+        result = result.filter((c) => c.price < 50000);
+      } else if (price === "$50,000 - $100,000") {
+        result = result.filter((c) => c.price >= 50000 && c.price <= 100000);
+      } else if (price === "$100,000 - $200,000") {
+        result = result.filter((c) => c.price >= 100000 && c.price <= 200000);
+      } else if (price === "$200,000 - $500,000") {
+        result = result.filter((c) => c.price >= 200000 && c.price <= 500000);
+      } else if (price === "$500,000+") {
+        result = result.filter((c) => c.price > 500000);
+      }
     }
+
+    // Filter by Year
+    if (params.year) {
+      if (params.year === "Before 2015") {
+        result = result.filter((c) => c.year < 2015);
+      } else {
+        const year = parseInt(params.year);
+        if (!isNaN(year)) {
+          result = result.filter((c) => c.year === year);
+        }
+      }
+    }
+
     setFilteredCars(result);
     setPage("listing");
     window.scrollTo(0, 0);
@@ -297,7 +327,7 @@ export default function Home() {
                   className="mt-1 w-full bg-white border border-slate-200 rounded-lg p-2.5 text-sm"
                   defaultValue=""
                   onChange={(e) =>
-                    handleSearch({ make: e.target.value, maxPrice: undefined, model: "" })
+                    handleSearch({ make: e.target.value, model: "" })
                   }
                 >
                   <option value="">All brands</option>

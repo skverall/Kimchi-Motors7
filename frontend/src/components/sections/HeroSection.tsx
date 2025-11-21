@@ -7,66 +7,31 @@ import { BRANDS } from "@/constants/brands";
 export interface SearchParams {
   make: string;
   model?: string;
-  minPrice?: number;
-  maxPrice?: number;
+  priceRange?: string;
+  year?: string;
 }
 
 interface HeroSectionProps {
   onSearch: (params: SearchParams) => void;
 }
 
-const MIN_PRICE = 0;
-const MAX_PRICE = 2000000;
+const PRICE_RANGES = [
+  "Under $50,000",
+  "$50,000 - $100,000",
+  "$100,000 - $200,000",
+  "$200,000 - $500,000",
+  "$500,000+",
+];
+
+const YEARS = Array.from({ length: 11 }, (_, i) => (2025 - i).toString()).concat(["Before 2015"]);
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
   const [searchParams, setSearchParams] = useState<SearchParams>({
     make: "",
     model: "",
-    minPrice: undefined,
-    maxPrice: undefined,
+    priceRange: "",
+    year: "",
   });
-
-  const formatPriceValue = (value?: number) =>
-    value !== undefined && value !== null ? value.toLocaleString() : "";
-
-  const clampPrice = (value?: number) => {
-    if (value === undefined) return undefined;
-    return Math.min(Math.max(value, MIN_PRICE), MAX_PRICE);
-  };
-
-  const handleMinPriceChange = (rawInput: string) => {
-    const numericOnly = rawInput.replace(/[^\d]/g, "");
-    const parsed = numericOnly ? clampPrice(Number(numericOnly)) : undefined;
-
-    setSearchParams((prev) => {
-      const minPrice = parsed;
-      const maxPrice =
-        prev.maxPrice !== undefined &&
-          parsed !== undefined &&
-          parsed > prev.maxPrice
-          ? parsed
-          : prev.maxPrice;
-
-      return { ...prev, minPrice, maxPrice };
-    });
-  };
-
-  const handleMaxPriceChange = (rawInput: string) => {
-    const numericOnly = rawInput.replace(/[^\d]/g, "");
-    const parsed = numericOnly ? clampPrice(Number(numericOnly)) : undefined;
-
-    setSearchParams((prev) => {
-      const maxPrice = parsed;
-      const minPrice =
-        prev.minPrice !== undefined &&
-          parsed !== undefined &&
-          parsed < prev.minPrice
-          ? parsed
-          : prev.minPrice;
-
-      return { ...prev, minPrice, maxPrice };
-    });
-  };
 
   return (
     <div className="relative min-h-[800px] flex items-center justify-center overflow-hidden bg-slate-900 py-20">
@@ -144,30 +109,46 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
                 </div>
               </div>
 
-              {/* Min Price */}
-              <div className="md:col-span-2 relative group">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-400 transition-colors text-sm">$</span>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={formatPriceValue(searchParams.minPrice)}
-                  onChange={(e) => handleMinPriceChange(e.target.value)}
-                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl pl-7 pr-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm placeholder-slate-400"
-                  placeholder="Min Price"
-                />
+              {/* Price Range */}
+              <div className="md:col-span-2 relative">
+                <select
+                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl px-4 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm"
+                  value={searchParams.priceRange}
+                  onChange={(e) => setSearchParams({ ...searchParams, priceRange: e.target.value })}
+                >
+                  <option value="" className="text-slate-400">Price Range</option>
+                  {PRICE_RANGES.map((range) => (
+                    <option key={range} value={range} className="text-slate-900">
+                      {range}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
 
-              {/* Max Price */}
-              <div className="md:col-span-2 relative group">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-400 transition-colors text-sm">$</span>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={formatPriceValue(searchParams.maxPrice)}
-                  onChange={(e) => handleMaxPriceChange(e.target.value)}
-                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl pl-7 pr-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm placeholder-slate-400"
-                  placeholder="Max Price"
-                />
+              {/* Year */}
+              <div className="md:col-span-2 relative">
+                <select
+                  className="w-full h-12 bg-slate-800/50 border border-white/10 rounded-xl px-4 text-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm"
+                  value={searchParams.year}
+                  onChange={(e) => setSearchParams({ ...searchParams, year: e.target.value })}
+                >
+                  <option value="" className="text-slate-400">Year</option>
+                  {YEARS.map((year) => (
+                    <option key={year} value={year} className="text-slate-900">
+                      {year}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
 
               {/* Search Button */}
