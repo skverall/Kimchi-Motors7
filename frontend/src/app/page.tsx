@@ -15,11 +15,15 @@ import { MostWantedMarquee } from "@/components/sections/MostWantedMarquee";
 import { BRANDS } from "@/constants/brands";
 import { INITIAL_CARS } from "@/constants/initialCars";
 
+import { AdminLogin } from "@/components/admin/AdminLogin";
+import { AdminDashboard } from "@/components/admin/AdminDashboard";
+import type { CarItem } from "@/components/cars/CarCard";
+
 export default function Home() {
-  const [page, setPage] = useState<"home" | "listing" | "detail" | "admin">("home");
-  const [cars] = useState(INITIAL_CARS);
-  const [filteredCars, setFilteredCars] = useState<typeof INITIAL_CARS>(INITIAL_CARS);
-  const [selectedCar, setSelectedCar] = useState<(typeof INITIAL_CARS)[number] | null>(null);
+  const [page, setPage] = useState<"home" | "listing" | "detail" | "admin" | "admin-dashboard">("home");
+  const [cars, setCars] = useState<CarItem[]>(INITIAL_CARS as CarItem[]);
+  const [filteredCars, setFilteredCars] = useState<CarItem[]>(INITIAL_CARS as CarItem[]);
+  const [selectedCar, setSelectedCar] = useState<CarItem | null>(null);
   const [isLocationModalOpen, setLocationModalOpen] = useState(false);
 
   const handleNavigate = (target: string) => {
@@ -53,6 +57,51 @@ export default function Home() {
     setPage("listing");
     window.scrollTo(0, 0);
   };
+
+  // Admin Handlers
+  const handleAddCar = (newCar: Omit<CarItem, "id">) => {
+    const carWithId = { ...newCar, id: Date.now().toString() };
+    setCars([carWithId, ...cars]);
+    setFilteredCars([carWithId, ...cars]);
+  };
+
+  const handleDeleteCar = (id: string) => {
+    const updated = cars.filter((c) => (c.id || c.model) !== id);
+    setCars(updated);
+    setFilteredCars(updated);
+  };
+
+  const handleUpdateCar = (id: string, updates: Partial<CarItem>) => {
+    const updated = cars.map((c) => {
+      if ((c.id || c.model) === id) {
+        return { ...c, ...updates };
+      }
+      return c;
+    });
+    setCars(updated);
+    setFilteredCars(updated);
+  };
+
+  if (page === "admin") {
+    return (
+      <AdminLogin
+        onLogin={() => setPage("admin-dashboard")}
+        onBack={() => setPage("home")}
+      />
+    );
+  }
+
+  if (page === "admin-dashboard") {
+    return (
+      <AdminDashboard
+        cars={cars}
+        onAdd={handleAddCar}
+        onDelete={handleDeleteCar}
+        onUpdate={handleUpdateCar}
+        onLogout={() => setPage("home")}
+      />
+    );
+  }
 
   if (page === "detail" && selectedCar) {
     return (
