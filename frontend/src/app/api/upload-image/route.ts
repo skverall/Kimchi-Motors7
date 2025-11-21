@@ -1,5 +1,12 @@
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 import { getServiceSupabase } from "@/lib/supabaseAdmin";
+
+export const runtime = "nodejs";
+
+const MAX_DIMENSION = 1920;
+const OUTPUT_QUALITY = 82;
 
 let bucketInitialized = false;
 
@@ -30,7 +37,7 @@ async function ensureBucket(supabase: ReturnType<typeof getServiceSupabase>) {
   bucketInitialized = true;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const supabase = getServiceSupabase();
     await ensureBucket(supabase);
@@ -45,14 +52,28 @@ export async function POST(request: Request) {
       );
     }
 
-    const ext = file.name.split(".").pop() || "jpg";
-    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const arrayBuffer = await file.arrayBuffer();
+    const inputBuffer = Buffer.from(arrayBuffer);
+
+    // Resize and convert to webp to keep uploads lightweight and consistent
+    const optimizedBuffer = await sharp(inputBuffer)
+      .rotate()
+      .resize({
+        width: MAX_DIMENSION,
+        height: MAX_DIMENSION,
+        fit: "inside",
+        withoutEnlargement: true,
+      })
+      .toFormat("webp", { quality: OUTPUT_QUALITY, effort: 4 })
+      .toBuffer();
+
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
     const filePath = `cars/${fileName}`;
 
     const { data, error } = await supabase.storage
       .from("car-images")
-      .upload(filePath, file, {
-        contentType: file.type || "image/jpeg",
+      .upload(filePath, optimizedBuffer, {
+        contentType: "image/webp",
         upsert: false,
       });
 
