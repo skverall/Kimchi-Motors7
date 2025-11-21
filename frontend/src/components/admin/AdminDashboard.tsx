@@ -362,14 +362,65 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     }
                     placeholder="https://..."
                   />
+                  <div className="mt-2 space-y-2">
+                    {formData.image && (
+                      <div className="flex items-center gap-3">
+                        <div className="w-16 h-12 rounded-lg overflow-hidden bg-slate-100">
+                          <img
+                            src={formData.image}
+                            alt="Current vehicle image preview"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, image: "" })}
+                          className="text-xs font-medium text-slate-500 hover:text-red-600 hover:underline"
+                        >
+                          Remove image
+                        </button>
+                      </div>
+                    )}
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 text-xs text-slate-500">
+                        <Info className="w-3 h-3" />
+                        <span>or upload image file</span>
+                      </div>
+                      <input
+                        id="car-image-file"
+                        type="file"
+                        accept="image/*"
+                        disabled={isUploading}
+                        className="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
+                        aria-label="Upload vehicle image file"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            void handleImageUpload(file);
+                          }
+                        }}
+                      />
+                      {isUploading && (
+                        <p className="text-xs text-slate-500">Uploading image...</p>
+                      )}
+                      {uploadError && (
+                        <p className="text-xs text-red-500">{uploadError}</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                <label
+                  className="block text-xs font-bold text-slate-500 uppercase mb-1"
+                  htmlFor="car-description"
+                >
                   Description
                 </label>
                 <textarea
+                  id="car-description"
                   className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none h-24 resize-none"
+                  placeholder="Short description of the vehicle, package, condition..."
                   value={formData.description}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
