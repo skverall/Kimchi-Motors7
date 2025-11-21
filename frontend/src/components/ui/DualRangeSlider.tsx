@@ -93,18 +93,18 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
             />
 
             <div className="relative w-full">
-                <div className="absolute h-1.5 w-full rounded bg-slate-200 z-10"></div>
+                <div className="absolute h-1.5 w-full rounded bg-slate-600 z-10"></div>
                 <div
                     ref={range}
-                    className="absolute h-1.5 rounded bg-red-600 z-20"
+                    className="absolute h-1.5 rounded bg-blue-500 z-20"
                 ></div>
             </div>
 
             <div className="flex justify-between mt-4">
-                <div className="bg-slate-100 px-3 py-1 rounded text-xs font-medium text-slate-600">
+                <div className="bg-slate-800/50 px-3 py-1 rounded text-xs font-medium text-slate-300 border border-slate-700">
                     {minVal.toLocaleString()}
                 </div>
-                <div className="bg-slate-100 px-3 py-1 rounded text-xs font-medium text-slate-600">
+                <div className="bg-slate-800/50 px-3 py-1 rounded text-xs font-medium text-slate-300 border border-slate-700">
                     {maxVal.toLocaleString()}
                 </div>
             </div>
@@ -117,9 +117,9 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
           height: 24px;
           width: 24px;
           border-radius: 50%;
-          background-color: #fff;
-          border: 2px solid #dc2626;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+          background-color: #3b82f6;
+          border: 2px solid #fff;
+          box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
           cursor: pointer;
           margin-top: -10px;
         }
@@ -128,9 +128,9 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
           height: 24px;
           width: 24px;
           border-radius: 50%;
-          background-color: #fff;
-          border: 2px solid #dc2626;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+          background-color: #3b82f6;
+          border: 2px solid #fff;
+          box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
           cursor: pointer;
         }
       `}</style>

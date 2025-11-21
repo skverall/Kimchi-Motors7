@@ -49,17 +49,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
           and elegance in every mile.
         </p>
 
-        <div className="bg-white p-4 rounded shadow-xl max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-4">
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl shadow-2xl max-w-5xl mx-auto flex flex-col lg:flex-row items-end gap-6">
           {/* Make */}
           <div className="flex-1 w-full">
             <select
-              className="w-full bg-slate-50 rounded px-4 py-3 text-sm border-none focus:ring-2 focus:ring-red-100 font-medium text-slate-700"
+              className="w-full bg-transparent border border-white/30 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all [&>option]:text-slate-900"
               value={searchParams.make}
               onChange={(e) =>
                 setSearchParams({ ...searchParams, make: e.target.value })
               }
             >
-              <option value="">Make</option>
+              <option value="" className="text-slate-500">Make</option>
               {BRANDS.map((b) => (
                 <option key={b.name} value={b.name}>
                   {b.name}
@@ -71,13 +71,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
           {/* Model */}
           <div className="flex-1 w-full">
             <select
-              className="w-full bg-slate-50 rounded px-4 py-3 text-sm border-none focus:ring-2 focus:ring-red-100 font-medium text-slate-700"
+              className="w-full bg-transparent border border-white/30 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all [&>option]:text-slate-900"
               value={searchParams.model}
               onChange={(e) =>
                 setSearchParams({ ...searchParams, model: e.target.value })
               }
             >
-              <option value="">Model</option>
+              <option value="" className="text-slate-500">Model</option>
               {/* Placeholder for models - would typically be filtered by make */}
               <option value="911">911</option>
               <option value="Cullinan">Cullinan</option>
@@ -87,7 +87,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
 
           {/* Price Slider */}
           <div className="flex-[2] w-full px-2">
-            <label className="text-xs text-slate-500 font-medium mb-1 block">
+            <label className="text-sm text-white font-medium mb-4 block text-center">
               Price
             </label>
             <DualRangeSlider
@@ -108,7 +108,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
           {/* Search Button */}
           <button
             onClick={() => onSearch(searchParams)}
-            className="w-full lg:w-auto bg-red-700 text-white px-10 py-3 rounded font-bold hover:bg-red-800 transition flex items-center justify-center gap-2 h-[50px]"
+            className="w-full lg:w-auto bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 h-[50px] mb-1"
           >
             <Search className="w-5 h-5" /> Search
           </button>
