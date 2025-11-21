@@ -1,3 +1,4 @@
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getServiceSupabase } from "@/lib/supabaseAdmin";
 
@@ -9,10 +10,14 @@ function parseId(rawId: string) {
   return id;
 }
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const id = parseId(params.id);
-    const updates = await request.json();
+    const { id: rawId } = await context.params;
+    const id = parseId(rawId);
+    const updates = (await request.json()) as Record<string, unknown>;
     const supabase = getServiceSupabase();
 
     const { data, error } = await supabase
@@ -31,9 +36,13 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  _request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const id = parseId(params.id);
+    const { id: rawId } = await context.params;
+    const id = parseId(rawId);
     const supabase = getServiceSupabase();
     const { error } = await supabase.from("cars").delete().eq("id", id);
 

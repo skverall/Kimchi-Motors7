@@ -92,7 +92,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   const handleOpenEdit = (car: CarItem) => {
-    setEditingId(car.id || null); // Ensure we have an ID
+    setEditingId(car.id ? String(car.id) : null); // Ensure we have an ID as string
     setFormData({
       make: car.make,
       model: car.model,
@@ -204,7 +204,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           <button
                             type="button"
                             onClick={() =>
-                              onUpdate(car.id || `${idx}`, { featured: !car.featured })
+                              onUpdate(String(car.id ?? idx), { featured: !car.featured })
                             }
                             className={`p-1.5 rounded-md transition ${car.featured
                               ? "bg-yellow-100 text-yellow-600"
@@ -218,7 +218,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           <button
                             type="button"
                             onClick={() =>
-                              onUpdate(car.id || `${idx}`, { mostWanted: !car.mostWanted })
+                              onUpdate(String(car.id ?? idx), { mostWanted: !car.mostWanted })
                             }
                             className={`p-1.5 rounded-md transition ${car.mostWanted
                               ? "bg-purple-100 text-purple-600"
@@ -245,7 +245,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         <Tooltip content="Delete Vehicle">
                           <button
                             type="button"
-                            onClick={() => onDelete(car.id || `${idx}`)}
+                            onClick={() => onDelete(String(car.id ?? idx))}
                             className="text-slate-400 hover:text-red-600 transition p-2 hover:bg-red-50 rounded-lg"
                             aria-label="Delete vehicle"
                           >
