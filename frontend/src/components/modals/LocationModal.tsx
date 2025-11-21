@@ -14,8 +14,8 @@ export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose })
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" aria-modal="true" role="dialog">
-      <div className="bg-white rounded-3xl w-full max-w-5xl h-[85vh] overflow-hidden shadow-2xl flex flex-col md:flex-row relative">
+    <div className="fixed inset-0 z-[100] bg-white animate-fade-in" aria-modal="true" role="dialog">
+      <div className="w-full h-full flex flex-col md:flex-row relative">
         <button
           type="button"
           onClick={onClose}
@@ -40,8 +40,8 @@ export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose })
                 key={loc.id}
                 onClick={() => setSelectedLocation(loc)}
                 className={`p-4 rounded-xl cursor-pointer transition-all border ${selectedLocation.id === loc.id
-                    ? "bg-blue-600 text-white border-blue-600 shadow-lg scale-[1.02]"
-                    : "bg-white hover:bg-gray-100 border-gray-100 text-slate-600"
+                  ? "bg-blue-600 text-white border-blue-600 shadow-lg scale-[1.02]"
+                  : "bg-white hover:bg-gray-100 border-gray-100 text-slate-600"
                   }`}
               >
                 <div className="flex justify-between items-start">
@@ -49,8 +49,8 @@ export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose })
                     <h3 className="font-bold text-lg">{loc.city}</h3>
                     <p
                       className={`text-xs font-semibold uppercase tracking-wider opacity-80 ${selectedLocation.id === loc.id
-                          ? "text-blue-100"
-                          : "text-slate-400"
+                        ? "text-blue-100"
+                        : "text-slate-400"
                         }`}
                     >
                       {loc.country}
