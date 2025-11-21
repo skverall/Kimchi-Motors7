@@ -105,7 +105,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
 
           {/* Search Container */}
           <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-4 md:p-8 shadow-2xl">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 items-end">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 items-center">
 
               {/* Make & Model */}
               <div className="lg:col-span-4 space-y-4">
@@ -174,7 +174,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
                           inputMode="numeric"
                           value={formatPriceValue(searchParams.minPrice)}
                           onChange={(e) => handleMinPriceChange(e.target.value)}
-                          className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-2 pl-7 pr-3 text-sm text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                          className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-2 pl-7 pr-3 text-base md:text-sm text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                           placeholder="0"
                         />
                       </div>
@@ -192,7 +192,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
                           inputMode="numeric"
                           value={formatPriceValue(searchParams.maxPrice)}
                           onChange={(e) => handleMaxPriceChange(e.target.value)}
-                          className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-2 pl-7 pr-3 text-sm text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                          className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-2 pl-7 pr-3 text-base md:text-sm text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                           placeholder="Max"
                         />
                       </div>
