@@ -11,7 +11,7 @@ import { CarDetails } from "@/components/cars/CarDetails";
 import { HowToBuy } from "@/components/sections/HowToBuy";
 import { FAQ } from "@/components/sections/FAQ";
 import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
-import { LocationModal } from "@/components/modals/LocationModal";
+import { ContactSection } from "@/components/sections/ContactSection";
 import { MostWantedMarquee } from "@/components/sections/MostWantedMarquee";
 import { BRANDS } from "@/constants/brands";
 import { INITIAL_CARS } from "@/constants/initialCars";
@@ -35,7 +35,7 @@ export default function Home() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const view = params.get("view");
-    if (view && ["home", "listing", "detail", "admin", "admin-dashboard"].includes(view)) {
+    if (view && ["home", "listing", "detail", "admin", "admin-dashboard", "contact"].includes(view)) {
       setPage(view as typeof page);
     }
   }, []);
@@ -101,13 +101,8 @@ export default function Home() {
 
 
   const [selectedCar, setSelectedCar] = useState<CarItem | null>(null);
-  const [isLocationModalOpen, setLocationModalOpen] = useState(false);
 
   const handleNavigate = (target: PageName) => {
-    if (target === "contact") {
-      setLocationModalOpen(true);
-      return;
-    }
     window.scrollTo(0, 0);
     setPage(target as typeof page);
     if (target !== "detail") setSelectedCar(null);
@@ -204,46 +199,8 @@ export default function Home() {
     }
   };
 
-  if (page === "admin") {
-    return (
-      <AdminLogin
-        onLogin={() => setPage("admin-dashboard")}
-        onBack={() => setPage("home")}
-      />
-    );
-  }
-
-  if (page === "admin-dashboard") {
-    return (
-      <AdminDashboard
-        cars={cars}
-        onAdd={handleAddCar}
-        onDelete={handleDeleteCar}
-        onUpdate={handleUpdateCar}
-        onLogout={() => setPage("home")}
-      />
-    );
-  }
-
-  if (page === "detail" && selectedCar) {
-    return (
-      <>
-        <CarDetails car={selectedCar} onBack={() => setPage("listing")} />
-        <FloatingWhatsApp />
-        <LocationModal
-          isOpen={isLocationModalOpen}
-          onClose={() => setLocationModalOpen(false)}
-        />
-        <Footer
-          onOpenLocation={() => setLocationModalOpen(true)}
-          onNavigate={handleNavigate}
-        />
-      </>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900">
+    <main className="min-h-screen bg-white font-sans text-slate-900">
       <Header onNavigate={handleNavigate} page={page} />
       {isSyncing && (
         <div className="bg-blue-50 text-blue-700 border border-blue-100 px-4 py-3 text-sm text-center">
@@ -259,30 +216,30 @@ export default function Home() {
       {page === "home" && (
         <>
           <HeroSection onSearch={handleSearch} />
+          <div id="brands-section">
+            {/* Brands grid */}
+            <section className="py-16 container mx-auto px-4">
+              <h2 className="text-2xl font-bold mb-8 text-center md:text-left">Browse by brands</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4">
+                {BRANDS.slice(0, 8).map((brand) => (
+                  <div
+                    key={brand.name}
+                    className="group border border-slate-100 rounded-2xl p-4 flex flex-col items-center justify-center bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer h-32"
+                  >
+                    <img
+                      src={brand.logo}
+                      alt={brand.name}
+                      className="h-12 w-auto object-contain mb-3 group-hover:scale-110 transition-transform duration-300 grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100"
+                    />
+                    <span className="text-xs font-bold text-slate-900 uppercase tracking-wide">
+                      {brand.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
 
-          {/* Brands grid */}
-          <section className="py-16 container mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-8 text-center md:text-left">Browse by brands</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4">
-              {BRANDS.slice(0, 8).map((brand) => (
-                <div
-                  key={brand.name}
-                  className="group border border-slate-100 rounded-2xl p-4 flex flex-col items-center justify-center bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer h-32"
-                >
-                  <img
-                    src={brand.logo}
-                    alt={brand.name}
-                    className="h-10 w-auto object-contain mb-3 opacity-60 group-hover:opacity-100 transition-opacity grayscale group-hover:grayscale-0"
-                  />
-                  <span className="text-xs font-bold text-slate-500 group-hover:text-slate-900 transition-colors uppercase tracking-wide text-center">
-                    {brand.name}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Most Wanted Marquee */}
           <MostWantedMarquee
             cars={cars.filter((c) => c.mostWanted)}
             onClick={handleCarClick}
