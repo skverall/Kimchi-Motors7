@@ -155,16 +155,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
           </div>
 
           {/* Right Image - Asymmetric & Overlapping */}
-          <div className="lg:col-span-5 relative h-[500px] lg:h-[800px] w-full flex items-center justify-center lg:justify-end pointer-events-none">
+          <div className="lg:col-span-5 relative h-[300px] md:h-[400px] lg:h-[800px] w-full flex items-center justify-center lg:justify-end pointer-events-none mt-8 lg:mt-0">
             <div className="absolute inset-0 bg-gradient-to-t from-[#0D0F12] via-transparent to-transparent z-10 lg:hidden" />
-            <div className="relative w-[140%] lg:w-[180%] max-w-none right-[-20%] lg:right-[-40%] z-0">
+            <div className="relative w-full lg:w-[180%] max-w-lg lg:max-w-none lg:right-[-40%] z-0 flex justify-center lg:block">
               <img
-                src="https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=2070&auto=format&fit=crop"
-                alt="Luxury Car"
-                className="w-full h-auto object-contain drop-shadow-2xl"
+                src="/hero-car.png"
+                alt="2025 Hyundai Santa Fe"
+                className="w-full h-auto object-contain drop-shadow-2xl transform scale-110 lg:scale-100"
               />
               {/* Reflection/Glow under the car */}
-              <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-[100px] bg-[#1A4AFF] opacity-20 blur-[80px]" />
+              <div className="absolute -bottom-4 lg:-bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-[60px] lg:h-[100px] bg-[#1A4AFF] opacity-20 blur-[60px] lg:blur-[80px]" />
             </div>
           </div>
 
