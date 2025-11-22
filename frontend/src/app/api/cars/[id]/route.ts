@@ -10,6 +10,30 @@ function parseId(rawId: string) {
   return id;
 }
 
+export async function GET(
+  _request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id: rawId } = await context.params;
+    const id = parseId(rawId);
+    const supabase = getServiceSupabase();
+
+    const { data, error } = await supabase
+      .from("cars")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json({ car: data });
+  } catch (error) {
+    console.error("Failed to fetch car", error);
+    return NextResponse.json({ error: "Car not found" }, { status: 404 });
+  }
+}
+
 export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
@@ -17,12 +41,12 @@ export async function PATCH(
   try {
     const { id: rawId } = await context.params;
     const id = parseId(rawId);
-    const updates = (await request.json()) as Record<string, unknown>;
+    const updates = await request.json();
     const supabase = getServiceSupabase();
 
     const { data, error } = await supabase
       .from("cars")
-      .update(updates)
+      .update(updates as any) // Cast to any to bypass strict type check for dynamic updates
       .eq("id", id)
       .select("*")
       .single();
