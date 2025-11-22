@@ -38,7 +38,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
 
   return (
     <div ref={containerRef} className="relative min-h-[90vh] flex items-center overflow-hidden bg-[#0D0F12] pt-0">
+      {/* Dynamic Mouse Glow */}
       <MouseTrackingGlow containerRef={containerRef} />
+
+      {/* Static Highlight: Top Right Corner */}
+      <div
+        className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full mix-blend-screen opacity-40 blur-[120px] pointer-events-none z-0"
+        style={{
+          background: "radial-gradient(circle, rgba(26, 74, 255, 0.4) 0%, rgba(147, 51, 234, 0.3) 50%, rgba(26, 74, 255, 0) 100%)",
+        }}
+      />
+
+      {/* Static Highlight: Above Santa Fe Car */}
+      <div
+        className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full mix-blend-screen opacity-30 blur-[100px] pointer-events-none z-10"
+        style={{
+          background: "radial-gradient(circle, rgba(56, 189, 248, 0.5) 0%, rgba(26, 74, 255, 0.2) 60%, rgba(26, 74, 255, 0) 100%)",
+        }}
+      />
       {/* Ambient Glow Effects - Removed in favor of dynamic glow */}
       {/* <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#1A4AFF] opacity-10 blur-[150px] pointer-events-none" /> */}
       {/* <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-[#1A4AFF] opacity-5 blur-[200px] pointer-events-none" /> */}

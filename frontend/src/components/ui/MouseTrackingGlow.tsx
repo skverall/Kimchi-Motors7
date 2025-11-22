@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 interface MouseTrackingGlowProps {
@@ -11,13 +11,20 @@ export const MouseTrackingGlow: React.FC<MouseTrackingGlowProps> = ({ containerR
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
-    // Smooth out the mouse movement - Slower, more viscous (water-like)
-    const springConfig = { damping: 50, stiffness: 80, mass: 2 };
+    // Firefly effect: Instant follow (stiff spring or direct)
+    // User asked for "without delay", so we use a very stiff spring or direct value.
+    // A very stiff spring feels "instant" but smooths out micro-jitters.
+    const springConfig = { damping: 20, stiffness: 300, mass: 0.1 };
     const x = useSpring(mouseX, springConfig);
     const y = useSpring(mouseY, springConfig);
 
+    // Entrance animation state
+    const [isVisible, setIsVisible] = useState(false);
+
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
+            if (!isVisible) setIsVisible(true);
+
             if (containerRef?.current) {
                 const rect = containerRef.current.getBoundingClientRect();
                 // Calculate position relative to the container
@@ -51,6 +58,8 @@ export const MouseTrackingGlow: React.FC<MouseTrackingGlowProps> = ({ containerR
         };
 
         const handleTouchMove = (e: TouchEvent) => {
+            if (!isVisible) setIsVisible(true);
+
             if (e.touches.length > 0) {
                 const touch = e.touches[0];
                 if (containerRef?.current) {
@@ -71,27 +80,25 @@ export const MouseTrackingGlow: React.FC<MouseTrackingGlowProps> = ({ containerR
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("touchmove", handleTouchMove);
         };
-    }, [mouseX, mouseY, containerRef]);
+    }, [mouseX, mouseY, containerRef, isVisible]);
 
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {/* Static Base Blob - Right Side */}
-            <div
-                className="absolute top-1/2 right-[-10%] -translate-y-1/2 w-[800px] h-[800px] rounded-full mix-blend-screen opacity-60 blur-[100px]"
-                style={{
-                    background: "radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, rgba(26, 74, 255, 0.3) 40%, rgba(147, 51, 234, 0.2) 70%, rgba(26, 74, 255, 0) 100%)",
-                }}
-            />
-
-            {/* Moving Blob - Follows Mouse */}
+            {/* Moving Blob - Follows Mouse - Firefly Style */}
             <motion.div
-                className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full mix-blend-screen blur-[80px]"
+                className="absolute top-0 left-0 w-[300px] h-[300px] rounded-full mix-blend-screen blur-[60px]"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{
+                    opacity: isVisible ? 1 : 0,
+                    scale: isVisible ? 1 : 0
+                }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
                 style={{
                     x,
                     y,
                     translateX: "-50%",
                     translateY: "-50%",
-                    // Brighter, multi-colored gradient (Blue -> Purple -> Cyan -> Transparent)
+                    // Brighter, multi-colored gradient
                     background: "radial-gradient(circle, rgba(56, 189, 248, 0.8) 0%, rgba(26, 74, 255, 0.6) 30%, rgba(147, 51, 234, 0.4) 60%, rgba(26, 74, 255, 0) 80%)",
                 }}
             />
