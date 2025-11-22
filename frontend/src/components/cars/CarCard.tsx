@@ -36,7 +36,7 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => (
       </div>
 
       <div className="mt-auto pt-3 border-t border-gray-100">
-        <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-4">
+        <div className="grid grid-cols-2 gap-y-2 gap-x-4">
           {/* Engine */}
           <div className="flex items-center gap-1.5">
             <Fuel className="w-3.5 h-3.5 text-gray-400" />

@@ -14,6 +14,7 @@ import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
 import { ShowroomsSection } from "@/components/sections/ShowroomsSection";
 import { ContactPageSection } from "@/components/sections/ContactPageSection";
 import { MostWantedMarquee } from "@/components/sections/MostWantedMarquee";
+import { BrandsSection } from "@/components/sections/BrandsSection";
 import { BRANDS } from "@/constants/brands";
 import { INITIAL_CARS } from "@/constants/initialCars";
 
@@ -257,27 +258,9 @@ export default function Home() {
         <>
           <HeroSection onSearch={handleSearch} />
           <div id="brands-section">
-            {/* Brands grid */}
-            <section className="py-16 container mx-auto px-4">
-              <h2 className="text-2xl font-bold mb-8 text-center md:text-left">Browse by brands</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4">
-                {BRANDS.slice(0, 8).map((brand) => (
-                  <div
-                    key={brand.name}
-                    className="group border border-slate-100 rounded-2xl p-4 flex flex-col items-center justify-center bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer h-32"
-                  >
-                    <img
-                      src={brand.logo}
-                      alt={brand.name}
-                      className="h-12 w-auto object-contain mb-3 group-hover:scale-110 transition-transform duration-300 grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100"
-                    />
-                    <span className="text-xs font-bold text-slate-900 uppercase tracking-wide">
-                      {brand.name}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </section>
+            <div id="brands-section">
+              <BrandsSection />
+            </div>
           </div>
 
           <MostWantedMarquee
