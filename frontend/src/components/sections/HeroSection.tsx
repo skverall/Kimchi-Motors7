@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { BRANDS } from "@/constants/brands";
+import { MouseTrackingGlow } from "@/components/ui/MouseTrackingGlow";
+import { useRef } from "react";
 
 export interface SearchParams {
   make: string;
@@ -26,6 +28,7 @@ const PRICE_RANGES = [
 const YEARS = Array.from({ length: 11 }, (_, i) => (2025 - i).toString()).concat(["Before 2015"]);
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useState<SearchParams>({
     make: "",
     model: "",
@@ -34,10 +37,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
   });
 
   return (
-    <div className="relative min-h-[90vh] flex items-center overflow-hidden bg-[#0D0F12] pt-0">
-      {/* Ambient Glow Effects */}
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#1A4AFF] opacity-10 blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-[#1A4AFF] opacity-5 blur-[200px] pointer-events-none" />
+    <div ref={containerRef} className="relative min-h-[90vh] flex items-center overflow-hidden bg-[#0D0F12] pt-0">
+      <MouseTrackingGlow containerRef={containerRef} />
+      {/* Ambient Glow Effects - Removed in favor of dynamic glow */}
+      {/* <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#1A4AFF] opacity-10 blur-[150px] pointer-events-none" /> */}
+      {/* <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-[#1A4AFF] opacity-5 blur-[200px] pointer-events-none" /> */}
 
       <div className="container mx-auto px-4 relative z-10 h-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center h-full">
