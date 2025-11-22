@@ -359,6 +359,24 @@ export default function Home() {
 
       {page === "showrooms" && <ShowroomsSection />}
       {page === "contact" && <ContactPageSection />}
+
+      {page === "admin" && (
+        <AdminLogin
+          onLogin={() => handleNavigate("admin-dashboard")}
+          onBack={() => handleNavigate("home")}
+        />
+      )}
+
+      {page === "admin-dashboard" && (
+        <AdminDashboard
+          cars={cars}
+          onAdd={handleAddCar}
+          onDelete={handleDeleteCar}
+          onUpdate={handleUpdateCar}
+          onLogout={() => handleNavigate("home")}
+        />
+      )}
+
       {page === "detail" && selectedCar && (
         <CarDetails
           car={selectedCar}
