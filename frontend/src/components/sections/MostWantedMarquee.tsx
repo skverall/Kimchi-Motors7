@@ -96,6 +96,7 @@ const InteractiveMarquee = ({ children }: { children: React.ReactNode }) => {
 
   // Interaction logic
   const isDragging = useRef(false);
+  const shouldBlockClick = useRef(false);
 
   const handlePanStart = () => {
     isDragging.current = true;
@@ -105,18 +106,32 @@ const InteractiveMarquee = ({ children }: { children: React.ReactNode }) => {
   const handlePan = (event: any, info: any) => {
     // When dragging, we move x directly by the delta
     x.set(x.get() + info.delta.x);
-    // We also update velocity to track the throw speed, but we don't apply it to x yet
-    // smoothVelocity will track this
     velocity.set(info.delta.x);
   };
 
   const handlePanEnd = (event: any, info: any) => {
     isDragging.current = false;
+
+    // If we moved significantly, block the subsequent click
+    const moveDistance = Math.sqrt(info.offset.x * info.offset.x + info.offset.y * info.offset.y);
+    if (moveDistance > 5) {
+      shouldBlockClick.current = true;
+      // Reset the block flag after a short delay to allow future clicks
+      setTimeout(() => {
+        shouldBlockClick.current = false;
+      }, 100);
+    }
+
     // Apply inertia
-    // info.velocity.x is pixels per second
-    // We convert to pixels per frame (approx)
     const endVelocity = info.velocity.x / 60;
     velocity.set(endVelocity);
+  };
+
+  const handleClickCapture = (e: React.MouseEvent) => {
+    if (shouldBlockClick.current) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
   };
 
   useAnimationFrame((t, delta) => {
@@ -169,6 +184,7 @@ const InteractiveMarquee = ({ children }: { children: React.ReactNode }) => {
         onPanStart={handlePanStart}
         onPan={handlePan}
         onPanEnd={handlePanEnd}
+        onClickCapture={handleClickCapture}
       >
         {children}
       </motion.div>
