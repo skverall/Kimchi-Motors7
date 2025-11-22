@@ -48,6 +48,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     featured: false,
     mostWanted: false,
     description: "",
+    status: "Available",
   };
 
   const [formData, setFormData] = useState<Partial<Omit<CarItem, "id">>>(initialFormState);
@@ -55,16 +56,31 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"All" | "Available" | "In Transit" | "Sold">("All");
+  const [sortBy, setSortBy] = useState<"newest" | "price_asc" | "price_desc" | "year_newest" | "mileage_asc">("newest");
 
-  // Filter cars based on search
-  const filteredCars = cars.filter((car) => {
-    const search = searchTerm.toLowerCase();
-    return (
-      car.make.toLowerCase().includes(search) ||
-      car.model.toLowerCase().includes(search) ||
-      car.year.toString().includes(search)
-    );
-  });
+  // Filter and Sort Logic
+  const filteredCars = cars
+    .filter((car) => {
+      const search = searchTerm.toLowerCase();
+      const matchesSearch =
+        car.make.toLowerCase().includes(search) ||
+        car.model.toLowerCase().includes(search) ||
+        car.year.toString().includes(search);
+
+      const matchesStatus = statusFilter === "All" || (car.status || "Available") === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "price_asc": return a.price - b.price;
+        case "price_desc": return b.price - a.price;
+        case "year_newest": return b.year - a.year;
+        case "mileage_asc": return a.mileage - b.mileage;
+        default: return 0; // Keep original order
+      }
+    });
 
   // Calculate Stats
   const totalValue = cars.reduce((sum, car) => sum + car.price, 0);
@@ -76,12 +92,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setUploadError(null);
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", file);
 
       const res = await fetch("/api/upload-image", {
         method: "POST",
-        body: formData,
+        body: uploadFormData,
       });
 
       if (!res.ok) {
@@ -122,6 +138,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       featured: car.featured,
       mostWanted: car.mostWanted,
       description: car.description,
+      status: car.status || "Available",
     });
     setModalOpen(true);
   };
@@ -141,148 +158,191 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 pb-20 md:pb-0">
-      {/* Top Bar */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-30">
-        <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center justify-between w-full md:w-auto">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                <span className="text-white font-black text-xs">KM</span>
+    <div className="min-h-screen bg-slate-50 pb-20 md:pb-10">
+      {/* Top Navigation Bar */}
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-30 px-4 py-3 shadow-sm">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-blue-600 p-2 rounded-lg">
+                <Plus className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-lg hidden md:block">Admin Dashboard</span>
-              <span className="font-bold text-lg md:hidden">Admin</span>
+              <h1 className="text-xl font-bold text-slate-900">Admin Dashboard</h1>
             </div>
-            <div className="flex items-center gap-2 md:hidden">
-              <button
-                type="button"
-                onClick={handleOpenAdd}
-                className="bg-blue-600 text-white p-2 rounded-lg shadow-lg shadow-blue-200"
-              >
-                <Plus className="w-5 h-5" />
-              </button>
-              <button
-                type="button"
-                onClick={onLogout}
-                className="text-slate-500 p-2"
-              >
-                <LogOut className="w-5 h-5" />
-              </button>
-            </div>
+            {/* Mobile Logout */}
+            <button onClick={onLogout} className="md:hidden p-2 text-slate-400 hover:text-slate-600">
+              <LogOut className="w-5 h-5" />
+            </button>
           </div>
 
-          {/* Search Bar */}
-          <div className="w-full md:w-96 relative">
-            <input
-              type="text"
-              placeholder="Search by make, model, or year..."
-              className="w-full pl-10 pr-4 py-2 bg-slate-100 border-transparent focus:bg-white focus:border-blue-500 rounded-lg text-sm transition-all outline-none border"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <div className="absolute left-3 top-2.5 text-slate-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+          <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+            <div className="relative group w-full md:w-64">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Search inventory..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-slate-100 border-transparent focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg text-sm transition-all outline-none"
+              />
             </div>
-          </div>
-
-          <div className="hidden md:flex items-center gap-4">
-            <Tooltip content="Add a new vehicle to inventory">
-              <button
-                type="button"
-                onClick={handleOpenAdd}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition flex items-center gap-2 shadow-lg shadow-blue-100"
-              >
-                <Plus className="w-4 h-4" /> Add Vehicle
-              </button>
-            </Tooltip>
-            <Tooltip content="Logout">
-              <button
-                type="button"
-                onClick={onLogout}
-                className="text-slate-500 hover:text-red-600 transition"
-              >
-                <LogOut className="w-5 h-5" />
-              </button>
-            </Tooltip>
+            <button
+              onClick={handleOpenAdd}
+              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-all shadow-sm hover:shadow-md active:scale-95"
+            >
+              <Plus className="w-4 h-4" />
+              <span className="hidden md:inline">Add Vehicle</span>
+              <span className="md:hidden">Add New</span>
+            </button>
+            <button onClick={onLogout} className="hidden md:flex items-center gap-2 text-slate-500 hover:text-slate-800 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-sm font-medium">
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Stats Section */}
-      <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6">
-          <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-            <div className="text-xs text-slate-500 font-bold uppercase mb-1">Total Inventory</div>
+      <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+        {/* Summary Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Total Inventory</div>
             <div className="text-2xl font-black text-slate-900">{totalCars}</div>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-            <div className="text-xs text-slate-500 font-bold uppercase mb-1">Total Value</div>
+          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Total Value</div>
             <div className="text-2xl font-black text-emerald-600">${(totalValue / 1000000).toFixed(1)}M</div>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-            <div className="text-xs text-slate-500 font-bold uppercase mb-1">Featured</div>
+          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Featured</div>
             <div className="text-2xl font-black text-yellow-600">{featuredCount}</div>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-            <div className="text-xs text-slate-500 font-bold uppercase mb-1">Most Wanted</div>
+          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Most Wanted</div>
             <div className="text-2xl font-black text-purple-600">{mostWantedCount}</div>
           </div>
         </div>
 
+        {/* Filters and Sorting */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          {/* Status Filters */}
+          <div className="flex flex-wrap gap-2">
+            {(["All", "Available", "In Transit", "Sold"] as const).map((status) => (
+              <button
+                key={status}
+                onClick={() => setStatusFilter(status)}
+                className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all ${statusFilter === status
+                    ? "bg-slate-900 text-white shadow-md"
+                    : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                  }`}
+              >
+                {status}
+              </button>
+            ))}
+          </div>
+
+          {/* Sort Dropdown */}
+          <div className="flex items-center gap-2 w-full md:w-auto">
+            <span className="text-sm font-medium text-slate-500 whitespace-nowrap">Sort by:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="w-full md:w-auto bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 outline-none font-semibold cursor-pointer"
+            >
+              <option value="newest">Newest Added</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="year_newest">Year: Newest</option>
+              <option value="mileage_asc">Mileage: Low to High</option>
+            </select>
+          </div>
+        </div>
+
         {/* Responsive Card Grid (All Screens) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredCars.map((car, idx) => (
-            <div key={car.id || idx} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-4 hover:shadow-md transition-shadow">
-              <div className="w-full h-48 rounded-lg bg-slate-100 overflow-hidden shrink-0 relative">
-                <img
-                  src={car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${Date.now()}` : ""}
-                  alt={car.model}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute top-2 right-2 flex gap-1">
-                  <button
-                    onClick={() => onUpdate(String(car.id ?? idx), { featured: !car.featured })}
-                    className={`p-1.5 rounded-md backdrop-blur-md ${car.featured ? "bg-yellow-100/90 text-yellow-600" : "bg-white/90 text-slate-400 hover:text-yellow-500"}`}
-                  >
-                    <Star className="w-3.5 h-3.5 fill-current" />
-                  </button>
-                  <button
-                    onClick={() => onUpdate(String(car.id ?? idx), { mostWanted: !car.mostWanted })}
-                    className={`p-1.5 rounded-md backdrop-blur-md ${car.mostWanted ? "bg-purple-100/90 text-purple-600" : "bg-white/90 text-slate-400 hover:text-purple-500"}`}
-                  >
-                    <Zap className="w-3.5 h-3.5 fill-current" />
-                  </button>
+        {filteredCars.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredCars.map((car, idx) => (
+              <div key={car.id || idx} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-4 hover:shadow-md transition-shadow">
+                <div className="w-full h-48 rounded-lg bg-slate-100 overflow-hidden shrink-0 relative">
+                  <img
+                    src={car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${Date.now()}` : ""}
+                    alt={car.model}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-2 right-2 flex gap-1">
+                    <button
+                      onClick={() => onUpdate(String(car.id ?? idx), { featured: !car.featured })}
+                      className={`p-1.5 rounded-md backdrop-blur-md ${car.featured ? "bg-yellow-100/90 text-yellow-600" : "bg-white/90 text-slate-400 hover:text-yellow-500"}`}
+                    >
+                      <Star className="w-3.5 h-3.5 fill-current" />
+                    </button>
+                    <button
+                      onClick={() => onUpdate(String(car.id ?? idx), { mostWanted: !car.mostWanted })}
+                      className={`p-1.5 rounded-md backdrop-blur-md ${car.mostWanted ? "bg-purple-100/90 text-purple-600" : "bg-white/90 text-slate-400 hover:text-purple-500"}`}
+                    >
+                      <Zap className="w-3.5 h-3.5 fill-current" />
+                    </button>
+                  </div>
+                  {/* Status Badge Overlay */}
+                  <div className="absolute bottom-2 left-2">
+                    <span className={`px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-wide backdrop-blur-md ${car.status === 'Sold' ? 'bg-red-500/90 text-white' :
+                        car.status === 'In Transit' ? 'bg-orange-500/90 text-white' :
+                          'bg-emerald-500/90 text-white'
+                      }`}>
+                      {car.status || "Available"}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h3 className="font-bold text-slate-900 text-lg truncate">{car.make} {car.model}</h3>
+                        <p className="text-xs text-slate-500 font-medium">{car.year} • {car.mileage.toLocaleString()} km</p>
+                      </div>
+                    </div>
+                    <div className="font-black text-xl text-slate-900">${car.price.toLocaleString()}</div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-slate-50">
+                    <button
+                      onClick={() => handleOpenEdit(car)}
+                      className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition"
+                    >
+                      <Pencil className="w-3.5 h-3.5" /> Edit
+                    </button>
+                    <button
+                      onClick={() => onDelete(String(car.id ?? idx))}
+                      className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" /> Delete
+                    </button>
+                  </div>
                 </div>
               </div>
-              <div className="flex-1 min-w-0 flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h3 className="font-bold text-slate-900 text-lg truncate">{car.make} {car.model}</h3>
-                      <p className="text-xs text-slate-500 font-medium">{car.year} • {car.mileage.toLocaleString()} km</p>
-                    </div>
-                  </div>
-                  <div className="font-black text-xl text-slate-900">${car.price.toLocaleString()}</div>
-                </div>
-
-                <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-slate-50">
-                  <button
-                    onClick={() => handleOpenEdit(car)}
-                    className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition"
-                  >
-                    <Pencil className="w-3.5 h-3.5" /> Edit
-                  </button>
-                  <button
-                    onClick={() => onDelete(String(car.id ?? idx))}
-                    className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" /> Delete
-                  </button>
-                </div>
+            ))}
+          </div>
+        ) : (
+          /* Empty State */
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="bg-slate-100 p-6 rounded-full mb-4">
+              <div className="text-slate-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
               </div>
             </div>
-          ))}
-        </div>
+            <h3 className="text-lg font-bold text-slate-900 mb-1">No vehicles found</h3>
+            <p className="text-slate-500">Try adjusting your search or filters.</p>
+            <button
+              onClick={() => { setSearchTerm(""); setStatusFilter("All"); }}
+              className="mt-4 text-blue-600 font-bold hover:underline"
+            >
+              Clear all filters
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Add/Edit Modal */}
@@ -374,6 +434,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     />
                   </div>
                   <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Status
+                    </label>
+                    <select
+                      className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                      value={formData.status || "Available"}
+                      onChange={(e) =>
+                        setFormData({ ...formData, status: e.target.value })
+                      }
+                    >
+                      <option value="Available">Available</option>
+                      <option value="In Transit">In Transit</option>
+                      <option value="Sold">Sold</option>
+                    </select>
+                  </div>
+                  <div className="col-span-2">
                     <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
                       Image URL
                     </label>
