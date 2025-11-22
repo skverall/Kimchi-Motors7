@@ -1,6 +1,6 @@
 "use client";
 
-import { Gauge, Settings, Fuel } from "lucide-react";
+import { Gauge, Settings, Fuel, Ship, CheckCircle2 } from "lucide-react";
 import type { CarItem } from "@/types/car";
 
 interface CarCardProps {
@@ -35,36 +35,40 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => (
         ${car.price.toLocaleString()}
       </div>
 
-      <div className="mt-auto pt-4 border-t border-gray-100">
-        <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+      <div className="mt-auto pt-3 border-t border-gray-100">
+        <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-4">
           {/* Engine */}
-          <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
-            <Fuel className="w-4 h-4 text-slate-400" />
-            <span>{car.fuel} {car.engine}</span>
+          <div className="flex items-center gap-1.5">
+            <Fuel className="w-3.5 h-3.5 text-gray-400" />
+            <span className="text-[11px] font-medium text-gray-600">{car.fuel} {car.engine}</span>
           </div>
 
           {/* Mileage */}
-          <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
-            <Gauge className="w-4 h-4 text-slate-400" />
-            <span>{car.mileage.toLocaleString()} km</span>
+          <div className="flex items-center gap-1.5">
+            <Gauge className="w-3.5 h-3.5 text-gray-400" />
+            <span className="text-[11px] font-medium text-gray-600">{car.mileage.toLocaleString()} km</span>
           </div>
 
           {/* Shipping */}
-          <div className="flex items-center gap-2 text-xs text-slate-500">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-            {car.shipping}
+          <div className="flex items-center gap-1.5">
+            <Ship className="w-3.5 h-3.5 text-gray-400" />
+            <span className="text-[11px] font-medium text-gray-600">{car.shipping || "By sea shipping"}</span>
           </div>
 
-          {/* Status Badge - Moved here */}
-          <div className="flex items-center">
-            {car.status && (
-              <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide text-white ${car.status === 'Sold' ? 'bg-red-500' :
-                car.status === 'In Transit' ? 'bg-orange-500' :
-                  'bg-emerald-500'
-                }`}>
-                {car.status}
-              </span>
-            )}
+          {/* Status */}
+          <div className="flex items-center gap-1.5">
+            <CheckCircle2
+              className={`w-3.5 h-3.5 ${car.status === 'Sold' ? 'text-red-500' :
+                car.status === 'In Transit' ? 'text-orange-500' :
+                  'text-emerald-500'
+                }`}
+            />
+            <span className={`text-[11px] font-bold ${car.status === 'Sold' ? 'text-red-600' :
+              car.status === 'In Transit' ? 'text-orange-600' :
+                'text-emerald-600'
+              }`}>
+              {car.status || "Available"}
+            </span>
           </div>
         </div>
       </div>
