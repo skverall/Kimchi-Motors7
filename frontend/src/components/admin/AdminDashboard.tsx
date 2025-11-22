@@ -229,155 +229,55 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
         </div>
 
-        {/* Desktop Table View */}
-        <div className="hidden md:block bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold">
-                <tr>
-                  <th className="p-4">Vehicle</th>
-                  <th className="p-4">Price</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {filteredCars.map((car, idx) => (
-                  <tr key={car.id || idx} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="p-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-16 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 relative">
-                          <img
-                            src={car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${Date.now()}` : ""}
-                            alt={car.model}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div>
-                          <div className="font-bold text-slate-900">
-                            {car.make} {car.model}
-                          </div>
-                          <div className="text-xs text-slate-500">
-                            {car.year} • {car.mileage.toLocaleString()} km
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-4 font-semibold">
-                      ${car.price.toLocaleString()}
-                    </td>
-                    <td className="p-4">
-                      <div className="flex items-center gap-2">
-                        <Tooltip content={car.featured ? "Remove from Featured" : "Add to Featured"}>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              onUpdate(String(car.id ?? idx), { featured: !car.featured })
-                            }
-                            className={`p-1.5 rounded-md transition ${car.featured
-                              ? "bg-yellow-100 text-yellow-600"
-                              : "text-slate-300 hover:bg-slate-100"
-                              }`}
-                          >
-                            <Star className="w-4 h-4 fill-current" />
-                          </button>
-                        </Tooltip>
-                        <Tooltip content={car.mostWanted ? "Remove from Most Wanted" : "Add to Most Wanted"}>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              onUpdate(String(car.id ?? idx), { mostWanted: !car.mostWanted })
-                            }
-                            className={`p-1.5 rounded-md transition ${car.mostWanted
-                              ? "bg-purple-100 text-purple-600"
-                              : "text-slate-300 hover:bg-slate-100"
-                              }`}
-                          >
-                            <Zap className="w-4 h-4 fill-current" />
-                          </button>
-                        </Tooltip>
-                      </div>
-                    </td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Tooltip content="Edit Vehicle Details">
-                          <button
-                            type="button"
-                            onClick={() => handleOpenEdit(car)}
-                            className="text-slate-400 hover:text-blue-600 transition p-2 hover:bg-blue-50 rounded-lg"
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </button>
-                        </Tooltip>
-                        <Tooltip content="Delete Vehicle">
-                          <button
-                            type="button"
-                            onClick={() => onDelete(String(car.id ?? idx))}
-                            className="text-slate-400 hover:text-red-600 transition p-2 hover:bg-red-50 rounded-lg"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </Tooltip>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Mobile Card View */}
-        <div className="md:hidden grid grid-cols-1 gap-4">
+        {/* Responsive Card Grid (All Screens) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredCars.map((car, idx) => (
-            <div key={car.id || idx} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex gap-4">
-              <div className="w-24 h-24 rounded-lg bg-slate-100 overflow-hidden shrink-0">
+            <div key={car.id || idx} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-4 hover:shadow-md transition-shadow">
+              <div className="w-full h-48 rounded-lg bg-slate-100 overflow-hidden shrink-0 relative">
                 <img
                   src={car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${Date.now()}` : ""}
                   alt={car.model}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                 />
+                <div className="absolute top-2 right-2 flex gap-1">
+                  <button
+                    onClick={() => onUpdate(String(car.id ?? idx), { featured: !car.featured })}
+                    className={`p-1.5 rounded-md backdrop-blur-md ${car.featured ? "bg-yellow-100/90 text-yellow-600" : "bg-white/90 text-slate-400 hover:text-yellow-500"}`}
+                  >
+                    <Star className="w-3.5 h-3.5 fill-current" />
+                  </button>
+                  <button
+                    onClick={() => onUpdate(String(car.id ?? idx), { mostWanted: !car.mostWanted })}
+                    className={`p-1.5 rounded-md backdrop-blur-md ${car.mostWanted ? "bg-purple-100/90 text-purple-600" : "bg-white/90 text-slate-400 hover:text-purple-500"}`}
+                  >
+                    <Zap className="w-3.5 h-3.5 fill-current" />
+                  </button>
+                </div>
               </div>
               <div className="flex-1 min-w-0 flex flex-col justify-between">
                 <div>
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start mb-2">
                     <div>
-                      <h3 className="font-bold text-slate-900 truncate">{car.make} {car.model}</h3>
-                      <p className="text-xs text-slate-500">{car.year} • {car.mileage.toLocaleString()} km</p>
+                      <h3 className="font-bold text-slate-900 text-lg truncate">{car.make} {car.model}</h3>
+                      <p className="text-xs text-slate-500 font-medium">{car.year} • {car.mileage.toLocaleString()} km</p>
                     </div>
                   </div>
-                  <div className="font-bold text-blue-600 mt-1">${car.price.toLocaleString()}</div>
+                  <div className="font-black text-xl text-slate-900">${car.price.toLocaleString()}</div>
                 </div>
 
-                <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-50">
-                  <div className="flex gap-1">
-                    <button
-                      onClick={() => onUpdate(String(car.id ?? idx), { featured: !car.featured })}
-                      className={`p-1.5 rounded-md ${car.featured ? "bg-yellow-100 text-yellow-600" : "text-slate-300 bg-slate-50"}`}
-                    >
-                      <Star className="w-3.5 h-3.5 fill-current" />
-                    </button>
-                    <button
-                      onClick={() => onUpdate(String(car.id ?? idx), { mostWanted: !car.mostWanted })}
-                      className={`p-1.5 rounded-md ${car.mostWanted ? "bg-purple-100 text-purple-600" : "text-slate-300 bg-slate-50"}`}
-                    >
-                      <Zap className="w-3.5 h-3.5 fill-current" />
-                    </button>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleOpenEdit(car)}
-                      className="p-1.5 text-blue-600 bg-blue-50 rounded-md"
-                    >
-                      <Pencil className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      onClick={() => onDelete(String(car.id ?? idx))}
-                      className="p-1.5 text-red-600 bg-red-50 rounded-md"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-slate-50">
+                  <button
+                    onClick={() => handleOpenEdit(car)}
+                    className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition"
+                  >
+                    <Pencil className="w-3.5 h-3.5" /> Edit
+                  </button>
+                  <button
+                    onClick={() => onDelete(String(car.id ?? idx))}
+                    className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" /> Delete
+                  </button>
                 </div>
               </div>
             </div>
