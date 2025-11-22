@@ -160,7 +160,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
             <div className="relative w-full lg:w-[180%] max-w-lg lg:max-w-none lg:right-[-40%] z-0 flex justify-center lg:block">
               {/* Background Text */}
               <div className="absolute top-1/2 left-1/2 -translate-x-[60%] -translate-y-[60%] lg:-translate-x-[60%] lg:-translate-y-[70%] z-0 pointer-events-none whitespace-nowrap">
-                <h2 className="text-[60px] md:text-[100px] lg:text-[180px] font-black italic text-transparent bg-clip-text bg-gradient-to-b from-white/10 to-white/0 transform -rotate-6 skew-x-12 tracking-tighter select-none">
+                <h2 className="text-[60px] md:text-[100px] lg:text-[180px] font-black italic text-transparent bg-clip-text bg-gradient-to-b from-white/5 to-white/0 transform -rotate-6 skew-x-12 tracking-tighter select-none">
                   KIMCHI <br className="hidden lg:block" /> MOTORS
                 </h2>
               </div>
