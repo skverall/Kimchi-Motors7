@@ -6,7 +6,6 @@ import {
   motion,
   useAnimationFrame,
   useMotionValue,
-  useSpring,
 } from "framer-motion";
 import { useRef, useEffect } from "react";
 
@@ -79,12 +78,6 @@ const InteractiveMarquee = ({ children }: { children: React.ReactNode }) => {
   const x = useMotionValue(0);
   const velocity = useMotionValue(baseVelocity);
 
-  // Smooth velocity for inertia
-  const smoothVelocity = useSpring(velocity, {
-    damping: 50,
-    stiffness: 400
-  });
-
   // We need to measure the content width to know when to wrap
   const contentWidth = useRef(0);
 
@@ -100,7 +93,9 @@ const InteractiveMarquee = ({ children }: { children: React.ReactNode }) => {
 
   const handlePanStart = () => {
     isDragging.current = true;
-    velocity.set(0); // Stop auto-scroll immediately
+    // Don't stop immediately, let it slide a bit or just stop?
+    // Stopping feels more responsive for "grabbing".
+    velocity.set(0);
   };
 
   const handlePan = (event: any, info: any) => {
@@ -116,14 +111,13 @@ const InteractiveMarquee = ({ children }: { children: React.ReactNode }) => {
     const moveDistance = Math.sqrt(info.offset.x * info.offset.x + info.offset.y * info.offset.y);
     if (moveDistance > 5) {
       shouldBlockClick.current = true;
-      // Reset the block flag after a short delay to allow future clicks
       setTimeout(() => {
         shouldBlockClick.current = false;
       }, 100);
     }
 
-    // Apply inertia
-    const endVelocity = info.velocity.x / 60;
+    // Apply inertia - reduce the divisor to make it fling further/smoother
+    const endVelocity = info.velocity.x / 40;
     velocity.set(endVelocity);
   };
 
@@ -138,27 +132,32 @@ const InteractiveMarquee = ({ children }: { children: React.ReactNode }) => {
     if (!isDragging.current) {
       // Decay velocity back to baseVelocity
       const currentVel = velocity.get();
+
+      // Simple linear interpolation (Lerp) for smoothness instead of Spring
+      // This prevents the "jitter" from stiff springs
+      let newVel = currentVel;
+
       if (currentVel !== baseVelocity) {
-        const decay = 0.02; // Slower decay for "premium" feel
-        const newVel = currentVel + (baseVelocity - currentVel) * decay;
+        const decay = 0.05; // Adjust for responsiveness
+        newVel = currentVel + (baseVelocity - currentVel) * decay;
 
         // Snap to base velocity if close enough
-        if (Math.abs(newVel - baseVelocity) < 0.001) {
-          velocity.set(baseVelocity);
-        } else {
-          velocity.set(newVel);
+        if (Math.abs(newVel - baseVelocity) < 0.01) {
+          newVel = baseVelocity;
         }
       }
 
+      velocity.set(newVel);
+
       // Apply movement
-      // We use smoothVelocity for that buttery smooth feel
-      let moveBy = smoothVelocity.get() * (delta / 16);
+      // Use newVel directly. Delta is time in ms since last frame.
+      // 16.6ms is one frame at 60fps.
+      // Normalizing by 16 ensures consistent speed across refresh rates.
+      let moveBy = newVel * (delta / 16);
       let currentX = x.get() + moveBy;
 
       // Wrap logic
       if (contentWidth.current > 0) {
-        // We assume 4 copies. Wrap point is 1/4th of width.
-        // If we are moving left (negative x), and x < -quarterWidth, we add quarterWidth.
         const quarterWidth = contentWidth.current / 4;
 
         if (currentX <= -quarterWidth) {
@@ -178,7 +177,7 @@ const InteractiveMarquee = ({ children }: { children: React.ReactNode }) => {
       <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-slate-900 to-transparent z-10 pointer-events-none" />
 
       <motion.div
-        className="flex w-max"
+        className="flex w-max will-change-transform" // Optimized for GPU
         style={{ x }}
         ref={contentRef}
         onPanStart={handlePanStart}
