@@ -1,13 +1,14 @@
 "use client";
 
+
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowRight, Car } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import type { PageName } from "@/components/layout/Header";
 import HeroSection, { SearchParams } from "@/components/sections/HeroSection";
 import { CarCard } from "@/components/cars/CarCard";
-import { CarDetails } from "@/components/cars/CarDetails";
 import { HowToBuy } from "@/components/sections/HowToBuy";
 import { FAQ } from "@/components/sections/FAQ";
 import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
@@ -112,6 +113,7 @@ export default function Home() {
 
 
   const [selectedCar, setSelectedCar] = useState<CarItem | null>(null);
+  const router = useRouter();
 
   const handleNavigate = (target: PageName) => {
     window.scrollTo(0, 0);
@@ -120,9 +122,8 @@ export default function Home() {
   };
 
   const handleCarClick = (car: CarItem) => {
-    setSelectedCar(car);
-    setPage("detail");
-    window.scrollTo(0, 0);
+    // Navigate to the separate subpage
+    router.push(`/inventory/${car.id}`);
   };
 
   const handleSearch = (params: SearchParams) => {
@@ -374,13 +375,6 @@ export default function Home() {
           onDelete={handleDeleteCar}
           onUpdate={handleUpdateCar}
           onLogout={() => handleNavigate("home")}
-        />
-      )}
-
-      {page === "detail" && selectedCar && (
-        <CarDetails
-          car={selectedCar}
-          onBack={() => handleNavigate("listing")}
         />
       )}
 

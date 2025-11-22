@@ -99,7 +99,7 @@ export const MouseTrackingGlow: React.FC<MouseTrackingGlowProps> = ({ containerR
                     translateX: "-50%",
                     translateY: "-50%",
                     // Brighter, multi-colored gradient
-                    background: "radial-gradient(circle, rgba(56, 189, 248, 0.8) 0%, rgba(26, 74, 255, 0.6) 30%, rgba(147, 51, 234, 0.4) 60%, rgba(26, 74, 255, 0) 80%)",
+                    background: "radial-gradient(circle, rgba(56, 189, 248, 0.5) 0%, rgba(26, 74, 255, 0.4) 30%, rgba(147, 51, 234, 0.2) 60%, rgba(26, 74, 255, 0) 80%)",
                 }}
             />
         </div>
