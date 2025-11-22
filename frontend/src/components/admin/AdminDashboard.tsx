@@ -48,7 +48,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     featured: false,
     mostWanted: false,
     description: "",
-    status: "Available",
+    status: "Available" as "Available" | "In Transit" | "Sold",
   };
 
   const [formData, setFormData] = useState<Partial<Omit<CarItem, "id">>>(initialFormState);
@@ -235,8 +235,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 key={status}
                 onClick={() => setStatusFilter(status)}
                 className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all ${statusFilter === status
-                    ? "bg-slate-900 text-white shadow-md"
-                    : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                  ? "bg-slate-900 text-white shadow-md"
+                  : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                   }`}
               >
                 {status}
@@ -289,8 +289,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   {/* Status Badge Overlay */}
                   <div className="absolute bottom-2 left-2">
                     <span className={`px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-wide backdrop-blur-md ${car.status === 'Sold' ? 'bg-red-500/90 text-white' :
-                        car.status === 'In Transit' ? 'bg-orange-500/90 text-white' :
-                          'bg-emerald-500/90 text-white'
+                      car.status === 'In Transit' ? 'bg-orange-500/90 text-white' :
+                        'bg-emerald-500/90 text-white'
                       }`}>
                       {car.status || "Available"}
                     </span>
@@ -441,7 +441,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
                       value={formData.status || "Available"}
                       onChange={(e) =>
-                        setFormData({ ...formData, status: e.target.value })
+                        setFormData({ ...formData, status: e.target.value as "Available" | "In Transit" | "Sold" })
                       }
                     >
                       <option value="Available">Available</option>
