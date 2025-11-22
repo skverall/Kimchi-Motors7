@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Settings } from "lucide-react";
+import { Menu, X, Settings, Plane } from "lucide-react";
+import { motion } from "framer-motion";
 
 export type PageName = "home" | "listing" | "detail" | "admin" | "admin-dashboard" | "contact" | "showrooms";
 
@@ -59,10 +60,24 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
         </nav>
 
         <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center gap-3 px-4 py-2 rounded-full bg-slate-50 border border-slate-100">
-            <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+          <div className="hidden md:flex items-center gap-3 px-4 py-2 rounded-full bg-slate-50 border border-slate-100 relative overflow-hidden">
+            <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase relative z-10">
               Dubai • London • Seoul
             </span>
+            <motion.div
+              className="absolute top-1/2 -translate-y-1/2 text-[#1A4AFF]/30 z-0"
+              initial={{ x: "120%", opacity: 0 }}
+              animate={{ x: "-120%", opacity: [0, 1, 1, 0] }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "linear",
+                repeatDelay: 1
+              }}
+            >
+              {/* Plane points NE by default. Rotate -135deg to point Left (West) */}
+              <Plane className="w-3 h-3 -rotate-[135deg]" />
+            </motion.div>
           </div>
 
           <button
