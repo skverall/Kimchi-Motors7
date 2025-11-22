@@ -46,7 +46,8 @@ export async function PATCH(
 
     const { data, error } = await supabase
       .from("cars")
-      .update(updates as any) // Cast to any to bypass strict type check for dynamic updates
+      // @ts-ignore - Supabase types are fighting us here, but runtime is fine
+      .update(updates)
       .eq("id", id)
       .select("*")
       .single();
