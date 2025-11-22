@@ -54,6 +54,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Filter cars based on search
+  const filteredCars = cars.filter((car) => {
+    const search = searchTerm.toLowerCase();
+    return (
+      car.make.toLowerCase().includes(search) ||
+      car.model.toLowerCase().includes(search) ||
+      car.year.toString().includes(search)
+    );
+  });
+
+  // Calculate Stats
+  const totalValue = cars.reduce((sum, car) => sum + car.price, 0);
+  const totalCars = cars.length;
+  const featuredCount = cars.filter(c => c.featured).length;
+  const mostWantedCount = cars.filter(c => c.mostWanted).length;
+
   const handleImageUpload = async (file: File) => {
     setUploadError(null);
     setIsUploading(true);
@@ -83,8 +101,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
-
-
   const handleOpenAdd = () => {
     setEditingId(null);
     setFormData(initialFormState);
@@ -92,7 +108,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   const handleOpenEdit = (car: CarItem) => {
-    setEditingId(car.id ? String(car.id) : null); // Ensure we have an ID as string
+    setEditingId(car.id ? String(car.id) : null);
     setFormData({
       make: car.make,
       model: car.model,
@@ -114,10 +130,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     e.preventDefault();
     if (formData.make && formData.model && formData.price) {
       if (editingId) {
-        // Update existing
         onUpdate(editingId, formData);
       } else {
-        // Add new
         onAdd(formData as Omit<CarItem, "id">);
       }
       setModalOpen(false);
@@ -127,22 +141,56 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-slate-50 text-slate-900 pb-20 md:pb-0">
       {/* Top Bar */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-20">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-              <span className="text-white font-black text-xs">KM</span>
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-30">
+        <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center justify-between w-full md:w-auto">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+                <span className="text-white font-black text-xs">KM</span>
+              </div>
+              <span className="font-bold text-lg hidden md:block">Admin Dashboard</span>
+              <span className="font-bold text-lg md:hidden">Admin</span>
             </div>
-            <span className="font-bold text-lg">Admin Dashboard</span>
+            <div className="flex items-center gap-2 md:hidden">
+              <button
+                type="button"
+                onClick={handleOpenAdd}
+                className="bg-blue-600 text-white p-2 rounded-lg shadow-lg shadow-blue-200"
+              >
+                <Plus className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={onLogout}
+                className="text-slate-500 p-2"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-4">
+
+          {/* Search Bar */}
+          <div className="w-full md:w-96 relative">
+            <input
+              type="text"
+              placeholder="Search by make, model, or year..."
+              className="w-full pl-10 pr-4 py-2 bg-slate-100 border-transparent focus:bg-white focus:border-blue-500 rounded-lg text-sm transition-all outline-none border"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <div className="absolute left-3 top-2.5 text-slate-400">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+            </div>
+          </div>
+
+          <div className="hidden md:flex items-center gap-4">
             <Tooltip content="Add a new vehicle to inventory">
               <button
                 type="button"
                 onClick={handleOpenAdd}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition flex items-center gap-2"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition flex items-center gap-2 shadow-lg shadow-blue-100"
               >
                 <Plus className="w-4 h-4" /> Add Vehicle
               </button>
@@ -160,9 +208,29 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      {/* Stats Section */}
+      <div className="container mx-auto px-4 py-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6">
+          <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+            <div className="text-xs text-slate-500 font-bold uppercase mb-1">Total Inventory</div>
+            <div className="text-2xl font-black text-slate-900">{totalCars}</div>
+          </div>
+          <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+            <div className="text-xs text-slate-500 font-bold uppercase mb-1">Total Value</div>
+            <div className="text-2xl font-black text-emerald-600">${(totalValue / 1000000).toFixed(1)}M</div>
+          </div>
+          <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+            <div className="text-xs text-slate-500 font-bold uppercase mb-1">Featured</div>
+            <div className="text-2xl font-black text-yellow-600">{featuredCount}</div>
+          </div>
+          <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+            <div className="text-xs text-slate-500 font-bold uppercase mb-1">Most Wanted</div>
+            <div className="text-2xl font-black text-purple-600">{mostWantedCount}</div>
+          </div>
+        </div>
+
+        {/* Desktop Table View */}
+        <div className="hidden md:block bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold">
@@ -174,11 +242,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {cars.map((car, idx) => (
-                  <tr key={car.id || idx} className="hover:bg-slate-50/50">
+                {filteredCars.map((car, idx) => (
+                  <tr key={car.id || idx} className="hover:bg-slate-50/50 transition-colors">
                     <td className="p-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-16 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0">
+                        <div className="w-16 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 relative">
                           <img
                             src={car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${Date.now()}` : ""}
                             alt={car.model}
@@ -237,7 +305,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             type="button"
                             onClick={() => handleOpenEdit(car)}
                             className="text-slate-400 hover:text-blue-600 transition p-2 hover:bg-blue-50 rounded-lg"
-                            aria-label="Edit vehicle details"
                           >
                             <Pencil className="w-4 h-4" />
                           </button>
@@ -247,7 +314,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             type="button"
                             onClick={() => onDelete(String(car.id ?? idx))}
                             className="text-slate-400 hover:text-red-600 transition p-2 hover:bg-red-50 rounded-lg"
-                            aria-label="Delete vehicle"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -260,213 +326,266 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </table>
           </div>
         </div>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden grid grid-cols-1 gap-4">
+          {filteredCars.map((car, idx) => (
+            <div key={car.id || idx} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex gap-4">
+              <div className="w-24 h-24 rounded-lg bg-slate-100 overflow-hidden shrink-0">
+                <img
+                  src={car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${Date.now()}` : ""}
+                  alt={car.model}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex-1 min-w-0 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-bold text-slate-900 truncate">{car.make} {car.model}</h3>
+                      <p className="text-xs text-slate-500">{car.year} • {car.mileage.toLocaleString()} km</p>
+                    </div>
+                  </div>
+                  <div className="font-bold text-blue-600 mt-1">${car.price.toLocaleString()}</div>
+                </div>
+
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-50">
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => onUpdate(String(car.id ?? idx), { featured: !car.featured })}
+                      className={`p-1.5 rounded-md ${car.featured ? "bg-yellow-100 text-yellow-600" : "text-slate-300 bg-slate-50"}`}
+                    >
+                      <Star className="w-3.5 h-3.5 fill-current" />
+                    </button>
+                    <button
+                      onClick={() => onUpdate(String(car.id ?? idx), { mostWanted: !car.mostWanted })}
+                      className={`p-1.5 rounded-md ${car.mostWanted ? "bg-purple-100 text-purple-600" : "text-slate-300 bg-slate-50"}`}
+                    >
+                      <Zap className="w-3.5 h-3.5 fill-current" />
+                    </button>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleOpenEdit(car)}
+                      className="p-1.5 text-blue-600 bg-blue-50 rounded-md"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => onDelete(String(car.id ?? idx))}
+                      className="p-1.5 text-red-600 bg-red-50 rounded-md"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Add/Edit Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
-              <h2 className="text-xl font-bold">
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white w-full h-[90vh] md:h-auto md:max-h-[90vh] md:max-w-2xl md:rounded-2xl rounded-t-2xl overflow-hidden flex flex-col shadow-2xl">
+            <div className="p-4 md:p-6 border-b border-slate-100 flex justify-between items-center bg-white z-10 shrink-0">
+              <h2 className="text-lg md:text-xl font-bold">
                 {editingId ? "Edit Vehicle" : "Add New Vehicle"}
               </h2>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
                 className="p-2 hover:bg-slate-100 rounded-full transition"
-                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                    Make
-                  </label>
-                  <input
-                    required
-                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                    value={formData.make}
-                    onChange={(e) =>
-                      setFormData({ ...formData, make: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                    Model
-                  </label>
-                  <input
-                    required
-                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                    value={formData.model}
-                    onChange={(e) =>
-                      setFormData({ ...formData, model: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                    Year
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                    value={formData.year}
-                    onChange={(e) =>
-                      setFormData({ ...formData, year: parseInt(e.target.value) })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                    Price ($)
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                    value={formData.price}
-                    onChange={(e) =>
-                      setFormData({ ...formData, price: parseInt(e.target.value) })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                    Mileage (km)
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                    value={formData.mileage}
-                    onChange={(e) =>
-                      setFormData({ ...formData, mileage: parseInt(e.target.value) })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                    Image URL
-                  </label>
-                  <input
-                    required
-                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                    value={formData.image}
-                    onChange={(e) =>
-                      setFormData({ ...formData, image: e.target.value })
-                    }
-                    placeholder="https://..."
-                  />
-                  <div className="mt-2 space-y-2">
-                    {formData.image && (
-                      <div className="flex items-center gap-3">
-                        <div className="w-16 h-12 rounded-lg overflow-hidden bg-slate-100">
-                          <img
-                            src={formData.image}
-                            alt="Current vehicle image preview"
-                            className="w-full h-full object-cover"
-                          />
+
+            <div className="overflow-y-auto flex-1 p-4 md:p-6">
+              <form id="car-form" onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Make
+                    </label>
+                    <input
+                      required
+                      className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                      value={formData.make}
+                      onChange={(e) =>
+                        setFormData({ ...formData, make: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Model
+                    </label>
+                    <input
+                      required
+                      className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                      value={formData.model}
+                      onChange={(e) =>
+                        setFormData({ ...formData, model: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Year
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                      value={formData.year}
+                      onChange={(e) =>
+                        setFormData({ ...formData, year: parseInt(e.target.value) })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Price ($)
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                      value={formData.price}
+                      onChange={(e) =>
+                        setFormData({ ...formData, price: parseInt(e.target.value) })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Mileage (km)
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                      value={formData.mileage}
+                      onChange={(e) =>
+                        setFormData({ ...formData, mileage: parseInt(e.target.value) })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Image URL
+                    </label>
+                    <input
+                      required
+                      className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                      value={formData.image}
+                      onChange={(e) =>
+                        setFormData({ ...formData, image: e.target.value })
+                      }
+                      placeholder="https://..."
+                    />
+                    <div className="mt-2 space-y-2">
+                      {formData.image && (
+                        <div className="flex items-center gap-3">
+                          <div className="w-16 h-12 rounded-lg overflow-hidden bg-slate-100">
+                            <img
+                              src={formData.image}
+                              alt="Preview"
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setFormData({ ...formData, image: "" })}
+                            className="text-xs font-medium text-slate-500 hover:text-red-600 hover:underline"
+                          >
+                            Remove
+                          </button>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => setFormData({ ...formData, image: "" })}
-                          className="text-xs font-medium text-slate-500 hover:text-red-600 hover:underline"
-                        >
-                          Remove image
-                        </button>
-                      </div>
-                    )}
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-xs text-slate-500">
-                        <Info className="w-3 h-3" />
-                        <span>or upload image file</span>
-                      </div>
-                      <input
-                        id="car-image-file"
-                        type="file"
-                        accept="image/*"
-                        disabled={isUploading}
-                        className="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
-                        aria-label="Upload vehicle image file"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            void handleImageUpload(file);
-                          }
-                        }}
-                      />
-                      {isUploading && (
-                        <p className="text-xs text-slate-500">Uploading image...</p>
                       )}
-                      {uploadError && (
-                        <p className="text-xs text-red-500">{uploadError}</p>
-                      )}
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <Info className="w-3 h-3" />
+                          <span>or upload image file</span>
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          disabled={isUploading}
+                          className="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) void handleImageUpload(file);
+                          }}
+                        />
+                        {isUploading && (
+                          <p className="text-xs text-slate-500">Uploading image...</p>
+                        )}
+                        {uploadError && (
+                          <p className="text-xs text-red-500">{uploadError}</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <label
-                  className="block text-xs font-bold text-slate-500 uppercase mb-1"
-                  htmlFor="car-description"
-                >
-                  Description
-                </label>
-                <textarea
-                  id="car-description"
-                  className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none h-24 resize-none"
-                  placeholder="Short description of the vehicle, package, condition..."
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                />
-              </div>
-              <div className="flex gap-4 pt-2">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.featured}
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                    Description
+                  </label>
+                  <textarea
+                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none h-24 resize-none"
+                    placeholder="Short description..."
+                    value={formData.description}
                     onChange={(e) =>
-                      setFormData({ ...formData, featured: e.target.checked })
+                      setFormData({ ...formData, description: e.target.value })
                     }
-                    className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
                   />
-                  <span className="text-sm font-medium">Featured Arrival</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.mostWanted}
-                    onChange={(e) =>
-                      setFormData({ ...formData, mostWanted: e.target.checked })
-                    }
-                    className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-sm font-medium">Most Wanted</span>
-                </label>
-              </div>
-              <div className="pt-4 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setModalOpen(false)}
-                  className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2.5 rounded-xl text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 transition shadow-lg shadow-blue-100"
-                >
-                  {editingId ? "Save Changes" : "Add Vehicle"}
-                </button>
-              </div>
-            </form>
+                </div>
+                <div className="flex gap-4 pt-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.featured}
+                      onChange={(e) =>
+                        setFormData({ ...formData, featured: e.target.checked })
+                      }
+                      className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm font-medium">Featured Arrival</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.mostWanted}
+                      onChange={(e) =>
+                        setFormData({ ...formData, mostWanted: e.target.checked })
+                      }
+                      className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm font-medium">Most Wanted</span>
+                  </label>
+                </div>
+              </form>
+            </div>
+
+            <div className="p-4 md:p-6 border-t border-slate-100 bg-slate-50 shrink-0 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setModalOpen(false)}
+                className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                form="car-form"
+                className="px-6 py-2.5 rounded-xl text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 transition shadow-lg shadow-blue-100"
+              >
+                {editingId ? "Save Changes" : "Add Vehicle"}
+              </button>
+            </div>
           </div>
         </div>
       )}
