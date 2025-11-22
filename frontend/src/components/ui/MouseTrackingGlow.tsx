@@ -11,8 +11,8 @@ export const MouseTrackingGlow: React.FC<MouseTrackingGlowProps> = ({ containerR
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
-    // Smooth out the mouse movement
-    const springConfig = { damping: 25, stiffness: 150, mass: 0.5 };
+    // Smooth out the mouse movement - Slower, more viscous (water-like)
+    const springConfig = { damping: 50, stiffness: 80, mass: 2 };
     const x = useSpring(mouseX, springConfig);
     const y = useSpring(mouseY, springConfig);
 
@@ -74,17 +74,27 @@ export const MouseTrackingGlow: React.FC<MouseTrackingGlowProps> = ({ containerR
     }, [mouseX, mouseY, containerRef]);
 
     return (
-        <motion.div
-            className="pointer-events-none absolute top-0 left-0 w-[600px] h-[600px] rounded-full z-0 mix-blend-screen"
-            style={{
-                x,
-                y,
-                translateX: "-50%",
-                translateY: "-50%",
-                // Brighter, multi-colored gradient (Blue -> Purple -> Cyan -> Transparent)
-                background: "radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, rgba(26, 74, 255, 0.25) 25%, rgba(147, 51, 234, 0.2) 50%, rgba(26, 74, 255, 0) 70%)",
-                filter: "blur(80px)", // Slightly reduced blur for more defined colors, but still soft
-            }}
-        />
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {/* Static Base Blob - Right Side */}
+            <div
+                className="absolute top-1/2 right-[-10%] -translate-y-1/2 w-[800px] h-[800px] rounded-full mix-blend-screen opacity-60 blur-[100px]"
+                style={{
+                    background: "radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, rgba(26, 74, 255, 0.3) 40%, rgba(147, 51, 234, 0.2) 70%, rgba(26, 74, 255, 0) 100%)",
+                }}
+            />
+
+            {/* Moving Blob - Follows Mouse */}
+            <motion.div
+                className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full mix-blend-screen blur-[80px]"
+                style={{
+                    x,
+                    y,
+                    translateX: "-50%",
+                    translateY: "-50%",
+                    // Brighter, multi-colored gradient (Blue -> Purple -> Cyan -> Transparent)
+                    background: "radial-gradient(circle, rgba(56, 189, 248, 0.8) 0%, rgba(26, 74, 255, 0.6) 30%, rgba(147, 51, 234, 0.4) 60%, rgba(26, 74, 255, 0) 80%)",
+                }}
+            />
+        </div>
     );
 };
