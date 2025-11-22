@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { CarItem } from "@/types/car";
 import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info } from "lucide-react";
 
@@ -58,6 +58,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"All" | "Available" | "In Transit" | "Sold">("All");
   const [sortBy, setSortBy] = useState<"newest" | "price_asc" | "price_desc" | "year_newest" | "mileage_asc">("newest");
+  const [isConnected, setIsConnected] = useState(true); // Optimistic default
+
+  // Check connection on mount
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const res = await fetch("/api/cars?limit=1");
+        setIsConnected(res.ok);
+      } catch (e) {
+        setIsConnected(false);
+      }
+    };
+    checkConnection();
+  }, []);
 
   // Filter and Sort Logic
   const filteredCars = cars
@@ -173,6 +187,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <button onClick={onLogout} className="md:hidden p-2 text-slate-400 hover:text-slate-600">
               <LogOut className="w-5 h-5" />
             </button>
+          </div>
+
+          {/* Connection Status */}
+          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-100">
+            <div className={`w-2 h-2 rounded-full ${isConnected ? "bg-emerald-500 animate-pulse" : "bg-red-500"}`} />
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              {isConnected ? "Database Connected" : "Database Offline"}
+            </span>
           </div>
 
           <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">

@@ -1,8 +1,9 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/types/supabase";
 
-let adminClient: SupabaseClient | null = null;
+let adminClient: SupabaseClient<Database> | null = null;
 
-export function getServiceSupabase(): SupabaseClient {
+export function getServiceSupabase(): SupabaseClient<Database> {
   if (adminClient) return adminClient;
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -12,6 +13,6 @@ export function getServiceSupabase(): SupabaseClient {
     throw new Error("Supabase service key or URL is not configured");
   }
 
-  adminClient = createClient(supabaseUrl, supabaseServiceKey);
+  adminClient = createClient<Database>(supabaseUrl, supabaseServiceKey);
   return adminClient;
 }

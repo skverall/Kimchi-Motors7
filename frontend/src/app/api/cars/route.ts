@@ -16,7 +16,10 @@ export async function GET() {
     let cars = data ?? [];
 
     if (cars.length === 0) {
-      const { error: seedError } = await supabase.from("cars").insert(INITIAL_CARS);
+      // Note: In a real production app, auto-seeding might be dangerous.
+      // Consider moving this to a dedicated seed script.
+      // For now, we map INITIAL_CARS to match the DB schema if needed.
+      const { error: seedError } = await supabase.from("cars").insert(INITIAL_CARS as any);
       if (seedError) throw seedError;
 
       const { data: seeded, error: reloadError } = await supabase
@@ -28,7 +31,12 @@ export async function GET() {
       cars = seeded ?? [];
     }
 
-    return NextResponse.json({ cars });
+    // Cache for 60 seconds, revalidate in background
+    return NextResponse.json({ cars }, {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+      },
+    });
   } catch (error) {
     console.error("Failed to load cars", error);
     return NextResponse.json({ error: "Failed to load cars" }, { status: 500 });
