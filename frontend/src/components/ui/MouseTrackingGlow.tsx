@@ -81,8 +81,9 @@ export const MouseTrackingGlow: React.FC<MouseTrackingGlowProps> = ({ containerR
                 y,
                 translateX: "-50%",
                 translateY: "-50%",
-                background: "radial-gradient(circle, rgba(26, 74, 255, 0.15) 0%, rgba(26, 74, 255, 0) 70%)",
-                filter: "blur(100px)",
+                // Brighter, multi-colored gradient (Blue -> Purple -> Cyan -> Transparent)
+                background: "radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, rgba(26, 74, 255, 0.25) 25%, rgba(147, 51, 234, 0.2) 50%, rgba(26, 74, 255, 0) 70%)",
+                filter: "blur(80px)", // Slightly reduced blur for more defined colors, but still soft
             }}
         />
     );
