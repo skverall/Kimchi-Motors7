@@ -60,22 +60,27 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
         </nav>
 
         <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center gap-3 px-4 py-2 rounded-full bg-slate-50 border border-slate-100 relative overflow-hidden">
+          <div className="hidden md:flex items-center gap-3 px-4 py-2 rounded-full bg-slate-50 border border-slate-100 relative">
             <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase relative z-10">
               Dubai • London • Seoul
             </span>
             <motion.div
-              className="absolute top-1/2 -translate-y-1/2 text-[#1A4AFF]/30 z-0"
-              initial={{ x: "120%", opacity: 0 }}
-              animate={{ x: "-120%", opacity: [0, 1, 1, 0] }}
+              className="absolute top-1/2 left-1/2 text-[#1A4AFF] z-20"
+              initial={{ x: "60px", y: "-50%", opacity: 0 }}
+              animate={{
+                x: ["60px", "0px", "-60px"], // Seoul (Right) -> London (Center) -> Dubai (Left)
+                y: ["-50%", "-250%", "-50%"], // Arc Upwards
+                opacity: [0, 1, 1, 0],
+                rotate: [-15, 0, 15] // Slight tilt to follow the arc
+              }}
               transition={{
-                duration: 6,
+                duration: 3,
                 repeat: Infinity,
-                ease: "linear",
-                repeatDelay: 1
+                ease: "easeInOut",
+                repeatDelay: 2
               }}
             >
-              {/* Plane points NE by default. Rotate -135deg to point Left (West) */}
+              {/* Plane icon base rotation to point Left (West) */}
               <Plane className="w-3 h-3 -rotate-[135deg]" />
             </motion.div>
           </div>
