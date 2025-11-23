@@ -178,7 +178,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
           {/* Right Image - Asymmetric & Overlapping */}
           <div className="lg:col-span-5 relative h-[300px] md:h-[400px] lg:h-[800px] w-full flex items-center justify-center lg:justify-end pointer-events-none mt-8 lg:mt-0">
             <div className="absolute inset-0 bg-gradient-to-t from-[#0D0F12] via-transparent to-transparent z-10 lg:hidden" />
-            <div className="relative w-full lg:w-[180%] max-w-lg lg:max-w-none lg:right-[-40%] z-0 flex justify-center lg:block">
+            <div className="relative w-full lg:w-[180%] max-w-lg lg:max-w-none lg:right-[-10%] z-0 flex justify-center lg:block">
               {/* Background Text */}
               <div className="absolute top-1/2 left-1/2 -translate-x-[60%] -translate-y-[60%] lg:-translate-x-[60%] lg:-translate-y-[70%] z-0 pointer-events-none whitespace-nowrap">
                 <h2 className="text-[60px] md:text-[100px] lg:text-[180px] font-black italic text-transparent bg-clip-text bg-gradient-to-b from-white/5 to-white/0 transform -rotate-6 skew-x-12 tracking-tighter select-none">
@@ -189,7 +189,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
               <img
                 src="/hero-car.png"
                 alt="2025 Hyundai Santa Fe"
-                className="relative z-10 w-full h-auto object-contain drop-shadow-2xl transform scale-110 lg:scale-100"
+                className="relative z-10 w-full h-auto object-contain drop-shadow-2xl transform scale-110 lg:scale-125"
               />
               {/* Reflection/Glow under the car */}
               <div className="absolute -bottom-4 lg:-bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-[60px] lg:h-[100px] bg-[#1A4AFF] opacity-20 blur-[60px] lg:blur-[80px] z-0" />
