@@ -18,6 +18,7 @@ import { MostWantedMarquee } from "@/components/sections/MostWantedMarquee";
 import { BrandsSection } from "@/components/sections/BrandsSection";
 import { BRANDS } from "@/constants/brands";
 import { INITIAL_CARS } from "@/constants/initialCars";
+import { InventorySection, type InventoryFilters } from "@/components/sections/InventorySection";
 
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
@@ -28,9 +29,8 @@ export default function Home() {
   const [cars, setCars] = useState<CarItem[]>(() =>
     INITIAL_CARS.map((car, index) => ({ ...car, id: `seed-${index}` }))
   );
-  const [filteredCars, setFilteredCars] = useState<CarItem[]>(() =>
-    INITIAL_CARS.map((car, index) => ({ ...car, id: `seed-${index}` }))
-  );
+
+  const [inventoryFilters, setInventoryFilters] = useState<InventoryFilters | undefined>(undefined);
   const [isSyncing, setIsSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -54,7 +54,6 @@ export default function Home() {
 
   const persistCars = (nextCars: CarItem[]) => {
     setCars(nextCars);
-    setFilteredCars(nextCars);
     if (typeof window !== "undefined") {
       localStorage.setItem("km_cached_cars_v2", JSON.stringify(nextCars));
     }
@@ -69,7 +68,6 @@ export default function Home() {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length) {
             setCars(parsed);
-            setFilteredCars(parsed);
           }
         } catch (err) {
           console.warn("Failed to parse cached cars", err);
@@ -127,47 +125,40 @@ export default function Home() {
   };
 
   const handleSearch = (params: SearchParams) => {
-    let result = cars;
+    const filters: InventoryFilters = {
+      make: params.make,
+      model: params.model,
+    };
 
-    // Filter by Make
-    if (params.make) {
-      result = result.filter((c) => c.make === params.make);
-    }
-
-    // Filter by Model
-    if (params.model) {
-      result = result.filter((c) => c.model === params.model);
-    }
-
-    // Filter by Price Range
+    // Parse Price Range
     if (params.priceRange) {
-      const price = params.priceRange;
-      if (price === "Under $50,000") {
-        result = result.filter((c) => c.price < 50000);
-      } else if (price === "$50,000 - $100,000") {
-        result = result.filter((c) => c.price >= 50000 && c.price <= 100000);
-      } else if (price === "$100,000 - $200,000") {
-        result = result.filter((c) => c.price >= 100000 && c.price <= 200000);
-      } else if (price === "$200,000 - $500,000") {
-        result = result.filter((c) => c.price >= 200000 && c.price <= 500000);
-      } else if (price === "$500,000+") {
-        result = result.filter((c) => c.price > 500000);
+      if (params.priceRange === "Under $50,000") {
+        filters.maxPrice = "50000";
+      } else if (params.priceRange === "$50,000 - $100,000") {
+        filters.minPrice = "50000";
+        filters.maxPrice = "100000";
+      } else if (params.priceRange === "$100,000 - $200,000") {
+        filters.minPrice = "100000";
+        filters.maxPrice = "200000";
+      } else if (params.priceRange === "$200,000 - $500,000") {
+        filters.minPrice = "200000";
+        filters.maxPrice = "500000";
+      } else if (params.priceRange === "$500,000+") {
+        filters.minPrice = "500000";
       }
     }
 
-    // Filter by Year
+    // Parse Year
     if (params.year) {
       if (params.year === "Before 2015") {
-        result = result.filter((c) => c.year < 2015);
+        filters.maxYear = "2014";
       } else {
-        const year = parseInt(params.year);
-        if (!isNaN(year)) {
-          result = result.filter((c) => c.year === year);
-        }
+        filters.minYear = params.year;
+        filters.maxYear = params.year;
       }
     }
 
-    setFilteredCars(result);
+    setInventoryFilters(filters);
     setPage("listing");
     window.scrollTo(0, 0);
   };
@@ -306,56 +297,13 @@ export default function Home() {
       )}
 
       {page === "listing" && (
-        <section className="py-20 bg-slate-50">
-          <div className="container mx-auto px-4 flex flex-col md:flex-row gap-8">
-            {/* Sidebar filters */}
-            <aside className="w-full md:w-64 space-y-4">
-              <h2 className="text-xl font-bold mb-2">Filter</h2>
-              <div>
-                <label className="text-xs text-slate-500 font-semibold ml-1">
-                  Brand
-                </label>
-                <select
-                  aria-label="Filter by brand"
-                  className="mt-1 w-full bg-white border border-slate-200 rounded-lg p-2.5 text-sm"
-                  defaultValue=""
-                  onChange={(e) =>
-                    handleSearch({ make: e.target.value, model: "" })
-                  }
-                >
-                  <option value="">All brands</option>
-                  {BRANDS.map((b) => (
-                    <option key={b.name} value={b.name}>
-                      {b.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </aside>
-
-            {/* Inventory grid */}
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold mb-6">
-                Inventory ({filteredCars.length})
-              </h1>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {filteredCars.map((car, index) => (
-                  <CarCard
-                    key={`${car.make}-${car.model}-${index}`}
-                    car={car}
-                    onClick={handleCarClick}
-                  />
-                ))}
-              </div>
-              {filteredCars.length === 0 && (
-                <div className="col-span-3 text-center py-20 text-slate-400">
-                  <Car className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                  No vehicles found matching your criteria.
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
+        <InventorySection
+          cars={cars}
+          onCarClick={handleCarClick}
+          initialFilters={inventoryFilters}
+          // Force re-mount when filters change to reset state
+          key={JSON.stringify(inventoryFilters)}
+        />
       )}
 
       {page === "showrooms" && <ShowroomsSection />}
