@@ -1,5 +1,5 @@
 export const BRANDS = [
-  // Luxury & Supercars
+  // Featured Brands (Top 8)
   {
     name: "Mercedes-Benz",
     logo: "https://logo.clearbit.com/mercedes-benz.com",
@@ -10,6 +10,38 @@ export const BRANDS = [
     logo: "https://logo.clearbit.com/bmw.com",
     models: ["7 Series", "5 Series", "3 Series", "X7", "X5", "X6", "M8", "M5", "M4", "M3", "XM"]
   },
+  {
+    name: "Kia",
+    logo: "https://logo.clearbit.com/kia.com",
+    models: ["K5", "Stinger", "Telluride", "Sorento", "Sportage", "Carnival", "EV6", "Soul"]
+  },
+  {
+    name: "Hyundai",
+    logo: "https://logo.clearbit.com/hyundai.com",
+    models: ["Elantra", "Sonata", "Tucson", "Santa Fe", "Palisade", "Kona", "Ioniq 5", "Ioniq 6"]
+  },
+  {
+    name: "Toyota",
+    logo: "https://logo.clearbit.com/toyota.com",
+    models: ["Camry", "Corolla", "RAV4", "Highlander", "Land Cruiser", "Supra", "Prius", "Sienna", "Tacoma", "Tundra"]
+  },
+  {
+    name: "Ford",
+    logo: "https://logo.clearbit.com/ford.com",
+    models: ["F-150", "Mustang", "Explorer", "Bronco", "Escape", "Edge", "Expedition", "Maverick"]
+  },
+  {
+    name: "Nissan",
+    logo: "https://logo.clearbit.com/nissanusa.com",
+    models: ["Altima", "Maxima", "Rogue", "Pathfinder", "Armada", "GT-R", "Z", "Frontier"]
+  },
+  {
+    name: "Rolls-Royce",
+    logo: "https://logo.clearbit.com/rolls-roycemotorcars.com",
+    models: ["Phantom", "Cullinan", "Ghost", "Wraith", "Dawn", "Spectre", "Boat Tail"]
+  },
+
+  // Other Luxury & Supercars
   {
     name: "Porsche",
     logo: "https://logo.clearbit.com/porsche.com",
@@ -35,18 +67,8 @@ export const BRANDS = [
     logo: "https://logo.clearbit.com/bentleymotors.com",
     models: ["Continental GT", "Flying Spur", "Bentayga", "Mulsanne", "Bacalar"]
   },
-  {
-    name: "Rolls-Royce",
-    logo: "https://logo.clearbit.com/rolls-roycemotorcars.com",
-    models: ["Phantom", "Cullinan", "Ghost", "Wraith", "Dawn", "Spectre", "Boat Tail"]
-  },
 
-  // Asian Brands
-  {
-    name: "Toyota",
-    logo: "https://logo.clearbit.com/toyota.com",
-    models: ["Camry", "Corolla", "RAV4", "Highlander", "Land Cruiser", "Supra", "Prius", "Sienna", "Tacoma", "Tundra"]
-  },
+  // Other Brands
   {
     name: "Honda",
     logo: "https://logo.clearbit.com/honda.com",
@@ -58,24 +80,9 @@ export const BRANDS = [
     models: ["RX", "ES", "LS", "NX", "GX", "LX", "IS", "LC", "RC"]
   },
   {
-    name: "Hyundai",
-    logo: "https://logo.clearbit.com/hyundai.com",
-    models: ["Elantra", "Sonata", "Tucson", "Santa Fe", "Palisade", "Kona", "Ioniq 5", "Ioniq 6"]
-  },
-  {
-    name: "Kia",
-    logo: "https://logo.clearbit.com/kia.com",
-    models: ["K5", "Stinger", "Telluride", "Sorento", "Sportage", "Carnival", "EV6", "Soul"]
-  },
-  {
     name: "Genesis",
     logo: "https://logo.clearbit.com/genesis.com",
     models: ["G70", "G80", "G90", "GV70", "GV80", "GV60"]
-  },
-  {
-    name: "Nissan",
-    logo: "https://logo.clearbit.com/nissanusa.com",
-    models: ["Altima", "Maxima", "Rogue", "Pathfinder", "Armada", "GT-R", "Z", "Frontier"]
   },
   {
     name: "Mazda",
@@ -87,17 +94,10 @@ export const BRANDS = [
     logo: "https://logo.clearbit.com/subaru.com",
     models: ["Outback", "Forester", "Crosstrek", "Ascent", "Impreza", "WRX", "BRZ"]
   },
-
-  // American Brands
   {
     name: "Tesla",
     logo: "https://logo.clearbit.com/tesla.com",
     models: ["Model S", "Model 3", "Model X", "Model Y", "Cybertruck"]
-  },
-  {
-    name: "Ford",
-    logo: "https://logo.clearbit.com/ford.com",
-    models: ["F-150", "Mustang", "Explorer", "Bronco", "Escape", "Edge", "Expedition", "Maverick"]
   },
   {
     name: "Chevrolet",
@@ -129,8 +129,6 @@ export const BRANDS = [
     logo: "https://logo.clearbit.com/ramtrucks.com",
     models: ["1500", "2500", "3500", "ProMaster"]
   },
-
-  // European Brands
   {
     name: "Volkswagen",
     logo: "https://logo.clearbit.com/vw.com",
