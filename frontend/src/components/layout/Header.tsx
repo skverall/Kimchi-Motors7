@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
           </Link>
         </div>
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-2">
           {[
             { id: "home", label: "Home" },
             { id: "listing", label: "Inventory" },
