@@ -20,6 +20,22 @@ export const MouseTrackingGlow: React.FC<MouseTrackingGlowProps> = ({ containerR
 
     // Entrance animation state
     const [isVisible, setIsVisible] = useState(false);
+    const [isMobile, setIsMobile] = useState(true); // Default to true to prevent flash on mobile
+
+    useEffect(() => {
+        // Check if device is mobile/touch
+        const checkMobile = () => {
+            const isTouch = window.matchMedia("(pointer: coarse)").matches;
+            const isSmallScreen = window.innerWidth < 768;
+            setIsMobile(isTouch || isSmallScreen);
+        };
+
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
+
+    if (isMobile) return null;
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {

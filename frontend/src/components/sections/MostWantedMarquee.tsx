@@ -132,9 +132,6 @@ const InteractiveMarquee = ({ children }: { children: React.ReactNode }) => {
     if (!isDragging.current) {
       // Decay velocity back to baseVelocity
       const currentVel = velocity.get();
-
-      // Simple linear interpolation (Lerp) for smoothness instead of Spring
-      // This prevents the "jitter" from stiff springs
       let newVel = currentVel;
 
       if (currentVel !== baseVelocity) {
@@ -153,16 +150,24 @@ const InteractiveMarquee = ({ children }: { children: React.ReactNode }) => {
       // Use newVel directly. Delta is time in ms since last frame.
       // 16.6ms is one frame at 60fps.
       // Normalizing by 16 ensures consistent speed across refresh rates.
-      let moveBy = newVel * (delta / 16);
+      // Capping delta to prevent huge jumps if tab was inactive
+      const safeDelta = Math.min(delta, 32);
+      let moveBy = newVel * (safeDelta / 16);
       let currentX = x.get() + moveBy;
 
       // Wrap logic
       if (contentWidth.current > 0) {
         const quarterWidth = contentWidth.current / 4;
 
+        // Ensure we wrap seamlessly
+        // If we've scrolled past the first set (moved left beyond -quarterWidth)
         if (currentX <= -quarterWidth) {
+          // Reset to 0 (or add quarterWidth to keep momentum)
+          // Adding quarterWidth keeps the exact position relative to the pattern
           currentX += quarterWidth;
-        } else if (currentX > 0) {
+        }
+        // If we've scrolled past the start (moved right beyond 0)
+        else if (currentX > 0) {
           currentX -= quarterWidth;
         }
       }
