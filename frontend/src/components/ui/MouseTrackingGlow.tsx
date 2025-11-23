@@ -35,39 +35,17 @@ export const MouseTrackingGlow: React.FC<MouseTrackingGlowProps> = ({ containerR
         return () => window.removeEventListener("resize", checkMobile);
     }, []);
 
-    if (isMobile) return null;
-
     useEffect(() => {
+        if (isMobile) return;
+
         const handleMouseMove = (e: MouseEvent) => {
             if (!isVisible) setIsVisible(true);
 
             if (containerRef?.current) {
                 const rect = containerRef.current.getBoundingClientRect();
-                // Calculate position relative to the container
-                // We use clientX/Y - rect.left/top to get position within the container
-                // But we need to account for scroll if we used pageX/Y. 
-                // clientX - rect.left is exactly the x coordinate within the container (visible part).
-                // But if the container is scrolled?
-                // rect.left/top changes with scroll. clientX/Y changes with mouse.
-                // This gives the correct position relative to the container's top-left corner *currently on screen*.
-                // Since we use absolute positioning inside the container, we want coordinates relative to the container's origin.
-                // If the container is `relative`, `absolute` children are positioned relative to it.
-                // So `left: x` means x pixels from the left edge of the container.
-                // `e.clientX - rect.left` is exactly that.
                 mouseX.set(e.clientX - rect.left);
                 mouseY.set(e.clientY - rect.top);
             } else {
-                // We need to account for the container's position if we want it strictly relative, 
-                // but for "Hero at top", pageX/Y is fine relative to document.
-                // Actually, to be safe and simple for a Hero section component:
-                // We will use clientX/Y but render it Fixed? 
-                // User said "specifically in that area". 
-                // If I use absolute inside Hero, and Hero moves on scroll, I want the glow to be under the mouse.
-                // If I scroll, the mouse stays fixed on screen, but the Hero moves up.
-                // So the glow should move up with the Hero? No, the glow should be under the mouse.
-                // So if I scroll, the glow should effectively move "down" relative to the Hero to stay under the mouse?
-                // This implies the glow position should be `scrollTop + clientY`.
-                // Which is `pageY`.
                 mouseX.set(e.pageX);
                 mouseY.set(e.pageY);
             }
@@ -96,7 +74,9 @@ export const MouseTrackingGlow: React.FC<MouseTrackingGlowProps> = ({ containerR
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("touchmove", handleTouchMove);
         };
-    }, [mouseX, mouseY, containerRef, isVisible]);
+    }, [mouseX, mouseY, containerRef, isVisible, isMobile]);
+
+    if (isMobile) return null;
 
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
