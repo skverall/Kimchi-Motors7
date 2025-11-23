@@ -59,10 +59,11 @@ export const BrandsSection = () => {
                                 <img
                                     src={brand.logo}
                                     alt={brand.name}
-                                    className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 transition-all duration-300"
+                                    loading="lazy"
+                                    className="max-h-full max-w-full object-contain transition-all duration-300"
                                 />
                             </div>
-                            <span className="text-xs font-bold text-slate-900 uppercase tracking-wider opacity-70 group-hover:opacity-100 transition-opacity">
+                            <span className="text-xs font-bold text-slate-900 uppercase tracking-wider transition-opacity">
                                 {brand.name}
                             </span>
                         </div>
@@ -76,7 +77,7 @@ export const BrandsSection = () => {
                 <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white to-transparent z-10" />
                 <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white to-transparent z-10" />
 
-                <div className="flex gap-4 animate-[marquee_25s_linear_infinite]">
+                <div className="flex gap-4 animate-[marquee_25s_linear_infinite] will-change-transform">
                     {/* Duplicate list for seamless loop */}
                     {[...BRANDS, ...BRANDS].map((brand, index) => (
                         <div
@@ -86,7 +87,8 @@ export const BrandsSection = () => {
                             <img
                                 src={brand.logo}
                                 alt={brand.name}
-                                className="h-12 w-auto object-contain mb-3 grayscale opacity-80"
+                                loading="lazy"
+                                className="h-12 w-auto object-contain mb-3"
                             />
                             <span className="text-[10px] font-bold text-slate-900 uppercase tracking-wide text-center">
                                 {brand.name}
