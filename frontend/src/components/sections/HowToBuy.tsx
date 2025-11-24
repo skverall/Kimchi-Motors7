@@ -33,16 +33,16 @@ export const HowToBuy: React.FC = () => (
         ].map((step, idx) => (
           <div
             key={idx}
-            className="relative p-6 rounded-2xl bg-slate-50 hover:bg-white hover:shadow-xl transition-all border border-slate-100 group"
+            className="relative p-8 rounded-3xl bg-white hover:shadow-xl transition-all duration-300 border border-slate-100 group"
           >
-            <div className="w-16 h-16 mx-auto bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-              <step.icon className="w-8 h-8" />
+            <div className="w-20 h-20 mx-auto bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <step.icon className="w-10 h-10" strokeWidth={1.5} />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">{step.title}</h3>
-            <p className="text-slate-500 leading-relaxed">{step.desc}</p>
+            <p className="text-slate-500 leading-relaxed text-sm">{step.desc}</p>
             {idx < 3 && (
-              <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
-                <ChevronRight className="text-slate-300 w-8 h-8" />
+              <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10 translate-x-1/2">
+                <ChevronRight className="text-slate-200 w-8 h-8" />
               </div>
             )}
           </div>
