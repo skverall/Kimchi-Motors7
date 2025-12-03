@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getServiceSupabase } from "@/lib/supabaseAdmin";
+import { assertAdminRequest } from "@/lib/serverAuth";
 
 function parseId(rawId: string) {
   const id = Number(rawId);
@@ -11,10 +12,13 @@ function parseId(rawId: string) {
 }
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await assertAdminRequest(request);
+    if (!auth.ok) return auth.response;
+
     const { id: rawId } = await context.params;
     const id = parseId(rawId);
     const supabase = getServiceSupabase();
@@ -39,6 +43,9 @@ export async function PATCH(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await assertAdminRequest(request);
+    if (!auth.ok) return auth.response;
+
     const { id: rawId } = await context.params;
     const id = parseId(rawId);
     const updates = await request.json();
@@ -46,7 +53,7 @@ export async function PATCH(
 
     const { data, error } = await supabase
       .from("cars")
-      // @ts-ignore - Supabase types are fighting us here, but runtime is fine
+      // @ts-expect-error - Supabase types are fighting us here, but runtime is fine
       .update(updates)
       .eq("id", id)
       .select("*")
@@ -62,10 +69,13 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = await assertAdminRequest(request);
+    if (!auth.ok) return auth.response;
+
     const { id: rawId } = await context.params;
     const id = parseId(rawId);
     const supabase = getServiceSupabase();

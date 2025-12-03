@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2, Mail } from "lucide-react";
+import { supabase } from "@/lib/supabaseClient";
 
 interface AdminLoginProps {
   onLogin: () => void;
@@ -9,20 +10,58 @@ interface AdminLoginProps {
 }
 
 export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
-  const [user, setUser] = useState("");
-  const [pass, setPass] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const adminUser = process.env.NEXT_PUBLIC_ADMIN_USERNAME || "admin";
-    const adminPass = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin";
+    setError("");
+    setMessage("");
+    setIsSubmitting(true);
 
-    if (user === adminUser && pass === adminPass) {
-      onLogin();
-    } else {
-      setError("Invalid credentials");
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      setError(signInError.message);
+      setIsSubmitting(false);
+      return;
     }
+
+    if (!data?.session) {
+      setError("Unable to start a session. Please try again.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    onLogin();
+    setIsSubmitting(false);
+  };
+
+  const handleForgotPassword = async () => {
+    setError("");
+    setMessage("");
+
+    if (!email) {
+      setError("Enter your email to receive a reset link.");
+      return;
+    }
+
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    if (resetError) {
+      setError(resetError.message);
+      return;
+    }
+
+    setMessage("Reset link sent. Check your inbox.");
   };
 
   return (
@@ -45,14 +84,15 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-1">
-              Username
+              Email
             </label>
             <input
-              type="text"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full border border-slate-200 rounded-lg p-3 focus:outline-none focus:border-blue-600 transition"
-              placeholder="Enter username"
+              placeholder="you@example.com"
+              required
             />
           </div>
           <div>
@@ -61,10 +101,11 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
             </label>
             <input
               type="password"
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full border border-slate-200 rounded-lg p-3 focus:outline-none focus:border-blue-600 transition"
               placeholder="Enter password"
+              required
             />
           </div>
 
@@ -73,12 +114,27 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
               {error}
             </div>
           )}
+          {message && (
+            <div className="text-emerald-600 text-sm font-semibold bg-emerald-50 p-3 rounded-lg">
+              {message}
+            </div>
+          )}
 
           <button
             type="submit"
-            className="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition shadow-lg shadow-slate-200"
+            disabled={isSubmitting}
+            className="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 disabled:opacity-60 flex items-center justify-center gap-2"
           >
-            Login to Dashboard
+            {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+            {isSubmitting ? "Signing in..." : "Login to Dashboard"}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleForgotPassword}
+            className="w-full text-slate-600 text-sm font-semibold hover:text-slate-900 transition flex items-center justify-center gap-2"
+          >
+            <Mail className="w-4 h-4" /> Forgot password?
           </button>
         </form>
 

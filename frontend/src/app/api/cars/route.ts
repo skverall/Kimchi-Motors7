@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 import { getServiceSupabase } from "@/lib/supabaseAdmin";
 import { INITIAL_CARS } from "@/constants/initialCars";
+import { assertAdminRequest } from "@/lib/serverAuth";
+import type { Database } from "@/types/supabase";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const auth = await assertAdminRequest(request);
+    if (!auth.ok) return auth.response;
+
     const supabase = getServiceSupabase();
 
     const { data, error } = await supabase
@@ -19,7 +24,9 @@ export async function GET() {
       // Note: In a real production app, auto-seeding might be dangerous.
       // Consider moving this to a dedicated seed script.
       // For now, we map INITIAL_CARS to match the DB schema if needed.
-      const { error: seedError } = await supabase.from("cars").insert(INITIAL_CARS as any);
+      const { error: seedError } = await supabase
+        .from("cars")
+        .insert(INITIAL_CARS as Database["public"]["Tables"]["cars"]["Insert"][]);
       if (seedError) throw seedError;
 
       const { data: seeded, error: reloadError } = await supabase
@@ -45,6 +52,9 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const auth = await assertAdminRequest(request);
+    if (!auth.ok) return auth.response;
+
     const supabase = getServiceSupabase();
     const payload = await request.json();
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { CarDetails } from "@/components/cars/CarDetails";
 import type { CarItem } from "@/types/car";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function CarPage() {
     const params = useParams();
@@ -15,7 +16,16 @@ export default function CarPage() {
     useEffect(() => {
         const fetchCar = async () => {
             try {
-                const response = await fetch(`/api/cars/${params.id}`);
+                const { data } = await supabase.auth.getSession();
+                const token = data.session?.access_token;
+                if (!token) {
+                    setError("Please log in to view this vehicle.");
+                    return;
+                }
+
+                const response = await fetch(`/api/cars/${params.id}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
                 if (!response.ok) {
                     throw new Error("Car not found");
                 }

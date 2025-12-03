@@ -1,9 +1,9 @@
 "use client";
 
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Car } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import type { PageName } from "@/components/layout/Header";
@@ -16,23 +16,25 @@ import { ShowroomsSection } from "@/components/sections/ShowroomsSection";
 import { ContactPageSection } from "@/components/sections/ContactPageSection";
 import { MostWantedMarquee } from "@/components/sections/MostWantedMarquee";
 import { BrandsSection } from "@/components/sections/BrandsSection";
-import { BRANDS } from "@/constants/brands";
 import { INITIAL_CARS } from "@/constants/initialCars";
 import { InventorySection, type InventoryFilters } from "@/components/sections/InventorySection";
+import { supabase } from "@/lib/supabaseClient";
 
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import type { CarItem } from "@/types/car";
 
+const buildSeedCars = () => INITIAL_CARS.map((car, index) => ({ ...car, id: `seed-${index}` }));
+
 export default function Home() {
   const [page, setPage] = useState<PageName>("home");
-  const [cars, setCars] = useState<CarItem[]>(() =>
-    INITIAL_CARS.map((car, index) => ({ ...car, id: `seed-${index}` }))
-  );
+  const [cars, setCars] = useState<CarItem[]>(() => buildSeedCars());
 
   const [inventoryFilters, setInventoryFilters] = useState<InventoryFilters | undefined>(undefined);
   const [isSyncing, setIsSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
   // Sync page with URL
   useEffect(() => {
@@ -52,14 +54,51 @@ export default function Home() {
     }
   }, [page]);
 
-  const persistCars = (nextCars: CarItem[]) => {
+  // Track Supabase auth session
+  useEffect(() => {
+    let isActive = true;
+    const initAuth = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!isActive) return;
+
+      const token = data.session?.access_token ?? null;
+      setAccessToken(token);
+      setIsAuthenticated(!!token);
+    };
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      const token = session?.access_token ?? null;
+      setAccessToken(token);
+      setIsAuthenticated(!!token);
+      if (!session) {
+        setPage("home");
+        setCars(buildSeedCars());
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("km_cached_cars_v2");
+        }
+      }
+    });
+
+    initAuth();
+
+    return () => {
+      isActive = false;
+      listener?.subscription.unsubscribe();
+    };
+  }, []);
+
+  const persistCars = useCallback((nextCars: CarItem[]) => {
     setCars(nextCars);
     if (typeof window !== "undefined") {
-      localStorage.setItem("km_cached_cars_v2", JSON.stringify(nextCars));
+      if (isAuthenticated) {
+        localStorage.setItem("km_cached_cars_v2", JSON.stringify(nextCars));
+      } else {
+        localStorage.removeItem("km_cached_cars_v2");
+      }
     }
-  };
+  }, [isAuthenticated]);
 
-  // Load cars from Supabase via server API on mount
+  // Load cars from Supabase via server API when authenticated
   useEffect(() => {
     if (typeof window !== "undefined") {
       const cached = localStorage.getItem("km_cached_cars_v2");
@@ -76,11 +115,22 @@ export default function Home() {
     }
 
     const loadCars = async () => {
+      if (!accessToken) {
+        setError("Login to view live inventory data. Showing demo cars.");
+        setIsSyncing(false);
+        return;
+      }
+
       try {
         setIsSyncing(true);
         setError(null);
 
-        const response = await fetch("/api/cars", { cache: "no-store" });
+        const response = await fetch("/api/cars", {
+          cache: "no-store",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         const body = await response.json().catch(() => ({}));
 
         if (!response.ok) {
@@ -90,11 +140,11 @@ export default function Home() {
         const fetchedCars = (body?.cars as CarItem[]) || [];
 
         // Inject missing fields for existing data
-        const enrichedCars = fetchedCars.map(car => ({
+        const enrichedCars = fetchedCars.map((car) => ({
           ...car,
           engine: car.engine || "3500 cc",
           shipping: car.shipping || "By Sea Shipping",
-          status: car.status || "Available"
+          status: car.status || "Available",
         }));
 
         persistCars(enrichedCars);
@@ -107,16 +157,14 @@ export default function Home() {
     };
 
     loadCars();
-  }, []);
+  }, [accessToken, persistCars]);
 
 
-  const [selectedCar, setSelectedCar] = useState<CarItem | null>(null);
   const router = useRouter();
 
   const handleNavigate = (target: PageName) => {
     window.scrollTo(0, 0);
     setPage(target as typeof page);
-    if (target !== "detail") setSelectedCar(null);
   };
 
   const handleCarClick = (car: CarItem) => {
@@ -166,9 +214,14 @@ export default function Home() {
   // Admin Handlers
   const handleAddCar = async (newCar: Omit<CarItem, "id">) => {
     try {
+      if (!accessToken) {
+        setError("You must be logged in to add a car.");
+        return;
+      }
+
       const response = await fetch("/api/cars", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify(newCar),
       });
       const body = await response.json().catch(() => ({}));
@@ -187,7 +240,15 @@ export default function Home() {
 
   const handleDeleteCar = async (id: string) => {
     try {
-      const response = await fetch(`/api/cars/${id}`, { method: "DELETE" });
+      if (!accessToken) {
+        setError("You must be logged in to delete a car.");
+        return;
+      }
+
+      const response = await fetch(`/api/cars/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
       const body = await response.json().catch(() => ({}));
 
       if (!response.ok) {
@@ -204,9 +265,14 @@ export default function Home() {
 
   const handleUpdateCar = async (id: string, updates: Partial<CarItem>) => {
     try {
+      if (!accessToken) {
+        setError("You must be logged in to update a car.");
+        return;
+      }
+
       const response = await fetch(`/api/cars/${id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify(updates),
       });
       const body = await response.json().catch(() => ({}));
@@ -230,6 +296,17 @@ export default function Home() {
       console.error("Error updating car", err);
       setError("Failed to update car. Please try again later.");
     }
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setAccessToken(null);
+    setIsAuthenticated(false);
+    setCars(buildSeedCars());
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("km_cached_cars_v2");
+    }
+    handleNavigate("home");
   };
 
   return (
@@ -322,7 +399,8 @@ export default function Home() {
           onAdd={handleAddCar}
           onDelete={handleDeleteCar}
           onUpdate={handleUpdateCar}
-          onLogout={() => handleNavigate("home")}
+          authToken={accessToken}
+          onLogout={handleLogout}
         />
       )}
 

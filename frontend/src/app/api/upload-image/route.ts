@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import sharp from "sharp";
 import { getServiceSupabase } from "@/lib/supabaseAdmin";
+import { assertAdminRequest } from "@/lib/serverAuth";
 
 export const runtime = "nodejs";
 
@@ -39,6 +40,9 @@ async function ensureBucket(supabase: ReturnType<typeof getServiceSupabase>) {
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = await assertAdminRequest(request);
+    if (!auth.ok) return auth.response;
+
     const supabase = getServiceSupabase();
     await ensureBucket(supabase);
 

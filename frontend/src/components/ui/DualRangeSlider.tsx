@@ -52,9 +52,10 @@ export const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
         }
     }, [maxVal, getPercent]);
 
-    // Update state when props change
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMinVal(value[0]);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMaxVal(value[1]);
         minValRef.current = value[0];
         maxValRef.current = value[1];

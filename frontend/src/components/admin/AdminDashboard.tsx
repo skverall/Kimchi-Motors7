@@ -10,6 +10,7 @@ interface AdminDashboardProps {
   onDelete: (id: string) => void;
   onUpdate: (id: string, updates: Partial<CarItem>) => void;
   onLogout: () => void;
+  authToken?: string | null;
 }
 
 // Simple Tooltip Component
@@ -31,6 +32,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onDelete,
   onUpdate,
   onLogout,
+  authToken,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -64,14 +66,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        const res = await fetch("/api/cars?limit=1");
+        if (!authToken) {
+          setIsConnected(false);
+          return;
+        }
+        const res = await fetch("/api/cars?limit=1", {
+          headers: { Authorization: `Bearer ${authToken}` },
+        });
         setIsConnected(res.ok);
       } catch (e) {
         setIsConnected(false);
       }
     };
     checkConnection();
-  }, []);
+  }, [authToken]);
 
   // Filter and Sort Logic
   const filteredCars = cars
@@ -105,12 +113,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const handleImageUpload = async (file: File) => {
     setUploadError(null);
     setIsUploading(true);
+    if (!authToken) {
+      setUploadError("You must be logged in to upload images.");
+      setIsUploading(false);
+      return;
+    }
     try {
       const uploadFormData = new FormData();
       uploadFormData.append("file", file);
 
       const res = await fetch("/api/upload-image", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
         body: uploadFormData,
       });
 
@@ -271,7 +287,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <span className="text-sm font-medium text-slate-500 whitespace-nowrap">Sort by:</span>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
               className="w-full md:w-auto bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 outline-none font-semibold cursor-pointer"
             >
               <option value="newest">Newest Added</option>

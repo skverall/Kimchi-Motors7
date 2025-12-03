@@ -6,6 +6,7 @@ import {
   motion,
   useAnimationFrame,
   useMotionValue,
+  type PanInfo,
 } from "framer-motion";
 import { useRef, useEffect } from "react";
 
@@ -98,13 +99,13 @@ const InteractiveMarquee = ({ children }: { children: React.ReactNode }) => {
     velocity.set(0);
   };
 
-  const handlePan = (event: any, info: any) => {
+  const handlePan = (_event: PointerEvent, info: PanInfo) => {
     // When dragging, we move x directly by the delta
     x.set(x.get() + info.delta.x);
     velocity.set(info.delta.x);
   };
 
-  const handlePanEnd = (event: any, info: any) => {
+  const handlePanEnd = (_event: PointerEvent, info: PanInfo) => {
     isDragging.current = false;
 
     // If we moved significantly, block the subsequent click
@@ -152,7 +153,7 @@ const InteractiveMarquee = ({ children }: { children: React.ReactNode }) => {
       // Normalizing by 16 ensures consistent speed across refresh rates.
       // Capping delta to prevent huge jumps if tab was inactive
       const safeDelta = Math.min(delta, 32);
-      let moveBy = newVel * (safeDelta / 16);
+      const moveBy = newVel * (safeDelta / 16);
       let currentX = x.get() + moveBy;
 
       // Wrap logic
