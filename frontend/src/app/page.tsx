@@ -26,8 +26,18 @@ import type { CarItem } from "@/types/car";
 
 const buildSeedCars = () => INITIAL_CARS.map((car, index) => ({ ...car, id: `seed-${index}` }));
 
+const getInitialPage = (): PageName => {
+  if (typeof window === "undefined") return "home";
+  const params = new URLSearchParams(window.location.search);
+  const view = params.get("view");
+  if (view && ["home", "listing", "detail", "admin", "admin-dashboard", "contact", "showrooms"].includes(view)) {
+    return view as PageName;
+  }
+  return "home";
+};
+
 export default function Home() {
-  const [page, setPage] = useState<PageName>("home");
+  const [page, setPage] = useState<PageName>(getInitialPage);
   const [cars, setCars] = useState<CarItem[]>(() => buildSeedCars());
 
   const [inventoryFilters, setInventoryFilters] = useState<InventoryFilters | undefined>(undefined);
@@ -35,15 +45,6 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-
-  // Sync page with URL
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const view = params.get("view");
-    if (view && ["home", "listing", "detail", "admin", "admin-dashboard", "contact", "showrooms"].includes(view)) {
-      setPage(view as typeof page);
-    }
-  }, []);
 
   // Update URL when page changes
   useEffect(() => {
