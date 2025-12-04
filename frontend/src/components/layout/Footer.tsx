@@ -122,7 +122,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
                 <span className="block font-bold text-white mb-0.5 group-hover:underline">
                   Find Our Showrooms
                 </span>
-                Sheikh Zayed Road, Dubai & others
+                Ajman, UAE & others
               </span>
             </li>
             <li className="flex items-center gap-3">
