@@ -16,8 +16,9 @@ export async function GET(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const auth = await assertAdminRequest(request);
-    if (!auth.ok) return auth.response;
+    // Public endpoint
+    // const auth = await assertAdminRequest(request);
+    // if (!auth.ok) return auth.response;
 
     const { id: rawId } = await context.params;
     const id = parseId(rawId);

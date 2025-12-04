@@ -18,13 +18,19 @@ export default function CarPage() {
             try {
                 const { data } = await supabase.auth.getSession();
                 const token = data.session?.access_token;
-                if (!token) {
-                    setError("Please log in to view this vehicle.");
-                    return;
+                // Allow public access
+                // if (!token) {
+                //     setError("Please log in to view this vehicle.");
+                //     return;
+                // }
+
+                const headers: HeadersInit = {};
+                if (token) {
+                    headers["Authorization"] = `Bearer ${token}`;
                 }
 
                 const response = await fetch(`/api/cars/${params.id}`, {
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers,
                 });
                 if (!response.ok) {
                     throw new Error("Car not found");

@@ -6,8 +6,9 @@ import type { Database } from "@/types/supabase";
 
 export async function GET(request: Request) {
   try {
-    const auth = await assertAdminRequest(request);
-    if (!auth.ok) return auth.response;
+    // Public endpoint, no auth required for GET
+    // const auth = await assertAdminRequest(request);
+    // if (!auth.ok) return auth.response;
 
     const supabase = getServiceSupabase();
 

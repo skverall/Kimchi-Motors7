@@ -115,21 +115,25 @@ export default function Home() {
     }
 
     const loadCars = async () => {
-      if (!accessToken) {
-        setError("Login to view live inventory data. Showing demo cars.");
-        setIsSyncing(false);
-        return;
-      }
+      // Allow public access to cars
+      // if (!accessToken) {
+      //   setError("Login to view live inventory data. Showing demo cars.");
+      //   setIsSyncing(false);
+      //   return;
+      // }
 
       try {
         setIsSyncing(true);
         setError(null);
 
+        const headers: HeadersInit = { "Content-Type": "application/json" };
+        if (accessToken) {
+          headers["Authorization"] = `Bearer ${accessToken}`;
+        }
+
         const response = await fetch("/api/cars", {
           cache: "no-store",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          headers,
         });
         const body = await response.json().catch(() => ({}));
 
