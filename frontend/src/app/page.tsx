@@ -40,7 +40,7 @@ export default function Home() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const view = params.get("view");
-    if (view && ["home", "listing", "detail", "admin", "admin-dashboard", "contact"].includes(view)) {
+    if (view && ["home", "listing", "detail", "admin", "admin-dashboard", "contact", "showrooms"].includes(view)) {
       setPage(view as typeof page);
     }
   }, []);

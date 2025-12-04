@@ -130,20 +130,20 @@ export const ContactPageSection = () => {
                                         <MapPin className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-lg mb-1">Dubai Showroom</h4>
-                                        <p className="text-slate-400 text-sm">Sheikh Zayed Road, Al Quoz 3<br />Dubai, United Arab Emirates</p>
+                                        <h4 className="font-bold text-lg mb-1">Ajman Showroom</h4>
+                                        <p className="text-slate-400 text-sm">Ajman, UAE</p>
                                     </div>
                                 </div>
                                 <div className="h-48 rounded-xl overflow-hidden relative">
                                     <iframe
-                                        title="Dubai Showroom Map"
+                                        title="Ajman Showroom Map"
                                         width="100%"
                                         height="100%"
                                         frameBorder="0"
                                         scrolling="no"
                                         marginHeight={0}
                                         marginWidth={0}
-                                        src="https://maps.google.com/maps?q=Sheikh%20Zayed%20Road%20Dubai&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                                        src="https://maps.google.com/maps?q=25.443475501231624,55.51327843713836&t=&z=13&ie=UTF8&iwloc=&output=embed"
                                         className="absolute inset-0 w-full h-full grayscale hover:grayscale-0 transition-all duration-500"
                                     />
                                 </div>
