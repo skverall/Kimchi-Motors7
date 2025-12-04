@@ -26,7 +26,8 @@ export async function GET(request: Request) {
       // For now, we map INITIAL_CARS to match the DB schema if needed.
       const { error: seedError } = await supabase
         .from("cars")
-        .insert(INITIAL_CARS as Database["public"]["Tables"]["cars"]["Insert"][]);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .insert(INITIAL_CARS as any);
       if (seedError) throw seedError;
 
       const { data: seeded, error: reloadError } = await supabase
