@@ -1,14 +1,14 @@
 export const SHOWROOM_LOCATIONS = [
   {
-    id: "dubai",
-    city: "Dubai",
+    id: "ajman",
+    city: "Ajman",
     country: "UAE",
-    address: "Sheikh Zayed Road, Exit 42, Dubai",
+    address: "Ajman, UAE",
     phone: "+971 56 474 2456",
     office: "+971 6 563 1137",
     hours: "9:00 AM - 9:00 PM",
-    image: "/dubai-showroom.png",
-    mapQuery: "Sheikh+Zayed+Road+Dubai",
+    image: "/ajman-showroom.png",
+    mapQuery: "25.443475501231624, 55.51327843713836",
   },
   {
     id: "seoul",
