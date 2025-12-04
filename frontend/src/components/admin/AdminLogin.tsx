@@ -22,8 +22,10 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
     setMessage("");
     setIsSubmitting(true);
 
+    const loginEmail = email.includes("@") ? email : `${email}@kimchimotors.com`;
+
     const { data, error: signInError } = await supabase.auth.signInWithPassword({
-      email,
+      email: loginEmail,
       password,
     });
 
@@ -84,14 +86,14 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-1">
-              Email
+              Email or Username
             </label>
             <input
-              type="email"
+              type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full border border-slate-200 rounded-lg p-3 focus:outline-none focus:border-blue-600 transition"
-              placeholder="you@example.com"
+              placeholder="admin or you@example.com"
               required
             />
           </div>
