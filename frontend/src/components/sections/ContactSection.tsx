@@ -29,8 +29,8 @@ export const ContactSection = () => {
                                     key={location.id}
                                     onClick={() => setActiveLocation(location)}
                                     className={`w-full text-left p-4 rounded-2xl transition-all duration-300 flex items-center justify-between group ${activeLocation.id === location.id
-                                            ? "bg-slate-900 text-white shadow-lg scale-[1.02]"
-                                            : "hover:bg-slate-50 text-slate-600"
+                                        ? "bg-slate-900 text-white shadow-lg scale-[1.02]"
+                                        : "hover:bg-slate-50 text-slate-600"
                                         }`}
                                 >
                                     <div>
@@ -41,8 +41,8 @@ export const ContactSection = () => {
                                         <span className="text-xl font-bold">{location.city}</span>
                                     </div>
                                     <ArrowRight className={`w-5 h-5 transition-transform ${activeLocation.id === location.id
-                                            ? "opacity-100 translate-x-0"
-                                            : "opacity-0 -translate-x-4 group-hover:opacity-50 group-hover:-translate-x-2"
+                                        ? "opacity-100 translate-x-0"
+                                        : "opacity-0 -translate-x-4 group-hover:opacity-50 group-hover:-translate-x-2"
                                         }`} />
                                 </button>
                             ))}
@@ -130,10 +130,15 @@ export const ContactSection = () => {
                                         <p className="text-sm text-slate-500 mt-1">Open 7 days a week</p>
                                     </div>
 
-                                    <button className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2 group">
+                                    <a
+                                        href={`https://wa.me/${activeLocation.phone.replace(/\D/g, '')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2 group"
+                                    >
                                         Book Appointment
                                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                    </button>
+                                    </a>
                                 </div>
 
                                 {/* Map Column */}
