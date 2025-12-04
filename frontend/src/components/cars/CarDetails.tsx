@@ -109,8 +109,8 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => (
                     <Settings className="w-4 h-4" /> Status
                   </span>
                   <span className={`font-bold px-2 py-0.5 rounded text-white text-xs ${car.status === 'Sold' ? 'bg-red-500' :
-                      car.status === 'In Transit' ? 'bg-orange-500' :
-                        'bg-emerald-500'
+                    car.status === 'In Transit' ? 'bg-orange-500' :
+                      'bg-emerald-500'
                     }`}>
                     {car.status}
                   </span>
@@ -120,7 +120,7 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => (
 
             <div className="flex flex-col gap-3">
               <a
-                href="https://wa.me/97141234567"
+                href="https://wa.me/971564742456"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-green-100"
@@ -128,7 +128,7 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => (
                 <MessageCircle className="w-5 h-5" /> WhatsApp Inquiry
               </a>
               <a
-                href="tel:+97141234567"
+                href="tel:+971564742456"
                 className="w-full bg-slate-900 hover:bg-slate-800 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-slate-200"
               >
                 <Phone className="w-5 h-5" /> Call Showroom
