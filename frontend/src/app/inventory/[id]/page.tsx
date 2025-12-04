@@ -29,8 +29,8 @@ export default function CarPage() {
                 if (!response.ok) {
                     throw new Error("Car not found");
                 }
-                const data = await response.json();
-                setCar(data.car);
+                const carData = await response.json();
+                setCar(carData.car);
             } catch (err) {
                 setError("Failed to load car details");
                 console.error(err);
