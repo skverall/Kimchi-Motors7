@@ -133,10 +133,15 @@ export const ShowroomsSection = () => {
                                         <p className="text-sm text-slate-500 mt-1">Open 7 days a week</p>
                                     </div>
 
-                                    <button className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2 group">
+                                    <a
+                                        href={`https://wa.me/${activeLocation.phone.replace(/\D/g, '')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2 group"
+                                    >
                                         Book Appointment
                                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                    </button>
+                                    </a>
                                 </div>
 
                                 {/* Map Column */}
