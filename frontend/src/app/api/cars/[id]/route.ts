@@ -52,15 +52,40 @@ export async function PATCH(
     const updates = await request.json();
     const supabase = getServiceSupabase();
 
+    // Transform camelCase from frontend to snake_case for DB
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const dbUpdates: Record<string, any> = {};
+
+    // Copy known fields with proper mapping
+    if (updates.make !== undefined) dbUpdates.make = updates.make;
+    if (updates.model !== undefined) dbUpdates.model = updates.model;
+    if (updates.year !== undefined) dbUpdates.year = updates.year;
+    if (updates.price !== undefined) dbUpdates.price = updates.price;
+    if (updates.priceAed !== undefined) dbUpdates.price_aed = updates.priceAed;
+    if (updates.price_aed !== undefined) dbUpdates.price_aed = updates.price_aed;
+    if (updates.mileage !== undefined) dbUpdates.mileage = updates.mileage;
+    if (updates.fuel !== undefined) dbUpdates.fuel = updates.fuel;
+    if (updates.transmission !== undefined) dbUpdates.transmission = updates.transmission;
+    if (updates.image !== undefined) dbUpdates.image = updates.image;
+    if (updates.images !== undefined) dbUpdates.images = updates.images;
+    if (updates.type !== undefined) dbUpdates.type = updates.type;
+    if (updates.description !== undefined) dbUpdates.description = updates.description;
+    if (updates.featured !== undefined) dbUpdates.featured = updates.featured;
+    if (updates.mostWanted !== undefined) dbUpdates.mostWanted = updates.mostWanted;
+    if (updates.status !== undefined) dbUpdates.status = updates.status;
+
     const { data, error } = await supabase
       .from("cars")
       // @ts-expect-error - Supabase types are fighting us here, but runtime is fine
-      .update(updates)
+      .update(dbUpdates)
       .eq("id", id)
       .select("*")
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error("Supabase update error:", error);
+      throw error;
+    }
 
     return NextResponse.json({ car: data });
   } catch (error) {

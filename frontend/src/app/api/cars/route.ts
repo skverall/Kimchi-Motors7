@@ -60,17 +60,40 @@ export async function POST(request: Request) {
     const supabase = getServiceSupabase();
     const payload = await request.json();
 
+    // Transform camelCase from frontend to snake_case for DB
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const dbPayload: Record<string, any> = {
+      make: payload.make,
+      model: payload.model,
+      year: payload.year,
+      price: payload.price,
+      price_aed: payload.priceAed ?? payload.price_aed ?? null,
+      mileage: payload.mileage,
+      fuel: payload.fuel,
+      transmission: payload.transmission,
+      image: payload.image,
+      images: payload.images ?? [],
+      type: payload.type,
+      description: payload.description ?? null,
+      featured: payload.featured ?? false,
+      mostWanted: payload.mostWanted ?? false, // DB column is camelCase
+      status: payload.status ?? "Available",
+    };
+
     const { data, error } = await supabase
       .from("cars")
-      .insert(payload)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .insert(dbPayload as any)
       .select("*")
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error("Supabase insert error:", error);
+      throw error;
+    }
 
     return NextResponse.json({ car: data });
   } catch (error) {
-    console.error("Failed to add car", error);
     console.error("Failed to add car", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to add car" },
@@ -78,3 +101,4 @@ export async function POST(request: Request) {
     );
   }
 }
+
