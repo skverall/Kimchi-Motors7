@@ -196,6 +196,55 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
+  const handleMultipleImageUpload = async (files: FileList) => {
+    setUploadError(null);
+    setIsUploading(true);
+    if (!authToken) {
+      setUploadError("You must be logged in to upload images.");
+      setIsUploading(false);
+      return;
+    }
+
+    try {
+      const uploadPromises = Array.from(files).map(async (file) => {
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", file);
+
+        const res = await fetch("/api/upload-image", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: uploadFormData,
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => null);
+          throw new Error(data?.error || "Upload failed");
+        }
+        const data = await res.json();
+        return data.url as string;
+      });
+
+      const uploadedUrls = await Promise.all(uploadPromises);
+
+      if (uploadedUrls.length > 0) {
+        setFormData((prev) => {
+          const currentImages = prev.images || [];
+          const newImages = [...currentImages, ...uploadedUrls];
+          // Ensure main image is set if empty
+          const mainImage = prev.image || uploadedUrls[0];
+          return { ...prev, images: newImages, image: mainImage };
+        });
+      }
+    } catch (error) {
+      console.error("Image upload error", error);
+      setUploadError("Failed to upload one or more images. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const removeImage = (indexToRemove: number) => {
     setFormData(prev => {
       const currentImages = prev.images || [];
@@ -623,11 +672,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         <input
                           type="file"
                           accept="image/*"
+                          multiple
                           disabled={isUploading}
                           className="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
                           onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) void handleImageUpload(file);
+                            if (e.target.files && e.target.files.length > 0) {
+                              void handleMultipleImageUpload(e.target.files);
+                            }
                           }}
                         />
                         {isUploading && (
