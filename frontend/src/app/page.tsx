@@ -155,6 +155,8 @@ export default function Home() {
           // If DB has price_aed, we need to ensure it maps to priceAed
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           priceAed: (car as any).price_aed || car.priceAed,
+          // Ensure images array exists, fallback to legacy image if needed
+          images: (car.images && car.images.length > 0) ? car.images : (car.image ? [car.image] : []),
         }));
 
         persistCars(enrichedCars);

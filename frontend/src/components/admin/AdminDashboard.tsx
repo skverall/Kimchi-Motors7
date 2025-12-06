@@ -40,13 +40,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const initialFormState = {
     make: "",
     model: "",
-    year: new Date().getFullYear(),
-    price: 0,
-    priceAed: 0,
-    mileage: 0,
+    year: new Date().getFullYear() as number | "",
+    price: "" as number | "",
+    priceAed: "" as number | "",
+    mileage: "" as number | "",
     fuel: "Petrol",
     transmission: "Automatic",
     image: "",
+    images: [] as string[],
     type: "Sedan",
     featured: false,
     mostWanted: false,
@@ -54,7 +55,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     status: "Available" as "Available" | "In Transit" | "Sold",
   };
 
-  const [formData, setFormData] = useState<Partial<Omit<CarItem, "id">>>(initialFormState);
+  type CarFormData = typeof initialFormState;
+
+  // Helper to safely parse numbers
+  const safeParseInt = (val: string | number): number => {
+    if (val === "" || val === undefined || val === null) return 0;
+    const items = val.toString().replace(/,/g, '');
+    const num = parseInt(items);
+    return isNaN(num) ? 0 : num;
+  };
+
+  const [formData, setFormData] = useState<CarFormData>(initialFormState);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
@@ -111,6 +122,37 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const featuredCount = cars.filter(c => c.featured).length;
   const mostWantedCount = cars.filter(c => c.mostWanted).length;
 
+  // Currency Conversion Rate
+  const USD_TO_AED = 3.67;
+
+  const handlePriceChange = (value: string, type: "USD" | "AED") => {
+    // fast update state
+    if (value === "") {
+      setFormData(prev => ({ ...prev, price: "", priceAed: "" }));
+      return;
+    }
+
+    // Allow typing, but filter non-digits
+    const cleanValue = value.replace(/[^0-9]/g, '');
+    const numValue = parseInt(cleanValue);
+
+    if (isNaN(numValue)) return;
+
+    if (type === "USD") {
+      setFormData(prev => ({
+        ...prev,
+        price: numValue,
+        priceAed: Math.round(numValue * USD_TO_AED)
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        priceAed: numValue,
+        price: Math.round(numValue / USD_TO_AED)
+      }));
+    }
+  };
+
   const handleImageUpload = async (file: File) => {
     setUploadError(null);
     setIsUploading(true);
@@ -138,7 +180,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
       const data = await res.json();
       if (data?.url) {
-        setFormData((prev) => ({ ...prev, image: data.url }));
+        setFormData((prev) => {
+          const currentImages = prev.images || [];
+          const newImages = [...currentImages, data.url];
+          // Ensure main image is set if empty
+          const mainImage = prev.image || data.url;
+          return { ...prev, images: newImages, image: mainImage };
+        });
       }
     } catch (error) {
       console.error("Image upload error", error);
@@ -146,6 +194,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const removeImage = (indexToRemove: number) => {
+    setFormData(prev => {
+      const currentImages = prev.images || [];
+      const newImages = currentImages.filter((_, idx) => idx !== indexToRemove);
+      // If we removed the main image (first one usually), update it
+      let newMainImage = prev.image;
+      if (newImages.length > 0) {
+        // If the main image was the one removed, or just to be safe, sync with the first one 
+        // but usually user might want to select main. For simplicity, let's just keep first as main if main is gone.
+        if (!newImages.includes(newMainImage || "")) {
+          newMainImage = newImages[0];
+        }
+      } else {
+        newMainImage = "";
+      }
+      return { ...prev, images: newImages, image: newMainImage };
+    });
   };
 
   const handleOpenAdd = () => {
@@ -161,15 +228,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       model: car.model,
       year: car.year,
       price: car.price,
-      priceAed: car.priceAed,
+      priceAed: car.priceAed || "", // If 0 or undefined, effectively handled but empty string is safer for UI if we want empty
       mileage: car.mileage,
       fuel: car.fuel,
       transmission: car.transmission,
       image: car.image,
+      images: car.images || (car.image ? [car.image] : []),
       type: car.type,
-      featured: car.featured,
-      mostWanted: car.mostWanted,
-      description: car.description,
+      featured: car.featured || false,
+      mostWanted: car.mostWanted || false,
+      description: car.description || "",
       status: car.status || "Available",
     });
     setModalOpen(true);
@@ -178,10 +246,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.make && formData.model && formData.price) {
+      const submissionData = {
+        ...formData,
+        price: safeParseInt(formData.price || 0),
+        priceAed: safeParseInt(formData.priceAed || 0),
+        mileage: safeParseInt(formData.mileage || 0),
+        year: safeParseInt(formData.year || 0),
+      };
+
       if (editingId) {
-        onUpdate(editingId, formData);
+        onUpdate(editingId, submissionData);
       } else {
-        onAdd(formData as Omit<CarItem, "id">);
+        onAdd(submissionData as Omit<CarItem, "id">);
       }
       setModalOpen(false);
       setFormData(initialFormState);
@@ -444,7 +520,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
                       value={formData.year}
                       onChange={(e) =>
-                        setFormData({ ...formData, year: parseInt(e.target.value) || 0 })
+                        setFormData({ ...formData, year: e.target.value === "" ? "" : parseInt(e.target.value) })
                       }
                     />
                   </div>
@@ -453,13 +529,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       Price ($)
                     </label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       required
                       className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
                       value={formData.price}
-                      onChange={(e) =>
-                        setFormData({ ...formData, price: parseInt(e.target.value) || 0 })
-                      }
+                      onChange={(e) => handlePriceChange(e.target.value, "USD")}
                     />
                   </div>
                   <div>
@@ -467,12 +542,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       Price (AED)
                     </label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
                       value={formData.priceAed}
-                      onChange={(e) =>
-                        setFormData({ ...formData, priceAed: parseInt(e.target.value) || 0 })
-                      }
+                      onChange={(e) => handlePriceChange(e.target.value, "AED")}
                     />
                   </div>
                   <div>
@@ -485,7 +559,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
                       value={formData.mileage}
                       onChange={(e) =>
-                        setFormData({ ...formData, mileage: parseInt(e.target.value) || 0 })
+                        setFormData({ ...formData, mileage: e.target.value === "" ? "" : parseInt(e.target.value) })
                       }
                     />
                   </div>
@@ -519,28 +593,32 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       placeholder="https://..."
                     />
                     <div className="mt-2 space-y-2">
-                      {formData.image && (
-                        <div className="flex items-center gap-3">
-                          <div className="w-16 h-12 rounded-lg overflow-hidden bg-slate-100">
-                            <img
-                              src={formData.image}
-                              alt="Preview"
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setFormData({ ...formData, image: "" })}
-                            className="text-xs font-medium text-slate-500 hover:text-red-600 hover:underline"
-                          >
-                            Remove
-                          </button>
+                      {formData.images && formData.images.length > 0 && (
+                        <div className="grid grid-cols-4 gap-2 mb-2">
+                          {formData.images.map((img, idx) => (
+                            <div key={idx} className="relative aspect-[4/3] rounded-lg overflow-hidden bg-slate-100 group">
+                              <img src={img} alt={`Car ${idx}`} className="w-full h-full object-cover" />
+                              <button
+                                type="button"
+                                onClick={() => removeImage(idx)}
+                                className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                              {img === formData.image && (
+                                <div className="absolute bottom-0 left-0 right-0 bg-blue-600/80 text-white text-[10px] text-center py-0.5">
+                                  Main
+                                </div>
+                              )}
+                            </div>
+                          ))}
                         </div>
                       )}
+
                       <div className="space-y-1">
                         <div className="flex items-center gap-2 text-xs text-slate-500">
                           <Info className="w-3 h-3" />
-                          <span>or upload image file</span>
+                          <span>Upload one or more images</span>
                         </div>
                         <input
                           type="file"

@@ -9,6 +9,7 @@ export interface CarItem {
   fuel: string;
   transmission: string;
   image: string;
+  images?: string[];
   type: string;
   description?: string;
   featured?: boolean;
