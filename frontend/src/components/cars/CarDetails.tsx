@@ -32,20 +32,23 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => (
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="grid grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="aspect-video rounded-lg overflow-hidden bg-gray-100 cursor-pointer opacity-70 hover:opacity-100 transition"
-              >
-                <img
-                  src={car.imageVersion && car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${car.imageVersion}` : car.image || ""}
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition"
-                  alt={car.model}
-                />
-              </div>
-            ))}
-          </div>
+          {/* Thumbnail gallery - use images array if available */}
+          {car.images && car.images.length > 1 && (
+            <div className="grid grid-cols-3 gap-4">
+              {car.images.slice(0, 6).map((img, i) => (
+                <div
+                  key={i}
+                  className="aspect-video rounded-lg overflow-hidden bg-gray-100 cursor-pointer opacity-70 hover:opacity-100 transition"
+                >
+                  <img
+                    src={img}
+                    className="w-full h-full object-cover grayscale hover:grayscale-0 transition"
+                    alt={`${car.model} - ${i + 1}`}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="lg:col-span-1">
