@@ -4,6 +4,7 @@ export interface CarItem {
   model: string;
   year: number;
   price: number;
+  priceAed?: number; // Price in UAE Dirhams
   mileage: number;
   fuel: string;
   transmission: string;
@@ -18,3 +19,4 @@ export interface CarItem {
   // Optional client-only field to force image reloads after updates
   imageVersion?: number;
 }
+

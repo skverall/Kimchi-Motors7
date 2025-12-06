@@ -42,6 +42,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     model: "",
     year: new Date().getFullYear(),
     price: 0,
+    priceAed: 0,
     mileage: 0,
     fuel: "Petrol",
     transmission: "Automatic",
@@ -160,6 +161,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       model: car.model,
       year: car.year,
       price: car.price,
+      priceAed: car.priceAed,
       mileage: car.mileage,
       fuel: car.fuel,
       transmission: car.transmission,
@@ -343,6 +345,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </div>
                     </div>
                     <div className="font-black text-xl text-slate-900">${car.price.toLocaleString()}</div>
+                    {car.priceAed && car.priceAed > 0 && (
+                      <div className="text-sm font-semibold text-slate-500">AED {car.priceAed.toLocaleString()}</div>
+                    )}
                   </div>
 
                   <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-slate-50">
@@ -439,7 +444,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
                       value={formData.year}
                       onChange={(e) =>
-                        setFormData({ ...formData, year: parseInt(e.target.value) })
+                        setFormData({ ...formData, year: parseInt(e.target.value) || 0 })
                       }
                     />
                   </div>
@@ -453,7 +458,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
                       value={formData.price}
                       onChange={(e) =>
-                        setFormData({ ...formData, price: parseInt(e.target.value) })
+                        setFormData({ ...formData, price: parseInt(e.target.value) || 0 })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Price (AED)
+                    </label>
+                    <input
+                      type="number"
+                      className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                      value={formData.priceAed}
+                      onChange={(e) =>
+                        setFormData({ ...formData, priceAed: parseInt(e.target.value) || 0 })
                       }
                     />
                   </div>
@@ -467,7 +485,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
                       value={formData.mileage}
                       onChange={(e) =>
-                        setFormData({ ...formData, mileage: parseInt(e.target.value) })
+                        setFormData({ ...formData, mileage: parseInt(e.target.value) || 0 })
                       }
                     />
                   </div>

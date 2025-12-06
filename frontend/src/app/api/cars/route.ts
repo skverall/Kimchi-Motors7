@@ -71,6 +71,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ car: data });
   } catch (error) {
     console.error("Failed to add car", error);
-    return NextResponse.json({ error: "Failed to add car" }, { status: 500 });
+    console.error("Failed to add car", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to add car" },
+      { status: 500 }
+    );
   }
 }

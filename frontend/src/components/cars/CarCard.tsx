@@ -35,8 +35,8 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => {
               toggleFavorite(String(car.id));
             }}
             className={`p-2 rounded-full backdrop-blur-md transition-all ${favorite
-                ? "bg-red-500/90 text-white"
-                : "bg-white/90 text-slate-400 hover:text-red-500"
+              ? "bg-red-500/90 text-white"
+              : "bg-white/90 text-slate-400 hover:text-red-500"
               }`}
           >
             <Heart className={`w-4 h-4 ${favorite ? "fill-current" : ""}`} />
@@ -57,9 +57,14 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => {
         >
           {car.model}
         </h3>
-        <div className="text-xl font-black text-slate-900 mb-4">
+        <div className="text-xl font-black text-slate-900">
           ${car.price.toLocaleString()}
         </div>
+        {car.priceAed && car.priceAed > 0 && (
+          <div className="text-sm font-semibold text-slate-500">
+            AED {car.priceAed.toLocaleString()}
+          </div>
+        )}
 
         <div className="mt-auto pt-3 border-t border-gray-100 space-y-4">
           <div className="grid grid-cols-2 gap-y-2 gap-x-4">

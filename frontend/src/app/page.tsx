@@ -150,6 +150,11 @@ export default function Home() {
           engine: car.engine || "3500 cc",
           shipping: car.shipping || "By Sea Shipping",
           status: car.status || "Available",
+          // Map DB snake_case to frontend camelCase if needed,
+          // though Supabase JS client usually returns what's in DB.
+          // If DB has price_aed, we need to ensure it maps to priceAed
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          priceAed: (car as any).price_aed || car.priceAed,
         }));
 
         persistCars(enrichedCars);
@@ -227,7 +232,11 @@ export default function Home() {
       const response = await fetch("/api/cars", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
-        body: JSON.stringify(newCar),
+        body: JSON.stringify({
+          ...newCar,
+          // Map frontend camelCase to DB snake_case
+          price_aed: newCar.priceAed,
+        }),
       });
       const body = await response.json().catch(() => ({}));
 
@@ -278,7 +287,11 @@ export default function Home() {
       const response = await fetch(`/api/cars/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
-        body: JSON.stringify(updates),
+        body: JSON.stringify({
+          ...updates,
+          // Map frontend camelCase to DB snake_case if it exists in updates
+          ...(updates.priceAed !== undefined && { price_aed: updates.priceAed }),
+        }),
       });
       const body = await response.json().catch(() => ({}));
 

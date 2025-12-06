@@ -62,9 +62,15 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => (
               </div>
             </div>
 
-            <div className="text-4xl font-black text-slate-900 mb-8">
+            <div className="text-4xl font-black text-slate-900">
               ${car.price.toLocaleString()}
             </div>
+            {car.priceAed && car.priceAed > 0 && (
+              <div className="text-xl font-bold text-slate-500 mb-8">
+                AED {car.priceAed.toLocaleString()}
+              </div>
+            )}
+            {(!car.priceAed || car.priceAed <= 0) && <div className="mb-8" />}
 
             <div className="space-y-4 mb-8">
               <div className="flex justify-between py-3 border-b border-gray-100">

@@ -17,6 +17,7 @@ export interface Database {
                     model: string
                     year: number
                     price: number
+                    price_aed: number | null
                     mileage: number
                     fuel: string
                     transmission: string
@@ -37,6 +38,7 @@ export interface Database {
                     model: string
                     year: number
                     price: number
+                    price_aed?: number | null
                     mileage: number
                     fuel: string
                     transmission: string
@@ -57,6 +59,7 @@ export interface Database {
                     model?: string
                     year?: number
                     price?: number
+                    price_aed?: number | null
                     mileage?: number
                     fuel?: string
                     transmission?: string
