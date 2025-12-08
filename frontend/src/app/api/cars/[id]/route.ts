@@ -73,6 +73,7 @@ export async function PATCH(
     if (updates.featured !== undefined) dbUpdates.featured = updates.featured;
     if (updates.mostWanted !== undefined) dbUpdates.mostWanted = updates.mostWanted;
     if (updates.status !== undefined) dbUpdates.status = updates.status;
+    if (updates.youtubeUrl !== undefined) dbUpdates.youtube_url = updates.youtubeUrl;
 
     const { data, error } = await supabase
       .from("cars")

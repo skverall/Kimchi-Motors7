@@ -19,5 +19,7 @@ export interface CarItem {
   status?: "Available" | "Sold" | "In Transit";
   // Optional client-only field to force image reloads after updates
   imageVersion?: number;
+  youtubeUrl?: string;
+  youtube_url?: string;
 }
 

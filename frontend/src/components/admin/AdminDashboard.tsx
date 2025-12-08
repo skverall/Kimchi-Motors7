@@ -53,6 +53,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     mostWanted: false,
     description: "",
     status: "Available" as "Available" | "In Transit" | "Sold",
+    youtubeUrl: "",
   };
 
   type CarFormData = typeof initialFormState;
@@ -288,6 +289,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       mostWanted: car.mostWanted || false,
       description: car.description || "",
       status: car.status || "Available",
+      youtubeUrl: car.youtubeUrl || car.youtube_url || "",
     });
     setModalOpen(true);
   };
@@ -727,6 +729,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     />
                     <span className="text-sm font-medium">Most Wanted</span>
                   </label>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                    YouTube Video URL
+                  </label>
+                  <input
+                    className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                    placeholder="https://youtu.be/..."
+                    value={formData.youtubeUrl || ""}
+                    onChange={(e) =>
+                      setFormData({ ...formData, youtubeUrl: e.target.value })
+                    }
+                  />
+                  <p className="text-[10px] text-slate-400 mt-1">Paste the full YouTube video link here.</p>
                 </div>
               </form>
             </div>

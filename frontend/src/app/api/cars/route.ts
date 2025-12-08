@@ -78,6 +78,7 @@ export async function POST(request: Request) {
       featured: payload.featured ?? false,
       mostWanted: payload.mostWanted ?? false, // DB column is camelCase
       status: payload.status ?? "Available",
+      youtube_url: payload.youtubeUrl ?? null,
     };
 
     const { data, error } = await supabase
