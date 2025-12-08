@@ -2,7 +2,7 @@ export const BRANDS = [
   // Featured Brands (Top 8)
   {
     name: "Mercedes-Benz",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Mercedes-Benz_Logo_2010.svg",
+    logo: "https://cdn.worldvectorlogo.com/logos/mercedes-benz-9.svg",
     models: ["S-Class", "G-Class", "E-Class", "C-Class", "GLE", "GLS", "AMG GT", "SL", "EQS", "EQE"]
   },
   {
@@ -32,7 +32,7 @@ export const BRANDS = [
   },
   {
     name: "Nissan",
-    logo: "https://libs-asia.nissan-cdn.net/etc/designs/nissan/20.07.2.NISSAN-18/common-assets/img/svg/nissan-logo.svg",
+    logo: "https://cdn.worldvectorlogo.com/logos/nissan-2020-logo.svg",
     models: ["Altima", "Maxima", "Rogue", "Pathfinder", "Armada", "GT-R", "Z", "Frontier"]
   },
   {
