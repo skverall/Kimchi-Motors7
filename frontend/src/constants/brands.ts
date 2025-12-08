@@ -2,42 +2,42 @@ export const BRANDS = [
   // Featured Brands (Top 8)
   {
     name: "Mercedes-Benz",
-    logo: "https://logo.clearbit.com/mercedes-benz.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Benz_Logo.svg",
     models: ["S-Class", "G-Class", "E-Class", "C-Class", "GLE", "GLS", "AMG GT", "SL", "EQS", "EQE"]
   },
   {
     name: "BMW",
-    logo: "https://logo.clearbit.com/bmw.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg",
     models: ["7 Series", "5 Series", "3 Series", "X7", "X5", "X6", "M8", "M5", "M4", "M3", "XM"]
   },
   {
     name: "Kia",
-    logo: "https://logo.clearbit.com/kia.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/4/47/KIA_logo3.svg",
     models: ["K5", "Stinger", "Telluride", "Sorento", "Sportage", "Carnival", "EV6", "Soul"]
   },
   {
     name: "Hyundai",
-    logo: "https://logo.clearbit.com/hyundai.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/Hyundai_Motor_Company_logo.svg",
     models: ["Elantra", "Sonata", "Tucson", "Santa Fe", "Palisade", "Kona", "Ioniq 5", "Ioniq 6"]
   },
   {
     name: "Toyota",
-    logo: "https://logo.clearbit.com/toyota.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Toyota_carlogo.svg",
     models: ["Camry", "Corolla", "RAV4", "Highlander", "Land Cruiser", "Supra", "Prius", "Sienna", "Tacoma", "Tundra"]
   },
   {
     name: "Ford",
-    logo: "https://logo.clearbit.com/ford.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Ford_logo_flat.svg",
     models: ["F-150", "Mustang", "Explorer", "Bronco", "Escape", "Edge", "Expedition", "Maverick"]
   },
   {
     name: "Nissan",
-    logo: "https://logo.clearbit.com/nissanusa.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/8/82/Nissan_logo.svg",
     models: ["Altima", "Maxima", "Rogue", "Pathfinder", "Armada", "GT-R", "Z", "Frontier"]
   },
   {
     name: "Rolls-Royce",
-    logo: "https://logo.clearbit.com/rolls-roycemotorcars.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a0/Rolls-Royce_Motor_Cars_logo.svg",
     models: ["Phantom", "Cullinan", "Ghost", "Wraith", "Dawn", "Spectre", "Boat Tail"]
   },
 
