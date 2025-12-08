@@ -154,6 +154,63 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
+  // Client-side image compression
+  const compressImage = async (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX_WIDTH = 1920;
+        const MAX_HEIGHT = 1920;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          URL.revokeObjectURL(img.src);
+          return reject(new Error("Failed to get canvas context"));
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              URL.revokeObjectURL(img.src);
+              return reject(new Error("Compression failed"));
+            }
+            const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+              type: "image/jpeg",
+              lastModified: Date.now(),
+            });
+            URL.revokeObjectURL(img.src);
+            resolve(compressedFile);
+          },
+          "image/jpeg",
+          0.8
+        );
+      };
+      img.onerror = (error) => {
+        URL.revokeObjectURL(img.src);
+        reject(error);
+      };
+    });
+  };
+
   const handleImageUpload = async (file: File) => {
     setUploadError(null);
     setIsUploading(true);
@@ -163,8 +220,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       return;
     }
     try {
+      // Compress before upload
+      const compressedFile = await compressImage(file);
+
       const uploadFormData = new FormData();
-      uploadFormData.append("file", file);
+      uploadFormData.append("file", compressedFile);
 
       const res = await fetch("/api/upload-image", {
         method: "POST",
@@ -208,8 +268,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
     try {
       const uploadPromises = Array.from(files).map(async (file) => {
+        // Compress before upload
+        const compressedFile = await compressImage(file);
+
         const uploadFormData = new FormData();
-        uploadFormData.append("file", file);
+        uploadFormData.append("file", compressedFile);
 
         const res = await fetch("/api/upload-image", {
           method: "POST",
