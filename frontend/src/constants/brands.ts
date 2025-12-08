@@ -2,7 +2,7 @@ export const BRANDS = [
   // Featured Brands (Top 8)
   {
     name: "Mercedes-Benz",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Benz_Logo.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Mercedes-Benz_Logo_2010.svg",
     models: ["S-Class", "G-Class", "E-Class", "C-Class", "GLE", "GLS", "AMG GT", "SL", "EQS", "EQE"]
   },
   {
@@ -12,7 +12,7 @@ export const BRANDS = [
   },
   {
     name: "Kia",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/4/47/KIA_logo3.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/d/d4/KIA_logo3.svg",
     models: ["K5", "Stinger", "Telluride", "Sorento", "Sportage", "Carnival", "EV6", "Soul"]
   },
   {
@@ -32,12 +32,12 @@ export const BRANDS = [
   },
   {
     name: "Nissan",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/8/82/Nissan_logo.svg",
+    logo: "https://libs-asia.nissan-cdn.net/etc/designs/nissan/20.07.2.NISSAN-18/common-assets/img/svg/nissan-logo.svg",
     models: ["Altima", "Maxima", "Rogue", "Pathfinder", "Armada", "GT-R", "Z", "Frontier"]
   },
   {
     name: "Rolls-Royce",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a0/Rolls-Royce_Motor_Cars_logo.svg",
+    logo: "https://cdn.worldvectorlogo.com/logos/rolls-royce.svg",
     models: ["Phantom", "Cullinan", "Ghost", "Wraith", "Dawn", "Spectre", "Boat Tail"]
   },
 
