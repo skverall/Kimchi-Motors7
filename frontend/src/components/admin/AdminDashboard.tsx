@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { CarItem } from "@/types/car";
-import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info } from "lucide-react";
+import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info, UploadCloud } from "lucide-react";
 
 interface AdminDashboardProps {
   cars: CarItem[];
@@ -630,67 +630,139 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <option value="Sold">Sold</option>
                     </select>
                   </div>
-                  <div className="col-span-2">
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                      Image URL
-                    </label>
-                    <input
-                      required
-                      className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
-                      value={formData.image}
-                      onChange={(e) =>
-                        setFormData({ ...formData, image: e.target.value })
-                      }
-                      placeholder="https://..."
-                    />
-                    <div className="mt-2 space-y-2">
-                      {formData.images && formData.images.length > 0 && (
-                        <div className="grid grid-cols-4 gap-2 mb-2">
-                          {formData.images.map((img, idx) => (
-                            <div key={idx} className="relative aspect-[4/3] rounded-lg overflow-hidden bg-slate-100 group">
-                              <img src={img} alt={`Car ${idx}`} className="w-full h-full object-cover" />
-                              <button
-                                type="button"
-                                onClick={() => removeImage(idx)}
-                                className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <X className="w-3 h-3" />
-                              </button>
-                              {img === formData.image && (
-                                <div className="absolute bottom-0 left-0 right-0 bg-blue-600/80 text-white text-[10px] text-center py-0.5">
-                                  Main
-                                </div>
-                              )}
-                            </div>
-                          ))}
+                  <div className="col-span-2 space-y-4">
+                    <div className="flex justify-between items-center">
+                      <label className="block text-xs font-bold text-slate-500 uppercase">
+                        Vehicle Photos
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          // Toggle manual entry visibility or just clear it
+                          // For now, let's keep it simple: just show a label
+                        }}
+                        className="text-[10px] text-blue-600 font-semibold hover:underline"
+                      >
+                        {/* Optional: Add toggle for manual URL if needed */}
+                      </button>
+                    </div>
+
+                    {/* Image Grid */}
+                    {formData.images && formData.images.length > 0 && (
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        {formData.images.map((img, idx) => (
+                          <div
+                            key={idx}
+                            onClick={() => setFormData({ ...formData, image: img })}
+                            className={`relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer group transition-all duration-200 ${img === formData.image ? 'ring-2 ring-blue-600 ring-offset-2' : 'hover:ring-2 hover:ring-slate-300 hover:ring-offset-1'
+                              }`}
+                          >
+                            <img src={img} alt={`Car ${idx}`} className="w-full h-full object-cover" />
+
+                            {/* Actions Overlay */}
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeImage(idx);
+                              }}
+                              className="absolute top-2 right-2 bg-white/90 text-red-500 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:text-red-600 shadow-sm"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+
+                            {img === formData.image && (
+                              <div className="absolute bottom-2 left-2 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">
+                                Main Photo
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Drag & Drop Zone */}
+                    <div
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        e.currentTarget.classList.add('border-blue-500', 'bg-blue-50');
+                      }}
+                      onDragLeave={(e) => {
+                        e.preventDefault();
+                        e.currentTarget.classList.remove('border-blue-500', 'bg-blue-50');
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.currentTarget.classList.remove('border-blue-500', 'bg-blue-50');
+                        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                          void handleMultipleImageUpload(e.dataTransfer.files);
+                        }
+                      }}
+                      onClick={() => document.getElementById('hidden-file-input')?.click()}
+                      className={`border-2 border-dashed border-slate-300 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:border-blue-400 hover:bg-slate-50 transition-all group ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
+                    >
+                      <input
+                        id="hidden-file-input"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        disabled={isUploading}
+                        className="hidden"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            void handleMultipleImageUpload(e.target.files);
+                          }
+                        }}
+                      />
+
+                      {isUploading ? (
+                        <div className="animate-pulse flex flex-col items-center">
+                          <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-3" />
+                          <p className="text-sm font-semibold text-slate-600">Uploading photos...</p>
                         </div>
+                      ) : (
+                        <>
+                          <div className="bg-slate-100 p-4 rounded-full mb-3 group-hover:bg-blue-100 transition-colors">
+                            <UploadCloud className="w-6 h-6 text-slate-400 group-hover:text-blue-600" />
+                          </div>
+                          <p className="text-sm font-bold text-slate-700 mb-1">
+                            Click or drag photos here
+                          </p>
+                          <p className="text-xs text-slate-400">
+                            Updates automatically. Click a photo to set as main.
+                          </p>
+                        </>
                       )}
 
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2 text-xs text-slate-500">
-                          <Info className="w-3 h-3" />
-                          <span>Upload one or more images</span>
-                        </div>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          multiple
-                          disabled={isUploading}
-                          className="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
-                          onChange={(e) => {
-                            if (e.target.files && e.target.files.length > 0) {
-                              void handleMultipleImageUpload(e.target.files);
-                            }
-                          }}
-                        />
-                        {isUploading && (
-                          <p className="text-xs text-slate-500">Uploading image...</p>
-                        )}
-                        {uploadError && (
-                          <p className="text-xs text-red-500">{uploadError}</p>
-                        )}
-                      </div>
+                      {uploadError && (
+                        <p className="mt-4 text-xs font-bold text-red-500 bg-red-50 px-3 py-1 rounded-full">
+                          {uploadError}
+                        </p>
+                      )}
                     </div>
+
+                    {/* Fallback Manual Input (Collapsible or Small) */}
+                    <div className="pt-2">
+                      <details className="text-xs text-slate-500">
+                        <summary className="cursor-pointer hover:text-blue-600 font-medium list-none flex items-center gap-1">
+                          <span className="text-[10px]">▶</span> Enter Image URL manually
+                        </summary>
+                        <div className="mt-2 pl-4 border-l-2 border-slate-100">
+                          <input
+                            className="w-full border border-slate-200 rounded-lg p-2 text-xs focus:ring-2 focus:ring-blue-100 outline-none"
+                            value={formData.image}
+                            onChange={(e) =>
+                              setFormData({ ...formData, image: e.target.value })
+                            }
+                            placeholder="https://example.com/image.jpg"
+                          />
+                          <p className="text-[10px] text-slate-400 mt-1">Useful for external hosted images.</p>
+                        </div>
+                      </details>
+                    </div>
+
                   </div>
                 </div>
                 <div>
