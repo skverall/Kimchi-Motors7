@@ -195,6 +195,37 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     });
   };
 
+  const toggleCategory = (category: keyof typeof CAR_FEATURES) => {
+    setFormData(prev => {
+      const keyMap: Record<string, keyof CarFormData> = {
+        safety: "featuresSafety",
+        multimedia: "featuresMultimedia",
+        interior: "featuresInterior",
+        exterior: "featuresExterior",
+        electrical: "featuresElectrical"
+      };
+
+      const stateKey = keyMap[category];
+      // @ts-ignore
+      const currentString = (prev[stateKey] as string) || "";
+      const currentList = currentString.split(",").map(s => s.trim()).filter(Boolean);
+
+      const categoryFeatures = CAR_FEATURES[category];
+      const allSelected = categoryFeatures.every(f => currentList.includes(f));
+
+      let newList;
+      if (allSelected) {
+        // Deselect all standard features, keep custom ones
+        newList = currentList.filter(f => !categoryFeatures.includes(f));
+      } else {
+        // Select all standard features, keep custom ones
+        newList = Array.from(new Set([...currentList, ...categoryFeatures]));
+      }
+
+      return { ...prev, [stateKey]: newList.join(", ") };
+    });
+  };
+
   // Client-side image compression using heic-to + browser-image-compression
   const compressImage = async (file: File): Promise<File> => {
     if (isHeicFile(file)) {
@@ -767,9 +798,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         const currentString = (formData[stateKeyMap[category]] as string) || "";
                         const selectedFeatures = currentString.split(",").map(s => s.trim());
 
+                        const isAllSelected = features.every(f => selectedFeatures.includes(f));
+
                         return (
                           <div key={category}>
-                            <h4 className="text-sm font-bold text-slate-700 uppercase mb-3 border-b border-slate-200 pb-2">{categoryTitleMap[category]}</h4>
+                            <div className="flex justify-between items-center border-b border-slate-200 mb-3 pb-2">
+                              <h4 className="text-sm font-bold text-slate-700 uppercase">{categoryTitleMap[category]}</h4>
+                              <button
+                                type="button"
+                                onClick={() => toggleCategory(category as any)}
+                                className="text-xs font-bold text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2 py-1 rounded transition-colors"
+                              >
+                                {isAllSelected ? "Deselect All" : "Select All"}
+                              </button>
+                            </div>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                               {features.map(feature => {
                                 const isSelected = selectedFeatures.includes(feature);

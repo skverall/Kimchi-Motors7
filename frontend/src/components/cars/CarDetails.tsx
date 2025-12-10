@@ -224,15 +224,23 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
               </div>
 
               {/* CTA Button */}
-              <button
-                onClick={() => {
-                  const message = `Hi, I am interested in the ${car.year} ${car.make} ${car.model} (SKU: ${car.id}).`;
-                  window.open(`https://wa.me/971564742456?text=${encodeURIComponent(message)}`, '_blank');
-                }}
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded shadow-md transition-colors uppercase tracking-wide flex items-center justify-center gap-2"
-              >
-                <MessageCircle className="w-5 h-5" /> Contact Us
-              </button>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  onClick={() => {
+                    const message = `Hi, I am interested in the ${car.year} ${car.make} ${car.model} (SKU: ${car.id}).`;
+                    window.open(`https://wa.me/971564742456?text=${encodeURIComponent(message)}`, '_blank');
+                  }}
+                  className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded shadow-md transition-colors uppercase tracking-wide flex items-center justify-center gap-2"
+                >
+                  <MessageCircle className="w-5 h-5" /> WhatsApp
+                </button>
+                <button
+                  onClick={() => window.open('tel:+971564742456')}
+                  className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded shadow-md transition-colors uppercase tracking-wide flex items-center justify-center gap-2"
+                >
+                  <Phone className="w-5 h-5" /> Call
+                </button>
+              </div>
             </div>
           </div>
         </div>
