@@ -189,7 +189,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         // Continue to verify if standard canvas can handle it (unlikely) or just return original to fail later
       }
     }
-    */
+
 
     return new Promise((resolve, reject) => {
       const img = new Image();
