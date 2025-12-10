@@ -79,6 +79,12 @@ export async function POST(request: Request) {
       mostWanted: payload.mostWanted ?? false, // DB column is camelCase
       status: payload.status ?? "Available",
       youtube_url: payload.youtubeUrl ?? null,
+      chassis: payload.chassis ?? null,
+      engine: payload.engine ?? null,
+      exterior_color: payload.exteriorColor ?? null,
+      interior_color: payload.interiorColor ?? null,
+      body_check: payload.bodyCheck ?? null,
+      features: payload.features ?? null,
     };
 
     const { data, error } = await supabase

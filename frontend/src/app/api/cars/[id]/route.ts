@@ -74,6 +74,12 @@ export async function PATCH(
     if (updates.mostWanted !== undefined) dbUpdates.mostWanted = updates.mostWanted;
     if (updates.status !== undefined) dbUpdates.status = updates.status;
     if (updates.youtubeUrl !== undefined) dbUpdates.youtube_url = updates.youtubeUrl;
+    if (updates.chassis !== undefined) dbUpdates.chassis = updates.chassis;
+    if (updates.engine !== undefined) dbUpdates.engine = updates.engine;
+    if (updates.exteriorColor !== undefined) dbUpdates.exterior_color = updates.exteriorColor;
+    if (updates.interiorColor !== undefined) dbUpdates.interior_color = updates.interiorColor;
+    if (updates.bodyCheck !== undefined) dbUpdates.body_check = updates.bodyCheck;
+    if (updates.features !== undefined) dbUpdates.features = updates.features;
 
     const { data, error } = await supabase
       .from("cars")
