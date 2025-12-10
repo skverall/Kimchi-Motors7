@@ -377,7 +377,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {cars
                 .filter((c) => c.featured)
-                .slice(0, 4)
+                .slice(0, 12)
                 .map((car, index) => (
                   <CarCard
                     key={`${car.make}-${car.model}-${index}`}
