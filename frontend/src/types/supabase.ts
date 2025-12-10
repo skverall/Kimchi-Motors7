@@ -30,6 +30,11 @@ export interface Database {
                     shipping: string | null
                     status: string | null
                     image_version: number | null
+                    chassis: string | null
+                    exterior_color: string | null
+                    interior_color: string | null
+                    body_check: string | null
+                    features: Json | null
                 }
                 Insert: {
                     id?: number
@@ -51,6 +56,11 @@ export interface Database {
                     shipping?: string | null
                     status?: string | null
                     image_version?: number | null
+                    chassis?: string | null
+                    exterior_color?: string | null
+                    interior_color?: string | null
+                    body_check?: string | null
+                    features?: Json | null
                 }
                 Update: {
                     id?: number
@@ -72,6 +82,11 @@ export interface Database {
                     shipping?: string | null
                     status?: string | null
                     image_version?: number | null
+                    chassis?: string | null
+                    exterior_color?: string | null
+                    interior_color?: string | null
+                    body_check?: string | null
+                    features?: Json | null
                 }
             }
             Views: {

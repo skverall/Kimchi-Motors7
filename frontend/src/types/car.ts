@@ -21,5 +21,18 @@ export interface CarItem {
   imageVersion?: number;
   youtubeUrl?: string;
   youtube_url?: string;
+  chassis?: string;
+  exteriorColor?: string;
+  interiorColor?: string;
+  bodyCheck?: string;
+  features?: {
+    safety?: string[];
+    multimedia?: string[];
+    interior?: string[];
+    exteriorLights?: string[];
+    exterior?: string[];
+    electrical?: string[];
+    [key: string]: string[] | undefined;
+  };
 }
 

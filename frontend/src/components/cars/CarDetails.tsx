@@ -1,15 +1,17 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { ArrowRight, Gauge, Fuel, Settings, MessageCircle, Phone, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Gauge, Fuel, Settings, MessageCircle, Phone, X, ChevronLeft, ChevronRight, Share2, Printer, Heart, CheckCircle2, CarFront, FileText, Palette, Shield, Music, Zap, Sun, Lightbulb } from "lucide-react";
 import type { CarItem } from "@/types/car";
+import { CarCard } from "./CarCard";
 
 interface CarDetailsProps {
   car: CarItem;
+  relatedCars?: CarItem[];
   onBack: () => void;
 }
 
-export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => {
+export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], onBack }) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
@@ -37,176 +39,204 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => {
     setLightboxIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
   }, [allImages.length]);
 
-  // Keyboard navigation
+  // Keyboard navigation for lightbox
   useEffect(() => {
     if (!lightboxOpen) return;
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeLightbox();
       if (e.key === "ArrowLeft") goToPrevious();
       if (e.key === "ArrowRight") goToNext();
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [lightboxOpen, closeLightbox, goToPrevious, goToNext]);
 
+  // Derived Values
+  const basePrice = Math.round(car.price * 0.98); // Mock breakdown
+  const brokerage = car.price - basePrice;
+  const priceAed = car.priceAed || Math.round(car.price * 3.67);
+
+  // Feature Section Helpers
+  const renderFeatureSection = (title: string, icon: React.ReactNode, items?: string[]) => {
+    if (!items || items.length === 0) return null;
+    return (
+      <div className="mb-8">
+        <h4 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+          {icon} {title}
+        </h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {items.map((item, i) => (
+            <div key={i} className="flex items-center gap-2 text-slate-600 font-medium">
+              <CheckCircle2 className="w-4 h-4 text-red-600 flex-shrink-0" />
+              <span className="text-sm">{item}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-white animate-fade-in">
-      <div className="bg-slate-900 text-white py-4">
-        <div className="container mx-auto px-4">
-          <button
-            type="button"
-            onClick={onBack}
-            className="flex items-center gap-2 text-sm hover:text-blue-400 transition"
-          >
-            <ArrowRight className="w-4 h-4 rotate-180" /> Back to Inventory
-          </button>
+    <div className="min-h-screen bg-white animate-fade-in pb-20">
+      {/* Top Navigation Bar */}
+      <div className="bg-white border-b border-gray-200 py-4 sticky top-0 z-30">
+        <div className="container mx-auto px-4 flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            {/* Logo placeholder if needed or just back button */}
+          </div>
+          <div className="flex items-center gap-6 text-sm font-medium text-slate-600">
+            <button onClick={onBack} className="hover:text-blue-600">Car List</button>
+            <button className="hover:text-blue-600">FAQ</button>
+            <button className="hover:text-blue-600">About us</button>
+            <button className="hover:text-blue-600">Contact us</button>
+            <div className="h-4 w-px bg-gray-300"></div>
+            <button className="text-red-500 border border-red-500 px-4 py-1.5 rounded hover:bg-red-50 transition">Login</button>
+          </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-4">
-            {/* Main Image - clickable */}
+        {/* Breadcrumb / Title area */}
+        <div className="mb-6">
+          {/* Could add breadcrumbs here */}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* LEFT COLUMN: Gallery */}
+          <div className="lg:col-span-7 space-y-4">
+            {/* Main Image */}
             <div
-              className="aspect-video rounded-2xl overflow-hidden bg-gray-100 shadow-lg cursor-pointer"
+              className="aspect-[4/3] rounded-sm overflow-hidden bg-gray-100 relative cursor-pointer group"
               onClick={() => openLightbox(0)}
             >
               <img
-                src={allImages[0] || car.image || ""}
+                src={allImages[0] || ""}
                 alt={car.model}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover"
               />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+              <button className="absolute bottom-4 right-4 bg-white/90 p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition">
+                <span className="sr-only">Expand</span>
+                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m0 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+              </button>
             </div>
 
-            {/* Thumbnail gallery - colorful and clickable */}
+            {/* Thumbnails */}
             {allImages.length > 1 && (
-              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                {allImages.slice(0, 12).map((img, i) => (
+              <div className="grid grid-cols-5 gap-2">
+                {allImages.slice(0, 10).map((img, i) => (
                   <div
                     key={i}
                     onClick={() => openLightbox(i)}
-                    className="aspect-video rounded-lg overflow-hidden bg-gray-100 cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all shadow-sm"
+                    className={`aspect-[4/3] rounded-sm overflow-hidden bg-gray-100 cursor-pointer border-2 ${i === 0 ? 'border-red-500' : 'border-transparent'} hover:border-red-300 transition-all`}
                   >
-                    <img
-                      src={img}
-                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                      alt={`${car.model} - ${i + 1}`}
-                    />
+                    <img src={img} className="w-full h-full object-cover" alt="" />
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          <div className="lg:col-span-1">
-            <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-lg sticky top-24">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h2 className="text-slate-500 text-sm font-bold uppercase tracking-widest">
-                    {car.make}
-                  </h2>
-                  <h1 className="text-3xl font-bold text-slate-900">{car.model}</h1>
+          {/* RIGHT COLUMN: Info & Specs */}
+          <div className="lg:col-span-5 space-y-8">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900 mb-2">{car.make} {car.model} {car.year}</h1>
+              <div className="text-sm text-slate-500 mb-4">SKU: {car.id}</div>
+
+              <div className="flex justify-between items-end mb-6">
+                <div className="text-3xl font-bold text-red-600">{priceAed.toLocaleString()} SAR</div>
+              </div>
+
+              {/* Price Breakdown */}
+              <div className="bg-gray-50 p-4 rounded-lg space-y-3 text-sm mb-6">
+                <div className="flex justify-between">
+                  <span className="text-slate-600">Base Price:</span>
+                  <span className="font-semibold">{basePrice.toLocaleString()} SAR</span>
                 </div>
-                <div className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">
-                  {car.year}
+                <div className="flex justify-between">
+                  <span className="text-slate-600">Brokerage (VAT incl.):</span>
+                  <span className="font-semibold">{brokerage.toLocaleString()} SAR</span>
+                </div>
+                <div className="border-t border-gray-200 pt-2 flex justify-between text-base font-bold text-red-600">
+                  <span>Total: Vehicle value + Customs + Port Fees</span>
+                  <span>{priceAed.toLocaleString()} SAR</span>
+                </div>
+                <div className="flex justify-between pt-2">
+                  <span className="text-slate-600 font-medium">Car Location</span>
+                  <span className="font-bold">Ajman Exhibition</span>
+                </div>
+                <div className="flex justify-end pt-2">
+                  <button className="text-red-500 text-xs font-bold hover:underline">Show Details</button>
                 </div>
               </div>
 
-              <div className="text-4xl font-black text-slate-900">
-                ${car.price.toLocaleString()}
-              </div>
-              <div className="text-xl font-bold text-slate-500 mb-8">
-                AED {(car.priceAed || Math.round(car.price * 3.67)).toLocaleString()}
+              {/* Specifications Grid */}
+              <div className="bg-gray-50 p-6 rounded-lg mb-6">
+                <h3 className="font-bold text-slate-900 mb-4">Vehicle Specifications</h3>
+                <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><CarFront className="w-3 h-3" /> Manufacturer</div>
+                    <div className="font-semibold text-slate-900">{car.make}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><FileText className="w-3 h-3" /> Year</div>
+                    <div className="font-semibold text-slate-900">{car.year}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><Gauge className="w-3 h-3" /> Odometer</div>
+                    <div className="font-semibold text-slate-900">{car.mileage.toLocaleString()} Km</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><FileText className="w-3 h-3" /> Chassis</div>
+                    <div className="font-semibold text-slate-900 text-xs truncate" title={car.chassis || "N/A"}>{car.chassis || "N/A"}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><Palette className="w-3 h-3" /> Exterior Color</div>
+                    <div className="font-semibold text-slate-900">{car.exteriorColor || "N/A"}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><Palette className="w-3 h-3" /> Interior Color</div>
+                    <div className="font-semibold text-slate-900">{car.interiorColor || "N/A"}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><Fuel className="w-3 h-3" /> Engine Type</div>
+                    <div className="font-semibold text-slate-900">{car.fuel} {car.engine || ""}</div>
+                  </div>
+                  <div className="col-span-2">
+                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Body Check</div>
+                    <div className="font-semibold text-slate-900 text-sm">{car.bodyCheck || "N/A"}</div>
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-4 mb-8">
-                <div className="flex justify-between py-3 border-b border-gray-100">
-                  <span className="text-slate-500 flex items-center gap-2">
-                    <Gauge className="w-4 h-4" /> Mileage
-                  </span>
-                  <span className="font-semibold">
-                    {car.mileage.toLocaleString()} km
-                  </span>
-                </div>
-                <div className="flex justify-between py-3 border-b border-gray-100">
-                  <span className="text-slate-500 flex items-center gap-2">
-                    <Fuel className="w-4 h-4" /> Fuel Type
-                  </span>
-                  <span className="font-semibold">{car.fuel}</span>
-                </div>
-                <div className="flex justify-between py-3 border-b border-gray-100">
-                  <span className="text-slate-500 flex items-center gap-2">
-                    <Settings className="w-4 h-4" /> Transmission
-                  </span>
-                  <span className="font-semibold">{car.transmission}</span>
-                </div>
-                {car.engine && (
-                  <div className="flex justify-between py-3 border-b border-gray-100">
-                    <span className="text-slate-500 flex items-center gap-2">
-                      <Settings className="w-4 h-4" /> Engine
-                    </span>
-                    <span className="font-semibold">{car.engine}</span>
-                  </div>
-                )}
-                {car.shipping && (
-                  <div className="flex justify-between py-3 border-b border-gray-100">
-                    <span className="text-slate-500 flex items-center gap-2">
-                      <Settings className="w-4 h-4" /> Shipping
-                    </span>
-                    <span className="font-semibold">{car.shipping}</span>
-                  </div>
-                )}
-                {car.status && (
-                  <div className="flex justify-between py-3 border-b border-gray-100">
-                    <span className="text-slate-500 flex items-center gap-2">
-                      <Settings className="w-4 h-4" /> Status
-                    </span>
-                    <span className={`font-bold px-2 py-0.5 rounded text-white text-xs ${car.status === 'Sold' ? 'bg-red-500' :
-                      car.status === 'In Transit' ? 'bg-orange-500' :
-                        'bg-emerald-500'
-                      }`}>
-                      {car.status}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <a
-                  href="https://wa.me/971564742456"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-green-100"
-                >
-                  <MessageCircle className="w-5 h-5" /> WhatsApp Inquiry
-                </a>
-                <a
-                  href="tel:+971564742456"
-                  className="w-full bg-slate-900 hover:bg-slate-800 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-slate-200"
-                >
-                  <Phone className="w-5 h-5" /> Call Showroom
-                </a>
-              </div>
+              {/* CTA Button */}
+              <button className="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-4 rounded shadow-md transition-colors uppercase tracking-wide">
+                Login To Buy
+              </button>
             </div>
           </div>
         </div>
 
-        <div className="mt-16 max-w-4xl">
-          <h3 className="text-2xl font-bold text-slate-900 mb-6">
-            Vehicle Description
-          </h3>
-          <p className="text-slate-600 leading-loose text-lg">
-            {car.description ||
-              `Experience the pinnacle of engineering with this ${car.year} ${car.make} ${car.model}. Finished in stunning condition, this vehicle represents the perfect blend of luxury and performance.`}
-          </p>
+        {/* Detailed Features Section */}
+        <div className="mt-12 bg-white rounded-xl p-8 border border-gray-100 shadow-sm">
+          {car.features ? (
+            <>
+              {renderFeatureSection("Safety & Security Features", <Shield className="w-5 h-5 text-red-600" />, car.features.safety)}
+              {renderFeatureSection("Multimedia & Screens", <Music className="w-5 h-5 text-red-600" />, car.features.multimedia)}
+              {renderFeatureSection("Interior Features", <Settings className="w-5 h-5 text-red-600" />, car.features.interior)}
+              {renderFeatureSection("Exterior / Interior Lights", <Sun className="w-5 h-5 text-red-600" />, car.features.exteriorLights)}
+              {renderFeatureSection("Exterior Features", <CarFront className="w-5 h-5 text-red-600" />, car.features.exterior)}
+              {renderFeatureSection("Electrical Controls", <Zap className="w-5 h-5 text-red-600" />, car.features.electrical)}
+            </>
+          ) : (
+            <div className="text-center text-slate-500 italic py-10">Detailed features not available for this vehicle.</div>
+          )}
         </div>
 
         {/* Video Review Section */}
         {(car.youtubeUrl || car.youtube_url) && (
-          <div className="mt-12 max-w-4xl">
-            <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+          <div className="mt-12 max-w-4xl mx-auto">
+            <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center justify-center gap-2">
               <span className="text-red-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" /></svg>
               </span>
@@ -226,15 +256,34 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => {
             </div>
           </div>
         )}
+
+        {/* Explore More Vehicles Section */}
+        {relatedCars.length > 0 && (
+          <div className="mt-20 border-t border-gray-100 pt-16">
+            <div className="text-center mb-10">
+              <h3 className="text-red-500 font-bold uppercase tracking-wider mb-2">Vehicles</h3>
+              <h2 className="text-3xl font-bold text-slate-900">Explore More Vehicles</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {relatedCars.map((relatedCar, idx) => (
+                <CarCard
+                  key={relatedCar.id || idx}
+                  car={relatedCar}
+                  onClick={() => window.location.href = `/inventory/${relatedCar.id}`}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Fullscreen Lightbox Modal */}
       {lightboxOpen && allImages.length > 0 && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center animate-fade-in"
           onClick={closeLightbox}
         >
-          {/* Close Button */}
           <button
             onClick={closeLightbox}
             className="absolute top-4 right-4 text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition z-50"
@@ -242,37 +291,34 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => {
             <X className="w-8 h-8" />
           </button>
 
-          {/* Navigation Arrows */}
           {allImages.length > 1 && (
             <>
               <button
                 onClick={(e) => { e.stopPropagation(); goToPrevious(); }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 rounded-full bg-black/30 hover:bg-black/50 transition z-50"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white p-2 transition z-50"
               >
-                <ChevronLeft className="w-8 h-8" />
+                <ChevronLeft className="w-12 h-12" />
               </button>
               <button
                 onClick={(e) => { e.stopPropagation(); goToNext(); }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 rounded-full bg-black/30 hover:bg-black/50 transition z-50"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white p-2 transition z-50"
               >
-                <ChevronRight className="w-8 h-8" />
+                <ChevronRight className="w-12 h-12" />
               </button>
             </>
           )}
 
-          {/* Main Image */}
           <div
-            className="max-w-[90vw] max-h-[85vh] flex items-center justify-center"
+            className="max-w-[90vw] max-h-[90vh] flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
             <img
               src={allImages[lightboxIndex]}
               alt={`${car.model} - ${lightboxIndex + 1}`}
-              className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+              className="max-w-full max-h-[85vh] object-contain"
             />
           </div>
 
-          {/* Image Counter */}
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/80 text-sm font-medium bg-black/50 px-4 py-2 rounded-full">
             {lightboxIndex + 1} / {allImages.length}
           </div>
@@ -281,5 +327,3 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, onBack }) => {
     </div>
   );
 };
-
-export default CarDetails;
