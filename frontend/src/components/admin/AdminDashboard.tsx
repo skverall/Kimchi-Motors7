@@ -197,35 +197,41 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   // Client-side image compression
   const compressImage = async (file: File): Promise<File> => {
     // Check for HEIC/HEIF
-    if (file.type === "image/heic" || file.type === "image/heif" || file.name.toLowerCase().endsWith(".heic") || file.name.toLowerCase().endsWith(".heif")) {
+    const isHeic = file.type === "image/heic" || file.type === "image/heif" ||
+      file.name.toLowerCase().endsWith(".heic") || file.name.toLowerCase().endsWith(".heif");
+
+    if (isHeic) {
       try {
-        console.log("Detected HEIC file, attempting conversion...");
-        // Load heic2any from CDN if not present
-        if (!(window as any).heic2any) {
+        console.log("Detected HEIC file, attempting conversion with heic-to...");
+        setUploadError("Converting HEIC image, please wait...");
+
+        // Load heic-to from CDN if not present
+        if (!(window as any).heicTo) {
           await new Promise<void>((resolve, reject) => {
             const script = document.createElement("script");
-            script.src = "https://unpkg.com/heic2any@0.0.4/dist/heic2any.min.js";
-            script.onload = () => resolve();
-            script.onerror = () => reject(new Error("Failed to load heic2any library"));
+            script.src = "https://cdn.jsdelivr.net/npm/heic-to@1.1.0/dist/heic-to.umd.min.js";
+            script.onload = () => {
+              console.log("heic-to library loaded successfully");
+              resolve();
+            };
+            script.onerror = () => reject(new Error("Failed to load heic-to library"));
             document.body.appendChild(script);
           });
         }
 
-        const heic2any = (window as any).heic2any;
-        const convertedBlob = await heic2any({
-          blob: file,
-          toType: "image/jpeg",
-          quality: 0.8,
-        });
+        const heicTo = (window as any).heicTo;
+        const jpegBlob = await heicTo.jpeg({ blob: file, quality: 0.85 });
 
-        const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
-        return new File([blob], file.name.replace(/\.(heic|heif)$/i, ".jpg"), {
+        setUploadError(null); // Clear the converting message
+
+        return new File([jpegBlob], file.name.replace(/\.(heic|heif)$/i, ".jpg"), {
           type: "image/jpeg",
           lastModified: Date.now(),
         });
       } catch (e) {
-        console.error("HEIC conversion failed", e);
-        // Continue to verify if standard canvas can handle it (unlikely) or just return original to fail later
+        console.error("HEIC conversion failed:", e);
+        setUploadError("HEIC conversion failed. Please convert this image to JPEG on your device first.");
+        throw new Error("HEIC conversion failed. Please convert image to JPEG manually.");
       }
     }
 
