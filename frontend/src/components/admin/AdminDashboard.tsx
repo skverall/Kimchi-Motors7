@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import type { CarItem } from "@/types/car";
 import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info, UploadCloud, Check } from "lucide-react";
 import { CAR_FEATURES } from "@/constants/carFeatures";
+import { heicTo } from "heic-to/next";
 
 
 interface AdminDashboardProps {
@@ -205,22 +206,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         console.log("Detected HEIC file, attempting conversion with heic-to...");
         setUploadError("Converting HEIC image, please wait...");
 
-        // Load heic-to from CDN if not present
-        if (!(window as any).heicTo) {
-          await new Promise<void>((resolve, reject) => {
-            const script = document.createElement("script");
-            script.src = "https://cdn.jsdelivr.net/npm/heic-to@1.1.0/dist/heic-to.umd.min.js";
-            script.onload = () => {
-              console.log("heic-to library loaded successfully");
-              resolve();
-            };
-            script.onerror = () => reject(new Error("Failed to load heic-to library"));
-            document.body.appendChild(script);
-          });
-        }
-
-        const heicTo = (window as any).heicTo;
-        const jpegBlob = await heicTo.jpeg({ blob: file, quality: 0.85 });
+        const jpegBlob = await heicTo({ blob: file, type: "image/jpeg", quality: 0.85 });
 
         setUploadError(null); // Clear the converting message
 
