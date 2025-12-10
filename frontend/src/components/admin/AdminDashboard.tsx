@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import type { CarItem } from "@/types/car";
 import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info, UploadCloud, Check } from "lucide-react";
 import { CAR_FEATURES } from "@/constants/carFeatures";
-import { heicTo } from "heic-to/next";
+import { prepareImageForUpload, isHeicFile } from "@/lib/imageProcessing";
 
 
 interface AdminDashboardProps {
@@ -195,86 +195,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     });
   };
 
-  // Client-side image compression
+  // Client-side image compression using heic-to + browser-image-compression
   const compressImage = async (file: File): Promise<File> => {
-    // Check for HEIC/HEIF
-    const isHeic = file.type === "image/heic" || file.type === "image/heif" ||
-      file.name.toLowerCase().endsWith(".heic") || file.name.toLowerCase().endsWith(".heif");
-
-    if (isHeic) {
-      try {
-        console.log("Detected HEIC file, attempting conversion with heic-to...");
-        setUploadError("Converting HEIC image, please wait...");
-
-        const jpegBlob = await heicTo({ blob: file, type: "image/jpeg", quality: 0.85 });
-
-        setUploadError(null); // Clear the converting message
-
-        return new File([jpegBlob], file.name.replace(/\.(heic|heif)$/i, ".jpg"), {
-          type: "image/jpeg",
-          lastModified: Date.now(),
-        });
-      } catch (e) {
-        console.error("HEIC conversion failed:", e);
-        setUploadError("HEIC conversion failed. Please convert this image to JPEG on your device first.");
-        throw new Error("HEIC conversion failed. Please convert image to JPEG manually.");
-      }
+    if (isHeicFile(file)) {
+      setUploadError("Converting HEIC image, please wait...");
     }
-
-
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = URL.createObjectURL(file);
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const MAX_WIDTH = 1920;
-        const MAX_HEIGHT = 1920;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
-            height = MAX_HEIGHT;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-          URL.revokeObjectURL(img.src);
-          return reject(new Error("Failed to get canvas context"));
-        }
-        ctx.drawImage(img, 0, 0, width, height);
-
-        canvas.toBlob(
-          (blob) => {
-            if (!blob) {
-              URL.revokeObjectURL(img.src);
-              return reject(new Error("Compression failed"));
-            }
-            const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
-              type: "image/jpeg",
-              lastModified: Date.now(),
-            });
-            URL.revokeObjectURL(img.src);
-            resolve(compressedFile);
-          },
-          "image/jpeg",
-          0.8
-        );
-      };
-      img.onerror = (error) => {
-        URL.revokeObjectURL(img.src);
-        reject(error);
-      };
-    });
+    try {
+      const result = await prepareImageForUpload(file);
+      setUploadError(null);
+      return result;
+    } catch (e) {
+      console.error("Image processing failed:", e);
+      setUploadError("Image processing failed. Please try a different image or convert HEIC to JPEG first.");
+      throw e;
+    }
   };
 
   const handleImageUpload = async (file: File) => {
