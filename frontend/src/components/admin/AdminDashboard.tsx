@@ -55,6 +55,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     description: "",
     status: "Available" as "Available" | "In Transit" | "Sold",
     youtubeUrl: "",
+    chassis: "",
+    engine: "",
+    exteriorColor: "",
+    interiorColor: "",
+    bodyCheck: "",
+    // Feature categories (comma separated strings for editing)
+    featuresSafety: "",
+    featuresMultimedia: "",
+    featuresInterior: "",
+    featuresExterior: "",
+    featuresElectrical: "",
   };
 
   type CarFormData = typeof initialFormState;
@@ -388,6 +399,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       description: car.description || "",
       status: car.status || "Available",
       youtubeUrl: car.youtubeUrl || car.youtube_url || "",
+      chassis: car.chassis || "",
+      engine: car.engine || "",
+      exteriorColor: car.exteriorColor || "",
+      interiorColor: car.interiorColor || "",
+      bodyCheck: car.bodyCheck || "",
+      featuresSafety: car.features?.safety?.join(", ") || "",
+      featuresMultimedia: car.features?.multimedia?.join(", ") || "",
+      featuresInterior: car.features?.interior?.join(", ") || "",
+      featuresExterior: car.features?.exterior?.join(", ") || "",
+      featuresElectrical: car.features?.electrical?.join(", ") || "",
     });
     setModalOpen(true);
   };
@@ -401,6 +422,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         priceAed: safeParseInt(formData.priceAed || 0),
         mileage: safeParseInt(formData.mileage || 0),
         year: safeParseInt(formData.year || 0),
+        chassis: formData.chassis,
+        engine: formData.engine,
+        exteriorColor: formData.exteriorColor,
+        interiorColor: formData.interiorColor,
+        bodyCheck: formData.bodyCheck,
+        features: {
+          safety: formData.featuresSafety.split(",").map(s => s.trim()).filter(Boolean),
+          multimedia: formData.featuresMultimedia.split(",").map(s => s.trim()).filter(Boolean),
+          interior: formData.featuresInterior.split(",").map(s => s.trim()).filter(Boolean),
+          exterior: formData.featuresExterior.split(",").map(s => s.trim()).filter(Boolean),
+          electrical: formData.featuresElectrical.split(",").map(s => s.trim()).filter(Boolean),
+        }
       };
 
       if (editingId) {
@@ -728,6 +761,60 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <option value="Sold">Sold</option>
                     </select>
                   </div>
+                  <div className="col-span-2 grid grid-cols-2 lg:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <div className="col-span-2 lg:col-span-4 text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Detailed Specifications</div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Chassis No.</label>
+                      <input className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.chassis} onChange={e => setFormData({ ...formData, chassis: e.target.value })} />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Engine</label>
+                      <input className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.engine} onChange={e => setFormData({ ...formData, engine: e.target.value })} />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Ext. Color</label>
+                      <input className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.exteriorColor} onChange={e => setFormData({ ...formData, exteriorColor: e.target.value })} />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Int. Color</label>
+                      <input className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.interiorColor} onChange={e => setFormData({ ...formData, interiorColor: e.target.value })} />
+                    </div>
+                    <div className="col-span-2">
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Body Condition Check</label>
+                      <input className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.bodyCheck} onChange={e => setFormData({ ...formData, bodyCheck: e.target.value })} />
+                    </div>
+                    <div className="col-span-2">
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">YouTube Video URL</label>
+                      <input className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.youtubeUrl} onChange={e => setFormData({ ...formData, youtubeUrl: e.target.value })} placeholder="https://youtube.com/watch?v=..." />
+                    </div>
+                  </div>
+
+                  <div className="col-span-2 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <div className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Features (Comma Separated)</div>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Safety & Security</label>
+                        <textarea rows={2} className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.featuresSafety} onChange={e => setFormData({ ...formData, featuresSafety: e.target.value })} placeholder="e.g. ABS, Airbags, Lane Assist" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Multimedia</label>
+                        <textarea rows={2} className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.featuresMultimedia} onChange={e => setFormData({ ...formData, featuresMultimedia: e.target.value })} placeholder="e.g. Touchscreen, Bluetooth, Navi" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Interior</label>
+                        <textarea rows={2} className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.featuresInterior} onChange={e => setFormData({ ...formData, featuresInterior: e.target.value })} placeholder="e.g. Leather Seats, Heated Seats" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Exterior</label>
+                        <textarea rows={2} className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.featuresExterior} onChange={e => setFormData({ ...formData, featuresExterior: e.target.value })} placeholder="e.g. Sunroof, Alloy Wheels" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Electrical</label>
+                        <textarea rows={2} className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.featuresElectrical} onChange={e => setFormData({ ...formData, featuresElectrical: e.target.value })} placeholder="e.g. Power Windows, Cruise Control" />
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="col-span-2 space-y-4">
                     <div className="flex justify-between items-center">
                       <label className="block text-xs font-bold text-slate-500 uppercase">
