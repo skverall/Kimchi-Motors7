@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { ArrowRight, Gauge, Fuel, Settings, MessageCircle, Phone, X, ChevronLeft, ChevronRight, Share2, Printer, Heart, CheckCircle2, CarFront, FileText, Palette, Shield, Music, Zap, Sun, Lightbulb } from "lucide-react";
+import { ArrowRight, Gauge, Fuel, Settings, MessageCircle, Phone, X, ChevronLeft, ChevronRight, Share2, Printer, Heart, CheckCircle2, CarFront, FileText, Palette, Shield, Music, Zap, Sun, Lightbulb, Check } from "lucide-react";
 import type { CarItem } from "@/types/car";
 import { CarCard } from "./CarCard";
 
@@ -64,11 +64,13 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
         <h4 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
           {icon} {title}
         </h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-6">
           {items.map((item, i) => (
-            <div key={i} className="flex items-center gap-2 text-slate-600 font-medium">
-              <CheckCircle2 className="w-4 h-4 text-red-600 flex-shrink-0" />
-              <span className="text-sm">{item}</span>
+            <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100 hover:border-red-100 transition-colors">
+              <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-600 flex items-center justify-center">
+                <Check className="w-3 h-3 text-white stroke-[3]" />
+              </div>
+              <span className="text-sm font-semibold text-slate-700">{item}</span>
             </div>
           ))}
         </div>
@@ -98,7 +100,15 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb / Title area */}
         <div className="mb-6">
-          {/* Could add breadcrumbs here */}
+          <button
+            onClick={onBack}
+            className="group flex items-center gap-2 text-slate-500 hover:text-red-600 transition-colors font-medium"
+          >
+            <div className="p-2 bg-slate-100 rounded-full group-hover:bg-red-50 transition-colors">
+              <ArrowRight className="w-4 h-4 rotate-180" />
+            </div>
+            Back to Inventory
+          </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
