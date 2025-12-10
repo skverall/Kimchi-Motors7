@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import type { CarItem } from "@/types/car";
-import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info, UploadCloud } from "lucide-react";
+import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info, UploadCloud, Check } from "lucide-react";
+import { CAR_FEATURES } from "@/constants/carFeatures";
 
 
 interface AdminDashboardProps {
@@ -164,6 +165,33 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         price: Math.round(numValue / USD_TO_AED)
       }));
     }
+  };
+
+  const toggleFeature = (category: keyof typeof CAR_FEATURES, feature: string) => {
+    setFormData(prev => {
+      // Map category to state key
+      const keyMap: Record<string, keyof CarFormData> = {
+        safety: "featuresSafety",
+        multimedia: "featuresMultimedia",
+        interior: "featuresInterior",
+        exterior: "featuresExterior",
+        electrical: "featuresElectrical"
+      };
+
+      const stateKey = keyMap[category];
+      // @ts-ignore - dynamic key access
+      const currentString = (prev[stateKey] as string) || "";
+      const currentList = currentString.split(",").map(s => s.trim()).filter(Boolean);
+
+      let newList;
+      if (currentList.includes(feature)) {
+        newList = currentList.filter(f => f !== feature);
+      } else {
+        newList = [...currentList, feature];
+      }
+
+      return { ...prev, [stateKey]: newList.join(", ") };
+    });
   };
 
   // Client-side image compression
@@ -789,29 +817,77 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     </div>
                   </div>
 
-                  <div className="col-span-2 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                    <div className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Features (Comma Separated)</div>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Safety & Security</label>
-                        <textarea rows={2} className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.featuresSafety} onChange={e => setFormData({ ...formData, featuresSafety: e.target.value })} placeholder="e.g. ABS, Airbags, Lane Assist" />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Multimedia</label>
-                        <textarea rows={2} className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.featuresMultimedia} onChange={e => setFormData({ ...formData, featuresMultimedia: e.target.value })} placeholder="e.g. Touchscreen, Bluetooth, Navi" />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Interior</label>
-                        <textarea rows={2} className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.featuresInterior} onChange={e => setFormData({ ...formData, featuresInterior: e.target.value })} placeholder="e.g. Leather Seats, Heated Seats" />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Exterior</label>
-                        <textarea rows={2} className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.featuresExterior} onChange={e => setFormData({ ...formData, featuresExterior: e.target.value })} placeholder="e.g. Sunroof, Alloy Wheels" />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Electrical</label>
-                        <textarea rows={2} className="w-full border border-slate-200 rounded-lg p-2.5 text-sm" value={formData.featuresElectrical} onChange={e => setFormData({ ...formData, featuresElectrical: e.target.value })} placeholder="e.g. Power Windows, Cruise Control" />
-                      </div>
+                  <div className="col-span-2 bg-slate-50 p-6 rounded-xl border border-slate-100">
+                    <div className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Vehicle Features</div>
+                    <div className="space-y-8">
+                      {Object.entries(CAR_FEATURES).map(([category, features]) => {
+                        const categoryTitleMap: Record<string, string> = {
+                          safety: "Safety & Security",
+                          multimedia: "Multimedia & Screens",
+                          interior: "Interior Features",
+                          exterior: "Exterior Features",
+                          electrical: "Electrical Controls"
+                        };
+
+                        const stateKeyMap: Record<string, keyof CarFormData> = {
+                          safety: "featuresSafety",
+                          multimedia: "featuresMultimedia",
+                          interior: "featuresInterior",
+                          exterior: "featuresExterior",
+                          electrical: "featuresElectrical"
+                        };
+
+                        // @ts-ignore
+                        const currentString = (formData[stateKeyMap[category]] as string) || "";
+                        const selectedFeatures = currentString.split(",").map(s => s.trim());
+
+                        return (
+                          <div key={category}>
+                            <h4 className="text-sm font-bold text-slate-700 uppercase mb-3 border-b border-slate-200 pb-2">{categoryTitleMap[category]}</h4>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                              {features.map(feature => {
+                                const isSelected = selectedFeatures.includes(feature);
+                                return (
+                                  <button
+                                    key={feature}
+                                    type="button"
+                                    onClick={() => toggleFeature(category as any, feature)}
+                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-semibold transition-all text-left ${isSelected
+                                      ? "bg-blue-50 border-blue-200 text-blue-700 shadow-sm"
+                                      : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
+                                      }`}
+                                  >
+                                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isSelected ? "bg-blue-600 border-blue-600" : "bg-slate-100 border-slate-300"
+                                      }`}>
+                                      {isSelected && <Check className="w-3 h-3 text-white" />}
+                                    </div>
+                                    {feature}
+                                  </button>
+                                );
+                              })}
+                              {/* Custom Input for extra features */}
+                              <div className="col-span-2 md:col-span-3 mt-2">
+                                <input
+                                  type="text"
+                                  placeholder={`Add custom ${category} feature...`}
+                                  className="w-full text-xs border border-dashed border-slate-300 rounded-md p-2 bg-slate-50 focus:bg-white focus:border-blue-400 focus:outline-none transition-colors"
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      e.preventDefault();
+                                      const val = e.currentTarget.value.trim();
+                                      if (val) {
+                                        toggleFeature(category as any, val);
+                                        e.currentTarget.value = "";
+                                      }
+                                    }
+                                  }}
+                                />
+                                <p className="text-[10px] text-slate-400 mt-1 pl-1">Press Enter to add custom feature</p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
 
