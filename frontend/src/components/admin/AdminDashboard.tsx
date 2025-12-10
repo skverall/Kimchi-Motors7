@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react";
 import type { CarItem } from "@/types/car";
 import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info, UploadCloud } from "lucide-react";
-// @ts-ignore
-import heic2any from "heic2any";
+
 
 interface AdminDashboardProps {
   cars: CarItem[];
@@ -161,11 +160,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     // Check for HEIC/HEIF
     if (file.type === "image/heic" || file.type === "image/heif" || file.name.toLowerCase().endsWith(".heic") || file.name.toLowerCase().endsWith(".heif")) {
       try {
+        console.log("Detected HEIC file, attempting conversion...");
+        // Load heic2any from CDN if not present
+        if (!(window as any).heic2any) {
+          await new Promise<void>((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = "https://unpkg.com/heic2any@0.0.4/dist/heic2any.min.js";
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error("Failed to load heic2any library"));
+            document.body.appendChild(script);
+          });
+        }
+
+        const heic2any = (window as any).heic2any;
         const convertedBlob = await heic2any({
           blob: file,
           toType: "image/jpeg",
           quality: 0.8,
         });
+
         const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
         return new File([blob], file.name.replace(/\.(heic|heif)$/i, ".jpg"), {
           type: "image/jpeg",
@@ -176,6 +189,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         // Continue to verify if standard canvas can handle it (unlikely) or just return original to fail later
       }
     }
+    */
 
     return new Promise((resolve, reject) => {
       const img = new Image();
