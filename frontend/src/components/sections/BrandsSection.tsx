@@ -24,7 +24,11 @@ const itemVariants = {
     },
 };
 
-export const BrandsSection = () => {
+interface BrandsSectionProps {
+    onBrandClick?: (brandName: string) => void;
+}
+
+export const BrandsSection: React.FC<BrandsSectionProps> = ({ onBrandClick }) => {
     return (
         <section className="py-20 container mx-auto px-4 overflow-hidden">
             <motion.div
@@ -50,6 +54,7 @@ export const BrandsSection = () => {
                     <motion.div
                         key={brand.name}
                         variants={itemVariants}
+                        onClick={() => onBrandClick?.(brand.name)}
                         className="group relative bg-white rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 hover:shadow-xl border border-slate-100 hover:border-blue-500/20"
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
@@ -82,7 +87,8 @@ export const BrandsSection = () => {
                     {[...BRANDS, ...BRANDS].map((brand, index) => (
                         <div
                             key={`${brand.name}-${index}`}
-                            className="flex-shrink-0 w-36 h-36 bg-white border border-slate-100 rounded-2xl p-4 flex flex-col items-center justify-center shadow-sm"
+                            onClick={() => onBrandClick?.(brand.name)}
+                            className="flex-shrink-0 w-36 h-36 bg-white border border-slate-100 rounded-2xl p-4 flex flex-col items-center justify-center shadow-sm cursor-pointer active:scale-95 transition-transform"
                         >
                             <img
                                 src={brand.logo}

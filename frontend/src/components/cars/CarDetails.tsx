@@ -238,7 +238,7 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
                   onClick={() => window.open('tel:+971564742456')}
                   className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded shadow-md transition-colors uppercase tracking-wide flex items-center justify-center gap-2"
                 >
-                  <Phone className="w-5 h-5" /> Call
+                  <Phone className="w-5 h-5" /> +971 56 474 2456
                 </button>
               </div>
             </div>

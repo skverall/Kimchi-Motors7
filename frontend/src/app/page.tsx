@@ -223,6 +223,12 @@ export default function Home() {
     window.scrollTo(0, 0);
   };
 
+  const handleBrandClick = (brandName: string) => {
+    setInventoryFilters({ make: brandName });
+    setPage("listing");
+    window.scrollTo(0, 0);
+  };
+
   // Admin Handlers
   const handleAddCar = async (newCar: Omit<CarItem, "id">) => {
     try {
@@ -348,7 +354,9 @@ export default function Home() {
           <HeroSection onSearch={handleSearch} />
           <div id="brands-section">
             <div id="brands-section">
-              <BrandsSection />
+              <div id="brands-section">
+                <BrandsSection onBrandClick={handleBrandClick} />
+              </div>
             </div>
           </div>
 

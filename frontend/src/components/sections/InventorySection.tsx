@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Search, Filter, SlidersHorizontal, Heart, X, ChevronDown } from "lucide-react";
+import { Search, Filter, SlidersHorizontal, Heart, X, ChevronDown, MessageCircle, Phone } from "lucide-react";
 import { CarCard } from "@/components/cars/CarCard";
 import { BRANDS } from "@/constants/brands";
 import type { CarItem } from "@/types/car";
@@ -299,22 +299,62 @@ export const InventorySection: React.FC<InventorySectionProps> = ({ cars, onCarC
                             </div>
                         ) : (
                             <div className="text-center py-20 bg-white rounded-2xl border border-slate-100 border-dashed">
-                                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <Search className="w-8 h-8 text-slate-300" />
-                                </div>
-                                <h3 className="text-lg font-bold text-slate-900 mb-1">No vehicles found</h3>
-                                <p className="text-slate-500 mb-6">Try adjusting your filters or search query.</p>
-                                <button
-                                    onClick={clearFilters}
-                                    className="px-6 py-2 bg-blue-600 text-white rounded-full font-bold text-sm hover:bg-blue-700 transition"
-                                >
-                                    Clear All Filters
-                                </button>
+                                {
+                                    selectedMake ? (
+                                        <>
+                                            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <Search className="w-8 h-8 text-blue-300" />
+                                            </div>
+                                            <h3 className="text-xl font-bold text-slate-900 mb-2">
+                                                No {selectedMake} available
+                                            </h3>
+                                            <p className="text-slate-500 max-w-sm mx-auto mb-8">
+                                                We don't have these cars in stock right now, but you can always order one through us.
+                                            </p>
+                                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                                                <button
+                                                    onClick={() => {
+                                                        const message = `Hi, I am looking for a ${selectedMake}, but I see it's not in stock. Can I order one?`;
+                                                        window.open(`https://wa.me/971564742456?text=${encodeURIComponent(message)}`, '_blank');
+                                                    }}
+                                                    className="flex items-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-slate-800 transition shadow-lg shadow-slate-200"
+                                                >
+                                                    <MessageCircle className="w-4 h-4" /> Write in WhatsApp
+                                                </button>
+                                                <button
+                                                    onClick={() => window.open('tel:+971564742456')}
+                                                    className="flex items-center gap-2 bg-white border border-slate-200 text-slate-900 px-6 py-3 rounded-xl font-bold text-sm hover:bg-slate-50 transition"
+                                                >
+                                                    <Phone className="w-4 h-4" /> +971 56 474 2456
+                                                </button>
+                                            </div>
+                                            <button
+                                                onClick={clearFilters}
+                                                className="mt-8 text-sm text-slate-400 font-medium hover:text-slate-600 hover:underline"
+                                            >
+                                                View all other vehicles
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <Search className="w-8 h-8 text-slate-300" />
+                                            </div>
+                                            <h3 className="text-lg font-bold text-slate-900 mb-1">No vehicles found</h3>
+                                            <p className="text-slate-500 mb-6">Try adjusting your filters or search query.</p>
+                                            <button
+                                                onClick={clearFilters}
+                                                className="px-6 py-2 bg-blue-600 text-white rounded-full font-bold text-sm hover:bg-blue-700 transition"
+                                            >
+                                                Clear All Filters
+                                            </button>
+                                        </>
+                                    )}
                             </div>
                         )}
                     </div>
                 </div>
-            </div>
-        </section>
+            </div >
+        </section >
     );
 };
