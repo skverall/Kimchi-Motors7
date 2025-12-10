@@ -144,26 +144,30 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
               <div className="text-sm text-slate-500 mb-4">SKU: {car.id}</div>
 
               <div className="flex justify-between items-end mb-6">
-                <div className="text-3xl font-bold text-red-600">{priceAed.toLocaleString()} SAR</div>
+                <div className="text-3xl font-bold text-red-600">{priceAed.toLocaleString()} AED</div>
+                <div className="text-lg font-bold text-slate-500">${car.price.toLocaleString()}</div>
               </div>
 
               {/* Price Breakdown */}
               <div className="bg-gray-50 p-4 rounded-lg space-y-3 text-sm mb-6">
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Base Price:</span>
-                  <span className="font-semibold">{basePrice.toLocaleString()} SAR</span>
+                  <span className="text-slate-900 font-medium">Base Price:</span>
+                  <span className="font-bold text-slate-900 text-base">{basePrice.toLocaleString()} USD</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Brokerage (VAT incl.):</span>
-                  <span className="font-semibold">{brokerage.toLocaleString()} SAR</span>
+                  <span className="text-slate-900 font-medium">Brokerage (VAT incl.):</span>
+                  <span className="font-bold text-slate-900 text-base">{brokerage.toLocaleString()} USD</span>
                 </div>
                 <div className="border-t border-gray-200 pt-2 flex justify-between text-base font-bold text-red-600">
                   <span>Total: Vehicle value + Customs + Port Fees</span>
-                  <span>{priceAed.toLocaleString()} SAR</span>
+                  <div className="text-right">
+                    <div>{priceAed.toLocaleString()} AED</div>
+                    <div className="text-xs text-slate-500 font-medium">approx ${Math.round(priceAed / 3.67).toLocaleString()}</div>
+                  </div>
                 </div>
                 <div className="flex justify-between pt-2">
-                  <span className="text-slate-600 font-medium">Car Location</span>
-                  <span className="font-bold">Ajman Exhibition</span>
+                  <span className="text-slate-900 font-medium">Car Location</span>
+                  <span className="font-bold text-slate-900">Ajman Exhibition</span>
                 </div>
                 <div className="flex justify-end pt-2">
                   <button className="text-red-500 text-xs font-bold hover:underline">Show Details</button>
@@ -175,43 +179,49 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
                 <h3 className="font-bold text-slate-900 mb-4">Vehicle Specifications</h3>
                 <div className="grid grid-cols-2 gap-y-6 gap-x-4">
                   <div>
-                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><CarFront className="w-3 h-3" /> Manufacturer</div>
+                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><CarFront className="w-3 h-3" /> Manufacturer</div>
                     <div className="font-semibold text-slate-900">{car.make}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><FileText className="w-3 h-3" /> Year</div>
+                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><FileText className="w-3 h-3" /> Year</div>
                     <div className="font-semibold text-slate-900">{car.year}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><Gauge className="w-3 h-3" /> Odometer</div>
+                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><Gauge className="w-3 h-3" /> Odometer</div>
                     <div className="font-semibold text-slate-900">{car.mileage.toLocaleString()} Km</div>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><FileText className="w-3 h-3" /> Chassis</div>
+                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><FileText className="w-3 h-3" /> Chassis</div>
                     <div className="font-semibold text-slate-900 text-xs truncate" title={car.chassis || "N/A"}>{car.chassis || "N/A"}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><Palette className="w-3 h-3" /> Exterior Color</div>
+                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><Palette className="w-3 h-3" /> Exterior Color</div>
                     <div className="font-semibold text-slate-900">{car.exteriorColor || "N/A"}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><Palette className="w-3 h-3" /> Interior Color</div>
+                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><Palette className="w-3 h-3" /> Interior Color</div>
                     <div className="font-semibold text-slate-900">{car.interiorColor || "N/A"}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><Fuel className="w-3 h-3" /> Engine Type</div>
+                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><Fuel className="w-3 h-3" /> Engine Type</div>
                     <div className="font-semibold text-slate-900">{car.fuel} {car.engine || ""}</div>
                   </div>
                   <div className="col-span-2">
-                    <div className="text-xs text-slate-500 mb-1 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Body Check</div>
+                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Body Check</div>
                     <div className="font-semibold text-slate-900 text-sm">{car.bodyCheck || "N/A"}</div>
                   </div>
                 </div>
               </div>
 
               {/* CTA Button */}
-              <button className="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-4 rounded shadow-md transition-colors uppercase tracking-wide">
-                Login To Buy
+              <button
+                onClick={() => {
+                  const message = `Hi, I am interested in the ${car.year} ${car.make} ${car.model} (SKU: ${car.id}).`;
+                  window.open(`https://wa.me/971564742456?text=${encodeURIComponent(message)}`, '_blank');
+                }}
+                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded shadow-md transition-colors uppercase tracking-wide flex items-center justify-center gap-2"
+              >
+                <MessageCircle className="w-5 h-5" /> Contact Us
               </button>
             </div>
           </div>

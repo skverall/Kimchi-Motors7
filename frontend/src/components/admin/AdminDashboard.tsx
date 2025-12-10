@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import type { CarItem } from "@/types/car";
 import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info, UploadCloud } from "lucide-react";
+// @ts-ignore
+import heic2any from "heic2any";
 
 interface AdminDashboardProps {
   cars: CarItem[];
@@ -156,6 +158,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   // Client-side image compression
   const compressImage = async (file: File): Promise<File> => {
+    // Check for HEIC/HEIF
+    if (file.type === "image/heic" || file.type === "image/heif" || file.name.toLowerCase().endsWith(".heic") || file.name.toLowerCase().endsWith(".heif")) {
+      try {
+        const convertedBlob = await heic2any({
+          blob: file,
+          toType: "image/jpeg",
+          quality: 0.8,
+        });
+        const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+        return new File([blob], file.name.replace(/\.(heic|heif)$/i, ".jpg"), {
+          type: "image/jpeg",
+          lastModified: Date.now(),
+        });
+      } catch (e) {
+        console.error("HEIC conversion failed", e);
+        // Continue to verify if standard canvas can handle it (unlikely) or just return original to fail later
+      }
+    }
+
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.src = URL.createObjectURL(file);
