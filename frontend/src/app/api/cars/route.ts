@@ -43,7 +43,7 @@ export async function GET(request: Request) {
     // Cache for 60 seconds, revalidate in background
     return NextResponse.json({ cars }, {
       headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+        "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=30",
       },
     });
   } catch (error) {
@@ -108,4 +108,3 @@ export async function POST(request: Request) {
     );
   }
 }
-

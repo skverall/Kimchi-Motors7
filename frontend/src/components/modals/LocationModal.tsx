@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X, Globe, MapPin, Phone, Clock } from "lucide-react";
 import { SHOWROOM_LOCATIONS } from "@/constants/locations";
+import Image from "next/image";
 
 interface LocationModalProps {
   isOpen: boolean;
@@ -73,10 +74,12 @@ export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose })
 
         <div className="flex-1 flex flex-col h-full overflow-y-auto relative">
           <div className="relative h-48 md:h-64 shrink-0">
-            <img
+            <Image
               src={selectedLocation.image}
-              className="w-full h-full object-cover"
               alt={selectedLocation.city}
+              fill
+              sizes="(max-width: 768px) 100vw, 66vw"
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent flex items-end p-6">
               <div>
@@ -147,4 +150,3 @@ export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose })
 };
 
 export default LocationModal;
-

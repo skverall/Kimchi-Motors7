@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { ArrowRight, Gauge, Fuel, Settings, MessageCircle, Phone, X, ChevronLeft, ChevronRight, Share2, Printer, Heart, CheckCircle2, CarFront, FileText, Palette, Shield, Music, Zap, Sun, Lightbulb, Check } from "lucide-react";
+import Image from "next/image";
 import type { CarItem } from "@/types/car";
 import { CarCard } from "./CarCard";
 
@@ -119,11 +120,18 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
               className="aspect-[4/3] rounded-sm overflow-hidden bg-gray-100 relative cursor-pointer group"
               onClick={() => openLightbox(0)}
             >
-              <img
-                src={allImages[0] || ""}
-                alt={car.model}
-                className="w-full h-full object-cover"
-              />
+              {allImages[0] ? (
+                <Image
+                  src={allImages[0]}
+                  alt={car.model}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  className="object-cover"
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-200" aria-hidden="true" />
+              )}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
               <button className="absolute bottom-4 right-4 bg-white/90 p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition">
                 <span className="sr-only">Expand</span>
@@ -138,9 +146,9 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
                   <div
                     key={i}
                     onClick={() => openLightbox(i)}
-                    className={`aspect-[4/3] rounded-sm overflow-hidden bg-gray-100 cursor-pointer border-2 ${i === 0 ? 'border-red-500' : 'border-transparent'} hover:border-red-300 transition-all`}
+                    className={`relative aspect-[4/3] rounded-sm overflow-hidden bg-gray-100 cursor-pointer border-2 ${i === 0 ? 'border-red-500' : 'border-transparent'} hover:border-red-300 transition-all`}
                   >
-                    <img src={img} className="w-full h-full object-cover" alt="" />
+                    <Image src={img} alt="" fill sizes="20vw" className="object-cover" />
                   </div>
                 ))}
               </div>

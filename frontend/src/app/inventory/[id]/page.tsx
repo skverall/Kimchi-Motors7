@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { CarDetails } from "@/components/cars/CarDetails";
 import type { CarItem } from "@/types/car";
-import { supabase } from "@/lib/supabaseClient";
 
 export default function CarPage() {
     const params = useParams();
@@ -17,18 +16,8 @@ export default function CarPage() {
     useEffect(() => {
         const fetchCarAndRelated = async () => {
             try {
-                const { data } = await supabase.auth.getSession();
-                const token = data.session?.access_token;
-
-                const headers: HeadersInit = {};
-                if (token) {
-                    headers["Authorization"] = `Bearer ${token}`;
-                }
-
                 // 1. Fetch Main Car
-                const response = await fetch(`/api/cars/${params.id}`, {
-                    headers,
-                });
+                const response = await fetch(`/api/cars/${params.id}`);
                 if (!response.ok) {
                     throw new Error("Car not found");
                 }
@@ -55,10 +44,7 @@ export default function CarPage() {
                 setCar(mainCar);
 
                 // 2. Fetch Related Cars (Fetch all and pick 4 random excluding current)
-                const relatedResponse = await fetch("/api/cars", {
-                    headers,
-                    cache: "no-store"
-                });
+                const relatedResponse = await fetch("/api/cars");
                 if (relatedResponse.ok) {
                     const relatedBody = await relatedResponse.json();
                     const allCars = (relatedBody.cars as any[] || []).map(enrichCar);

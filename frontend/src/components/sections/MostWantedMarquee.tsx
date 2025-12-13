@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 import type { CarItem } from "@/types/car";
 import {
   motion,
@@ -47,11 +48,21 @@ export const MostWantedMarquee: React.FC<MostWantedMarqueeProps> = ({
             className="min-w-[260px] bg-white/5 border border-white/10 rounded-2xl px-4 py-3 flex items-center gap-4 hover:bg-white/10 hover:border-white/30 transition-colors cursor-pointer mx-3 select-none text-left"
           >
             <div className="relative w-20 h-14 rounded-xl overflow-hidden bg-slate-800 flex-shrink-0">
-              <img
-                src={car.imageVersion && car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${car.imageVersion}` : car.image || ""}
-                alt={car.model}
-                className="w-full h-full object-cover pointer-events-none"
-              />
+              {car.image ? (
+                <Image
+                  src={
+                    car.imageVersion
+                      ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${car.imageVersion}`
+                      : car.image
+                  }
+                  alt={car.model}
+                  fill
+                  sizes="80px"
+                  className="object-cover pointer-events-none"
+                />
+              ) : (
+                <div className="w-full h-full bg-slate-700" aria-hidden="true" />
+              )}
             </div>
             <div className="flex-1">
               <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">

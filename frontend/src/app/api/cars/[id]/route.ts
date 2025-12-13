@@ -32,7 +32,14 @@ export async function GET(
 
     if (error) throw error;
 
-    return NextResponse.json({ car: data });
+    return NextResponse.json(
+      { car: data },
+      {
+        headers: {
+          "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=30",
+        },
+      }
+    );
   } catch (error) {
     console.error("Failed to fetch car", error);
     return NextResponse.json({ error: "Car not found" }, { status: 404 });

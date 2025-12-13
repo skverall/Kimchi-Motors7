@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SHOWROOM_LOCATIONS } from "@/constants/locations";
 import { MapPin, Phone, Clock, Globe, ArrowRight, Mail } from "lucide-react";
+import Image from "next/image";
 
 export const ContactSection = () => {
     const [activeLocation, setActiveLocation] = useState(SHOWROOM_LOCATIONS[0]);
@@ -83,10 +84,12 @@ export const ContactSection = () => {
                             {/* Image Hero */}
                             <div className="relative h-64 md:h-96 shrink-0 overflow-hidden group">
                                 <div className="absolute inset-0 bg-slate-900/20 group-hover:bg-slate-900/10 transition-colors z-10"></div>
-                                <img
+                                <Image
                                     src={activeLocation.image}
                                     alt={`${activeLocation.city} Showroom`}
-                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                    fill
+                                    sizes="(max-width: 1024px) 100vw, 66vw"
+                                    className="object-cover transform group-hover:scale-105 transition-transform duration-700"
                                 />
                                 <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent z-20">
                                     <div className="flex items-end justify-between">

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, Settings, Plane } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -27,9 +28,12 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
               onNavigate("home");
             }}
           >
-            <img
+            <Image
               src="/kimchi-logo-white.jpg"
               alt="Kimchi Motors"
+              width={1024}
+              height={1023}
+              sizes="48px"
               className="h-10 md:h-12 w-auto object-contain"
             />
             <div className="flex items-center text-lg md:text-2xl font-black tracking-tighter uppercase">
@@ -162,4 +166,3 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
 };
 
 export default Header;
-

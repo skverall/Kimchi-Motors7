@@ -1,6 +1,7 @@
 "use client";
 
 import { Gauge, Fuel, Ship, CheckCircle2, Heart } from "lucide-react";
+import Image from "next/image";
 import type { CarItem } from "@/types/car";
 import { Button } from "@/components/ui/Button";
 import { useFavorites } from "@/hooks/useFavorites";
@@ -13,6 +14,10 @@ interface CarCardProps {
 export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => {
   const { isFavorite, toggleFavorite } = useFavorites();
   const favorite = isFavorite(String(car.id));
+  const imageSrc =
+    car.image && car.imageVersion
+      ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${car.imageVersion}`
+      : car.image;
 
   return (
     <div
@@ -23,11 +28,17 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => {
         className="relative h-48 overflow-hidden cursor-pointer"
         onClick={() => onClick(car)}
       >
-        <img
-          src={car.imageVersion && car.image ? `${car.image}${car.image.includes("?") ? "&" : "?"}t=${car.imageVersion}` : car.image || ""}
-          alt={car.model}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
+        {imageSrc ? (
+          <Image
+            src={imageSrc}
+            alt={car.model}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className="w-full h-full bg-slate-100" aria-hidden="true" />
+        )}
         <div className="absolute top-3 right-3 flex gap-2">
           <button
             onClick={(e) => {

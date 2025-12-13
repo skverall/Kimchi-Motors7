@@ -88,6 +88,7 @@ export const ShowroomsSection = () => {
                                     src={activeLocation.image}
                                     alt={`${activeLocation.city} Showroom`}
                                     fill
+                                    sizes="(max-width: 1024px) 100vw, 66vw"
                                     className="object-cover transform group-hover:scale-105 transition-transform duration-700"
                                     priority
                                 />

@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { ArrowRight } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -12,19 +13,66 @@ import { CarCard } from "@/components/cars/CarCard";
 import { HowToBuy } from "@/components/sections/HowToBuy";
 import { FAQ } from "@/components/sections/FAQ";
 import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
-import { ShowroomsSection } from "@/components/sections/ShowroomsSection";
-import { ContactPageSection } from "@/components/sections/ContactPageSection";
 import { MostWantedMarquee } from "@/components/sections/MostWantedMarquee";
 import { BrandsSection } from "@/components/sections/BrandsSection";
 import { INITIAL_CARS } from "@/constants/initialCars";
-import { InventorySection, type InventoryFilters } from "@/components/sections/InventorySection";
-import { supabase } from "@/lib/supabaseClient";
+import type { InventoryFilters } from "@/components/sections/InventorySection";
 
-import { AdminLogin } from "@/components/admin/AdminLogin";
-import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import type { CarItem } from "@/types/car";
 
 const buildSeedCars = () => INITIAL_CARS.map((car, index) => ({ ...car, id: `seed-${index}` }));
+
+let supabasePromise: Promise<typeof import("@/lib/supabaseClient")> | null = null;
+const getSupabase = async () => {
+  supabasePromise ??= import("@/lib/supabaseClient");
+  const mod = await supabasePromise;
+  return mod.supabase;
+};
+
+const InventorySection = dynamic(
+  () => import("@/components/sections/InventorySection").then((mod) => mod.InventorySection),
+  {
+    loading: () => (
+      <div className="py-16 text-center text-slate-500">Loading inventory…</div>
+    ),
+  }
+);
+
+const ShowroomsSection = dynamic(
+  () => import("@/components/sections/ShowroomsSection").then((mod) => mod.ShowroomsSection),
+  {
+    loading: () => (
+      <div className="py-16 text-center text-slate-500">Loading showrooms…</div>
+    ),
+  }
+);
+
+const ContactPageSection = dynamic(
+  () => import("@/components/sections/ContactPageSection").then((mod) => mod.ContactPageSection),
+  {
+    loading: () => (
+      <div className="py-16 text-center text-slate-500">Loading contact…</div>
+    ),
+  }
+);
+
+const AdminLogin = dynamic(
+  () => import("@/components/admin/AdminLogin").then((mod) => mod.AdminLogin),
+  {
+    loading: () => (
+      <div className="py-16 text-center text-slate-500">Loading admin…</div>
+    ),
+  }
+);
+
+const AdminDashboard = dynamic(
+  () => import("@/components/admin/AdminDashboard").then((mod) => mod.AdminDashboard),
+  {
+    loading: () => (
+      <div className="py-16 text-center text-slate-500">Loading dashboard…</div>
+    ),
+  }
+);
 
 const getInitialPage = (): PageName => {
   if (typeof window === "undefined") return "home";
@@ -55,38 +103,52 @@ export default function Home() {
     }
   }, [page]);
 
-  // Track Supabase auth session
+  // Track Supabase auth session (lazy-loaded; only for admin views)
   useEffect(() => {
+    if (page !== "admin" && page !== "admin-dashboard") return;
+
     let isActive = true;
+    let unsubscribe: (() => void) | null = null;
+
     const initAuth = async () => {
+      const supabase = await getSupabase();
+      if (!isActive) return;
+
       const { data } = await supabase.auth.getSession();
       if (!isActive) return;
 
       const token = data.session?.access_token ?? null;
       setAccessToken(token);
       setIsAuthenticated(!!token);
-    };
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      const token = session?.access_token ?? null;
-      setAccessToken(token);
-      setIsAuthenticated(!!token);
-      if (!session) {
-        setPage("home");
-        setCars(buildSeedCars());
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("km_cached_cars_v2");
+      const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+        const token = session?.access_token ?? null;
+        setAccessToken(token);
+        setIsAuthenticated(!!token);
+        if (!session) {
+          setPage("home");
+          setCars(buildSeedCars());
+          if (typeof window !== "undefined") {
+            localStorage.removeItem("km_cached_cars_v2");
+          }
         }
+      });
+
+      if (!isActive) {
+        listener?.subscription.unsubscribe();
+        return;
       }
-    });
+
+      unsubscribe = () => listener?.subscription.unsubscribe();
+    };
 
     initAuth();
 
     return () => {
       isActive = false;
-      listener?.subscription.unsubscribe();
+      unsubscribe?.();
     };
-  }, []);
+  }, [page]);
 
   const persistCars = useCallback((nextCars: CarItem[]) => {
     setCars(nextCars);
@@ -133,7 +195,6 @@ export default function Home() {
         }
 
         const response = await fetch("/api/cars", {
-          cache: "no-store",
           headers,
         });
         const body = await response.json().catch(() => ({}));
@@ -325,6 +386,7 @@ export default function Home() {
   };
 
   const handleLogout = async () => {
+    const supabase = await getSupabase();
     await supabase.auth.signOut();
     setAccessToken(null);
     setIsAuthenticated(false);

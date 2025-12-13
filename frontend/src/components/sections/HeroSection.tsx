@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Search } from "lucide-react";
+import Image from "next/image";
 import { BRANDS } from "@/constants/brands";
 import { MouseTrackingGlow } from "@/components/ui/MouseTrackingGlow";
 import { useRef } from "react";
@@ -186,9 +187,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
                 </h2>
               </div>
 
-              <img
+              <Image
                 src="/hero-car.png"
                 alt="2025 Hyundai Santa Fe"
+                width={1024}
+                height={1024}
+                priority
+                sizes="(max-width: 1024px) 100vw, 800px"
                 className="relative z-10 w-full h-auto object-contain drop-shadow-2xl transform scale-110 lg:scale-125"
               />
               {/* Reflection/Glow under the car */}
