@@ -1,17 +1,19 @@
 "use client";
 
 import { Gauge, Fuel, Ship, CheckCircle2, Heart } from "lucide-react";
-import Image from "next/image";
 import type { CarItem } from "@/types/car";
 import { Button } from "@/components/ui/Button";
 import { useFavorites } from "@/hooks/useFavorites";
+import { FadeInImage } from "@/components/ui/FadeInImage";
 
 interface CarCardProps {
   car: CarItem;
   onClick: (car: CarItem) => void;
+  imagePriority?: boolean;
+  imageLoading?: "eager" | "lazy";
 }
 
-export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => {
+export const CarCard: React.FC<CarCardProps> = ({ car, onClick, imagePriority, imageLoading }) => {
   const { isFavorite, toggleFavorite } = useFavorites();
   const favorite = isFavorite(String(car.id));
   const imageSrc =
@@ -25,15 +27,17 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => {
     >
       {/* Image Section - Clickable */}
       <div
-        className="relative h-48 overflow-hidden cursor-pointer"
+        className="relative h-48 overflow-hidden cursor-pointer bg-slate-100"
         onClick={() => onClick(car)}
       >
         {imageSrc ? (
-          <Image
+          <FadeInImage
             src={imageSrc}
             alt={car.model}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            priority={imagePriority}
+            loading={imagePriority ? undefined : imageLoading}
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
@@ -130,3 +134,17 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick }) => {
 };
 
 export default CarCard;
+
+export const CarCardSkeleton: React.FC = () => (
+  <div className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm flex flex-col h-full animate-pulse">
+    <div className="h-48 bg-slate-200" />
+    <div className="p-5 flex-1 flex flex-col gap-3">
+      <div className="h-3 w-24 bg-slate-200 rounded" />
+      <div className="h-5 w-3/4 bg-slate-200 rounded" />
+      <div className="h-6 w-1/2 bg-slate-200 rounded" />
+      <div className="mt-auto pt-3 border-t border-gray-100">
+        <div className="h-9 bg-slate-200 rounded" />
+      </div>
+    </div>
+  </div>
+);

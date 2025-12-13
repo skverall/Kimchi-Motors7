@@ -9,9 +9,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import type { PageName } from "@/components/layout/Header";
 import HeroSection, { SearchParams } from "@/components/sections/HeroSection";
-import { CarCard } from "@/components/cars/CarCard";
-import { HowToBuy } from "@/components/sections/HowToBuy";
-import { FAQ } from "@/components/sections/FAQ";
+import { CarCard, CarCardSkeleton } from "@/components/cars/CarCard";
 import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
 import { MostWantedMarquee } from "@/components/sections/MostWantedMarquee";
 import { BrandsSection } from "@/components/sections/BrandsSection";
@@ -74,6 +72,16 @@ const AdminDashboard = dynamic(
   }
 );
 
+const HowToBuy = dynamic(
+  () => import("@/components/sections/HowToBuy").then((mod) => mod.HowToBuy),
+  { loading: () => <div className="py-20 bg-white" /> }
+);
+
+const FAQ = dynamic(
+  () => import("@/components/sections/FAQ").then((mod) => mod.FAQ),
+  { loading: () => <div className="py-20 bg-slate-50" /> }
+);
+
 const getInitialPage = (): PageName => {
   if (typeof window === "undefined") return "home";
   const params = new URLSearchParams(window.location.search);
@@ -90,9 +98,21 @@ export default function Home() {
 
   const [inventoryFilters, setInventoryFilters] = useState<InventoryFilters | undefined>(undefined);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [showSyncToast, setShowSyncToast] = useState(false);
+  const [hasLoadedCarsOnce, setHasLoadedCarsOnce] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isSyncing) {
+      setShowSyncToast(false);
+      return;
+    }
+
+    const timer = setTimeout(() => setShowSyncToast(true), 350);
+    return () => clearTimeout(timer);
+  }, [isSyncing]);
 
   // Update URL when page changes
   useEffect(() => {
@@ -226,6 +246,7 @@ export default function Home() {
         setError("Failed to load cars. Please try again later.");
       } finally {
         setIsSyncing(false);
+        setHasLoadedCarsOnce(true);
       }
     };
 
@@ -400,16 +421,23 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white font-sans text-slate-900">
       <Header onNavigate={handleNavigate} page={page} />
-      {isSyncing && (
-        <div className="bg-blue-50 text-blue-700 border border-blue-100 px-4 py-3 text-sm text-center">
-          Syncing latest inventory...
-        </div>
-      )}
-      {error && (
-        <div className="bg-red-50 text-red-700 border border-red-100 px-4 py-3 text-sm text-center">
+      {error ? (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-[92vw] rounded-full bg-red-600 text-white px-4 py-2 text-sm font-semibold shadow-lg"
+        >
           {error}
         </div>
-      )}
+      ) : showSyncToast ? (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 rounded-full bg-slate-900 text-white px-4 py-2 text-sm font-semibold shadow-lg"
+        >
+          Syncing latest inventory...
+        </div>
+      ) : null}
 
       {page === "home" && (
         <>
@@ -445,16 +473,22 @@ export default function Home() {
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {cars
-                .filter((c) => c.featured)
-                .slice(0, 12)
-                .map((car, index) => (
-                  <CarCard
-                    key={`${car.make}-${car.model}-${index}`}
-                    car={car}
-                    onClick={handleCarClick}
-                  />
-                ))}
+              {!hasLoadedCarsOnce
+                ? Array.from({ length: 8 }).map((_, index) => (
+                  <CarCardSkeleton key={`featured-skeleton-${index}`} />
+                ))
+                : cars
+                  .filter((c) => c.featured)
+                  .slice(0, 8)
+                  .map((car, index) => (
+                    <CarCard
+                      key={`${car.make}-${car.model}-${index}`}
+                      car={car}
+                      onClick={handleCarClick}
+                      imagePriority={index < 2}
+                      imageLoading={index < 4 ? "eager" : "lazy"}
+                    />
+                  ))}
             </div>
           </section>
 

@@ -294,6 +294,8 @@ export const InventorySection: React.FC<InventorySectionProps> = ({ cars, onCarC
                                         key={`${car.id}-${index}`}
                                         car={car}
                                         onClick={onCarClick}
+                                        imagePriority={index < 4}
+                                        imageLoading={index < 8 ? "eager" : "lazy"}
                                     />
                                 ))}
                             </div>

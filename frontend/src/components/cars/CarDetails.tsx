@@ -2,9 +2,9 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { ArrowRight, Gauge, Fuel, Settings, MessageCircle, Phone, X, ChevronLeft, ChevronRight, Share2, Printer, Heart, CheckCircle2, CarFront, FileText, Palette, Shield, Music, Zap, Sun, Lightbulb, Check } from "lucide-react";
-import Image from "next/image";
 import type { CarItem } from "@/types/car";
 import { CarCard } from "./CarCard";
+import { FadeInImage } from "@/components/ui/FadeInImage";
 
 interface CarDetailsProps {
   car: CarItem;
@@ -121,7 +121,7 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
               onClick={() => openLightbox(0)}
             >
               {allImages[0] ? (
-                <Image
+                <FadeInImage
                   src={allImages[0]}
                   alt={car.model}
                   fill
@@ -148,7 +148,7 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
                     onClick={() => openLightbox(i)}
                     className={`relative aspect-[4/3] rounded-sm overflow-hidden bg-gray-100 cursor-pointer border-2 ${i === 0 ? 'border-red-500' : 'border-transparent'} hover:border-red-300 transition-all`}
                   >
-                    <Image src={img} alt="" fill sizes="20vw" className="object-cover" />
+                    <FadeInImage src={img} alt="" fill sizes="20vw" className="object-cover" />
                   </div>
                 ))}
               </div>
