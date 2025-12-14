@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import type { CarItem } from "@/types/car";
-import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info, UploadCloud, Check } from "lucide-react";
+import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info, UploadCloud, Check, GripVertical } from "lucide-react";
+import { Reorder } from "framer-motion";
 import { CAR_FEATURES } from "@/constants/carFeatures";
 import { prepareImageForUpload, isHeicFile } from "@/lib/imageProcessing";
 
@@ -876,28 +877,39 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </button>
                     </div>
 
-                    {/* Image Grid */}
+                    {/* Image Grid with Drag & Drop Reordering */}
                     {formData.images && formData.images.length > 0 && (
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                        {formData.images.map((img, idx) => (
-                          <div
-                            key={idx}
+                      <Reorder.Group
+                        axis="y"
+                        values={formData.images}
+                        onReorder={(newOrder) => setFormData({ ...formData, images: newOrder })}
+                        className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4"
+                      >
+                        {formData.images.map((img) => (
+                          <Reorder.Item
+                            key={img}
+                            value={img}
                             onClick={() => setFormData({ ...formData, image: img })}
-                            className={`relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer group transition-all duration-200 ${img === formData.image ? 'ring-2 ring-blue-600 ring-offset-2' : 'hover:ring-2 hover:ring-slate-300 hover:ring-offset-1'
+                            className={`relative aspect-[4/3] rounded-xl overflow-hidden cursor-move group transition-all duration-200 ${img === formData.image ? 'ring-2 ring-blue-600 ring-offset-2' : 'hover:ring-2 hover:ring-slate-300 hover:ring-offset-1'
                               }`}
                           >
-                            <img src={img} alt={`Car ${idx}`} className="w-full h-full object-cover" />
+                            <img src={img} alt="Car" className="w-full h-full object-cover pointer-events-none" />
 
                             {/* Actions Overlay */}
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+
+                            <div className="absolute top-2 left-2 bg-black/20 text-white p-1 rounded backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                              <GripVertical className="w-4 h-4" />
+                            </div>
 
                             <button
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                removeImage(idx);
+                                const index = formData.images.indexOf(img);
+                                if (index > -1) removeImage(index);
                               }}
-                              className="absolute top-2 right-2 bg-white/90 text-red-500 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:text-red-600 shadow-sm"
+                              className="absolute top-2 right-2 bg-white/90 text-red-500 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:text-red-600 shadow-sm z-10"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -907,9 +919,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 Main Photo
                               </div>
                             )}
-                          </div>
+                          </Reorder.Item>
                         ))}
-                      </div>
+                      </Reorder.Group>
                     )}
 
                     {/* Drag & Drop Zone */}
