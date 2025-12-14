@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import type { CarItem } from "@/types/car";
 import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info, UploadCloud, Check, GripVertical } from "lucide-react";
-import { Reorder } from "framer-motion";
+import { motion } from "framer-motion";
 import { CAR_FEATURES } from "@/constants/carFeatures";
 import { prepareImageForUpload, isHeicFile } from "@/lib/imageProcessing";
 
@@ -877,23 +877,46 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </button>
                     </div>
 
-                    {/* Image Grid with Drag & Drop Reordering */}
+                    {/* Image Grid with Drag & Drop Reordering (HTML5 + Framer Motion Layout) */}
                     {formData.images && formData.images.length > 0 && (
-                      <Reorder.Group
-                        axis="y"
-                        values={formData.images}
-                        onReorder={(newOrder) => setFormData({ ...formData, images: newOrder })}
-                        className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4"
-                      >
-                        {formData.images.map((img) => (
-                          <Reorder.Item
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        {formData.images.map((img, idx) => (
+                          <motion.div
+                            layout
                             key={img}
-                            value={img}
-                            onClick={() => setFormData({ ...formData, image: img })}
-                            className={`relative aspect-[4/3] rounded-xl overflow-hidden cursor-move group transition-all duration-200 ${img === formData.image ? 'ring-2 ring-blue-600 ring-offset-2' : 'hover:ring-2 hover:ring-slate-300 hover:ring-offset-1'
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            className={`relative aspect-[4/3] rounded-xl overflow-hidden cursor-move group transition-shadow duration-200 ${img === formData.image ? 'ring-2 ring-blue-600 ring-offset-2' : 'hover:ring-2 hover:ring-slate-300 hover:ring-offset-1'
                               }`}
+                            draggable={true}
+                            onDragStart={(e) => {
+                              // Set data for the drag
+                              e.dataTransfer.setData("text/plain", idx.toString());
+                              e.dataTransfer.effectAllowed = "move";
+                              // Create a ghost image if needed, or rely on browser default
+                            }}
+                            onDragOver={(e) => {
+                              e.preventDefault(); // Necessary to allow dropping
+                              e.dataTransfer.dropEffect = "move";
+                            }}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              const draggedIdx = parseInt(e.dataTransfer.getData("text/plain"));
+                              const targetIdx = idx;
+
+                              if (draggedIdx === targetIdx || isNaN(draggedIdx)) return;
+
+                              // Reorder
+                              const newImages = [...formData.images];
+                              const [movedItem] = newImages.splice(draggedIdx, 1);
+                              newImages.splice(targetIdx, 0, movedItem);
+
+                              setFormData({ ...formData, images: newImages });
+                            }}
+                            onClick={() => setFormData({ ...formData, image: img })}
                           >
-                            <img src={img} alt="Car" className="w-full h-full object-cover pointer-events-none" />
+                            <img src={img} alt="Car" className="w-full h-full object-cover pointer-events-none select-none" />
 
                             {/* Actions Overlay */}
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
@@ -919,9 +942,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 Main Photo
                               </div>
                             )}
-                          </Reorder.Item>
+                          </motion.div>
                         ))}
-                      </Reorder.Group>
+                      </div>
                     )}
 
                     {/* Drag & Drop Zone */}
