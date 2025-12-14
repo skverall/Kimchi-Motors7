@@ -882,7 +882,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                         {formData.images.map((img, idx) => (
                           <motion.div
-                            layout
                             key={img}
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -912,7 +911,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               const [movedItem] = newImages.splice(draggedIdx, 1);
                               newImages.splice(targetIdx, 0, movedItem);
 
-                              setFormData({ ...formData, images: newImages });
+                              // FORCE FIRST IMAGE TO BE MAIN
+                              setFormData({ ...formData, images: newImages, image: newImages[0] });
                             }}
                             onClick={() => setFormData({ ...formData, image: img })}
                           >
