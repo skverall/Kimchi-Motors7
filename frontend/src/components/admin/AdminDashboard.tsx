@@ -890,17 +890,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             className={`relative aspect-[4/3] rounded-xl overflow-hidden cursor-move group transition-shadow duration-200 ${img === formData.image ? 'ring-2 ring-blue-600 ring-offset-2' : 'hover:ring-2 hover:ring-slate-300 hover:ring-offset-1'
                               }`}
                             draggable={true}
-                            onDragStart={(e) => {
+                            onDragStart={(e: any) => {
                               // Set data for the drag
                               e.dataTransfer.setData("text/plain", idx.toString());
                               e.dataTransfer.effectAllowed = "move";
                               // Create a ghost image if needed, or rely on browser default
                             }}
-                            onDragOver={(e) => {
+                            onDragOver={(e: any) => {
                               e.preventDefault(); // Necessary to allow dropping
                               e.dataTransfer.dropEffect = "move";
                             }}
-                            onDrop={(e) => {
+                            onDrop={(e: any) => {
                               e.preventDefault();
                               const draggedIdx = parseInt(e.dataTransfer.getData("text/plain"));
                               const targetIdx = idx;
