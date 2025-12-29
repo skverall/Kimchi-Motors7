@@ -25,6 +25,8 @@ interface InventorySectionProps {
 
 type SortOption = "newest" | "price_asc" | "price_desc" | "year_desc" | "year_asc";
 
+const normalizeText = (value: string) => value.toLowerCase().replace(/\s+/g, " ").trim();
+
 export const InventorySection: React.FC<InventorySectionProps> = ({ cars, onCarClick, initialFilters }) => {
     const { isFavorite } = useFavorites();
 
@@ -43,26 +45,32 @@ export const InventorySection: React.FC<InventorySectionProps> = ({ cars, onCarC
     // Derived Models based on Make
     const availableModels = useMemo(() => {
         if (!selectedMake) return [];
-        const brand = BRANDS.find(b => b.name === selectedMake);
+        const normalizedSelectedMake = normalizeText(selectedMake);
+        const brand = BRANDS.find(b => normalizeText(b.name) === normalizedSelectedMake);
         return brand ? brand.models : [];
     }, [selectedMake]);
 
     // Filtering Logic
     const filteredCars = useMemo(() => {
         return cars.filter(car => {
+            const normalizedMake = normalizeText(car.make);
+            const normalizedModel = normalizeText(car.model);
+            const normalizedSelectedMake = normalizeText(selectedMake);
+            const normalizedSelectedModel = normalizeText(selectedModel);
+            const query = normalizeText(searchQuery);
+
             // Search Query
-            if (searchQuery) {
-                const query = searchQuery.toLowerCase();
+            if (query) {
                 const match =
-                    car.make.toLowerCase().includes(query) ||
-                    car.model.toLowerCase().includes(query) ||
+                    normalizedMake.includes(query) ||
+                    normalizedModel.includes(query) ||
                     String(car.year).includes(query);
                 if (!match) return false;
             }
 
             // Make & Model
-            if (selectedMake && car.make.toLowerCase() !== selectedMake.toLowerCase()) return false;
-            if (selectedModel && car.model.toLowerCase() !== selectedModel.toLowerCase()) return false;
+            if (normalizedSelectedMake && normalizedMake !== normalizedSelectedMake) return false;
+            if (normalizedSelectedModel && normalizedModel !== normalizedSelectedModel) return false;
 
             // Price
             if (minPrice && car.price < Number(minPrice)) return false;
