@@ -160,31 +160,17 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
               <h1 className="text-3xl font-bold text-slate-900 mb-2">{car.make} {car.model} {car.year}</h1>
               <div className="text-sm text-slate-500 mb-4">SKU: {car.id}</div>
 
-              <div className="flex justify-between items-end mb-6">
-                <div className="text-3xl font-bold text-red-600">{priceAed.toLocaleString()} AED</div>
-                <div className="text-lg font-bold text-slate-500">${car.price.toLocaleString()}</div>
-              </div>
-
-              {/* Price Breakdown */}
-              <div className="bg-gray-50 p-4 rounded-lg space-y-3 text-sm mb-6">
-                <div className="flex justify-between">
-                  <span className="text-slate-900 font-medium">Base Price:</span>
-                  <span className="font-bold text-slate-900 text-base">{basePrice.toLocaleString()} USD</span>
+              {/* Simplified Price Display */}
+              <div className="flex flex-col gap-1 mb-8">
+                <div className="flex items-baseline gap-4">
+                  <span className="text-4xl font-black text-slate-900">{priceAed.toLocaleString()} AED</span>
+                  <span className="text-xl font-medium text-slate-500">
+                    / ${car.price.toLocaleString()}
+                  </span>
                 </div>
-
-                <div className="border-t border-gray-200 pt-2 flex justify-between text-base font-bold text-red-600">
-                  <span>Total: Vehicle value + Customs + Port Fees</span>
-                  <div className="text-right">
-                    <div>{priceAed.toLocaleString()} AED</div>
-                    <div className="text-xs text-slate-500 font-medium">approx ${Math.round(priceAed / 3.67).toLocaleString()}</div>
-                  </div>
-                </div>
-                <div className="flex justify-between pt-2">
-                  <span className="text-slate-900 font-medium">Car Location</span>
-                  <span className="font-bold text-slate-900">Ajman Exhibition</span>
-                </div>
-                <div className="flex justify-end pt-2">
-                  <button className="text-red-500 text-xs font-bold hover:underline">Show Details</button>
+                <div className="flex items-center gap-2 text-sm font-medium text-blue-600 mt-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+                  Available at Ajman Exhibition
                 </div>
               </div>
 
