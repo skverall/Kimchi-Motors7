@@ -107,17 +107,8 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Breadcrumb / Title area */}
+        {/* Breadcrumb / Title area - Removed duplicate back button per user feedback */}
         <div className="mb-6">
-          <button
-            onClick={onBack}
-            className="group flex items-center gap-2 text-slate-500 hover:text-red-600 transition-colors font-medium"
-          >
-            <div className="p-2 bg-slate-100 rounded-full group-hover:bg-red-50 transition-colors">
-              <ArrowRight className="w-4 h-4 rotate-180" />
-            </div>
-            Back to Inventory
-          </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -149,7 +140,7 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
 
             {/* Thumbnails */}
             {allImages.length > 1 && (
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-4 md:grid-cols-5 gap-2">
                 {allImages.slice(0, 10).map((img, i) => (
                   <div
                     key={i}
@@ -180,10 +171,7 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
                   <span className="text-slate-900 font-medium">Base Price:</span>
                   <span className="font-bold text-slate-900 text-base">{basePrice.toLocaleString()} USD</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-900 font-medium">Brokerage (VAT incl.):</span>
-                  <span className="font-bold text-slate-900 text-base">{brokerage.toLocaleString()} USD</span>
-                </div>
+
                 <div className="border-t border-gray-200 pt-2 flex justify-between text-base font-bold text-red-600">
                   <span>Total: Vehicle value + Customs + Port Fees</span>
                   <div className="text-right">
