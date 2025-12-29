@@ -61,8 +61,8 @@ export const InventorySection: React.FC<InventorySectionProps> = ({ cars, onCarC
             }
 
             // Make & Model
-            if (selectedMake && car.make !== selectedMake) return false;
-            if (selectedModel && car.model !== selectedModel) return false;
+            if (selectedMake && car.make.toLowerCase() !== selectedMake.toLowerCase()) return false;
+            if (selectedModel && car.model.toLowerCase() !== selectedModel.toLowerCase()) return false;
 
             // Price
             if (minPrice && car.price < Number(minPrice)) return false;
