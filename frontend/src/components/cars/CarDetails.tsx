@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import Image from "next/image";
 import { ArrowRight, Gauge, Fuel, Settings, MessageCircle, Phone, X, ChevronLeft, ChevronRight, Share2, Printer, Heart, CheckCircle2, CarFront, FileText, Palette, Shield, Music, Zap, Sun, Lightbulb, Check } from "lucide-react";
 import type { CarItem } from "@/types/car";
 import { CarCard } from "./CarCard";
@@ -22,6 +23,18 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
     : car.image
       ? [car.image]
       : [];
+
+  const hasMultipleImages = allImages.length > 1;
+  const currentImage = allImages[lightboxIndex];
+  const previousIndex = hasMultipleImages
+    ? (lightboxIndex - 1 + allImages.length) % allImages.length
+    : 0;
+  const nextIndex = hasMultipleImages
+    ? (lightboxIndex + 1) % allImages.length
+    : 0;
+  const preloadIndices = hasMultipleImages
+    ? Array.from(new Set([previousIndex, nextIndex])).filter((index) => index !== lightboxIndex)
+    : [];
 
   const openLightbox = useCallback((index: number) => {
     setLightboxIndex(index);
@@ -348,7 +361,7 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
             <X className="w-8 h-8" />
           </button>
 
-          {allImages.length > 1 && (
+          {hasMultipleImages && (
             <>
               <button
                 onClick={(e) => { e.stopPropagation(); goToPrevious(); }}
@@ -366,15 +379,39 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
           )}
 
           <div
-            className="max-w-[90vw] max-h-[90vh] flex items-center justify-center"
+            className="relative w-[90vw] h-[85vh] flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
-              src={allImages[lightboxIndex]}
-              alt={`${car.model} - ${lightboxIndex + 1}`}
-              className="max-w-full max-h-[85vh] object-contain"
-            />
+            {currentImage ? (
+              <FadeInImage
+                key={currentImage}
+                src={currentImage}
+                alt={`${car.model} - ${lightboxIndex + 1}`}
+                fill
+                sizes="90vw"
+                className="object-contain"
+                loading="eager"
+                quality={80}
+              />
+            ) : null}
           </div>
+
+          {preloadIndices.length > 0 && (
+            <div className="absolute inset-0 pointer-events-none opacity-0" aria-hidden="true">
+              {preloadIndices.map((index) => (
+                <Image
+                  key={`preload-${allImages[index]}`}
+                  src={allImages[index]}
+                  alt=""
+                  fill
+                  sizes="90vw"
+                  className="object-contain"
+                  loading="eager"
+                  quality={80}
+                />
+              ))}
+            </div>
+          )}
 
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/80 text-sm font-medium bg-black/50 px-4 py-2 rounded-full">
             {lightboxIndex + 1} / {allImages.length}
