@@ -13,12 +13,11 @@ import { CarCard, CarCardSkeleton } from "@/components/cars/CarCard";
 import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
 import { MostWantedMarquee } from "@/components/sections/MostWantedMarquee";
 import { BrandsSection } from "@/components/sections/BrandsSection";
-import { INITIAL_CARS } from "@/constants/initialCars";
 import type { InventoryFilters } from "@/components/sections/InventorySection";
 
 import type { CarItem } from "@/types/car";
 
-const buildSeedCars = () => INITIAL_CARS.map((car, index) => ({ ...car, id: `seed-${index}` }));
+// Initial cars handled by empty state to prevent legacy data flash
 
 let supabasePromise: Promise<typeof import("@/lib/supabaseClient")> | null = null;
 const getSupabase = async () => {
@@ -27,49 +26,45 @@ const getSupabase = async () => {
   return mod.supabase;
 };
 
+const LoadingSpinner = () => (
+  <div className="py-20 flex justify-center items-center">
+    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-red-600"></div>
+  </div>
+);
+
+const InventoryLoading = () => (
+  <div className="py-8 container mx-auto px-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <CarCardSkeleton key={i} />
+      ))}
+    </div>
+  </div>
+);
+
 const InventorySection = dynamic(
   () => import("@/components/sections/InventorySection").then((mod) => mod.InventorySection),
-  {
-    loading: () => (
-      <div className="py-16 text-center text-slate-500">Loading inventory…</div>
-    ),
-  }
+  { loading: InventoryLoading }
 );
 
 const ShowroomsSection = dynamic(
   () => import("@/components/sections/ShowroomsSection").then((mod) => mod.ShowroomsSection),
-  {
-    loading: () => (
-      <div className="py-16 text-center text-slate-500">Loading showrooms…</div>
-    ),
-  }
+  { loading: LoadingSpinner }
 );
 
 const ContactPageSection = dynamic(
   () => import("@/components/sections/ContactPageSection").then((mod) => mod.ContactPageSection),
-  {
-    loading: () => (
-      <div className="py-16 text-center text-slate-500">Loading contact…</div>
-    ),
-  }
+  { loading: LoadingSpinner }
 );
 
 const AdminLogin = dynamic(
   () => import("@/components/admin/AdminLogin").then((mod) => mod.AdminLogin),
-  {
-    loading: () => (
-      <div className="py-16 text-center text-slate-500">Loading admin…</div>
-    ),
-  }
+  { loading: LoadingSpinner }
 );
 
 const AdminDashboard = dynamic(
   () => import("@/components/admin/AdminDashboard").then((mod) => mod.AdminDashboard),
-  {
-    loading: () => (
-      <div className="py-16 text-center text-slate-500">Loading dashboard…</div>
-    ),
-  }
+  { loading: LoadingSpinner }
 );
 
 const HowToBuy = dynamic(
@@ -94,7 +89,8 @@ const getInitialPage = (): PageName => {
 
 export default function Home() {
   const [page, setPage] = useState<PageName>(getInitialPage);
-  const [cars, setCars] = useState<CarItem[]>(() => buildSeedCars());
+  // Initialize with empty array intentionally to avoid legacy data flashing
+  const [cars, setCars] = useState<CarItem[]>([]);
 
   const [inventoryFilters, setInventoryFilters] = useState<InventoryFilters | undefined>(undefined);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -147,7 +143,7 @@ export default function Home() {
         setIsAuthenticated(!!token);
         if (!session) {
           setPage("home");
-          setCars(buildSeedCars());
+          setCars([]);
           if (typeof window !== "undefined") {
             localStorage.removeItem("km_cached_cars_v2");
           }
@@ -411,7 +407,8 @@ export default function Home() {
     await supabase.auth.signOut();
     setAccessToken(null);
     setIsAuthenticated(false);
-    setCars(buildSeedCars());
+    setIsAuthenticated(false);
+    setCars([]);
     if (typeof window !== "undefined") {
       localStorage.removeItem("km_cached_cars_v2");
     }
