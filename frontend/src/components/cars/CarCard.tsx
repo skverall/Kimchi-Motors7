@@ -75,11 +75,9 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick, imagePriority, i
         <div className="text-xl font-black text-slate-900">
           ${car.price.toLocaleString()}
         </div>
-        {car.priceAed && car.priceAed > 0 && (
-          <div className="text-sm font-semibold text-slate-500">
-            AED {car.priceAed.toLocaleString()}
-          </div>
-        )}
+        <div className="text-sm font-semibold text-slate-500">
+          AED {(car.priceAed || Math.round(car.price * 3.67)).toLocaleString()}
+        </div>
 
         <div className="mt-auto pt-3 border-t border-gray-100 space-y-4">
           <div className="grid grid-cols-2 gap-y-2 gap-x-4">

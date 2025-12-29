@@ -72,7 +72,7 @@ export const MostWantedMarquee: React.FC<MostWantedMarqueeProps> = ({
                 {car.model}
               </div>
               <div className="text-xs text-slate-400 mt-1">
-                ${car.price.toLocaleString()}{car.priceAed && car.priceAed > 0 ? ` / AED ${car.priceAed.toLocaleString()}` : ''} · {car.year}
+                ${car.price.toLocaleString()} / AED {(car.priceAed || Math.round(car.price * 3.67)).toLocaleString()} · {car.year}
               </div>
             </div>
           </button>
