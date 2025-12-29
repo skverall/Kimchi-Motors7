@@ -12,7 +12,7 @@ export const BRANDS = [
   },
   {
     name: "Kia",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/1/13/Kia-logo.svg",
+    logo: "https://static.cdnlogo.com/logos/k/45/kia.svg",
     models: ["K5", "Stinger", "Telluride", "Sorento", "Sportage", "Carnival", "EV6", "Soul"]
   },
   {
