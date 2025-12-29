@@ -32,6 +32,46 @@ const LoadingSpinner = () => (
   </div>
 );
 
+const ShowroomLoading = () => (
+  <div className="min-h-screen bg-slate-50 pt-24 pb-12">
+    <div className="container mx-auto px-4 mb-12">
+      <div className="h-12 w-64 bg-slate-200 rounded-lg mb-4 animate-pulse" />
+      <div className="h-6 w-96 bg-slate-200 rounded-lg animate-pulse" />
+    </div>
+    <div className="container mx-auto px-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-4 space-y-4">
+          <div className="h-64 bg-slate-200 rounded-3xl animate-pulse" />
+          <div className="h-48 bg-blue-100 rounded-3xl animate-pulse" />
+        </div>
+        <div className="lg:col-span-8">
+          <div className="h-[600px] bg-slate-200 rounded-3xl animate-pulse" />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const ContactLoading = () => (
+  <div className="min-h-screen bg-slate-50 pt-24 pb-12">
+    <div className="container mx-auto px-4">
+      <div className="mb-12 text-center max-w-3xl mx-auto">
+        <div className="h-12 w-96 bg-slate-200 rounded-lg mx-auto mb-4 animate-pulse" />
+        <div className="h-6 w-full max-w-xl bg-slate-200 rounded-lg mx-auto animate-pulse" />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-64 bg-white rounded-3xl border border-slate-100 animate-pulse" />
+        ))}
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="h-[600px] bg-white rounded-3xl animate-pulse" />
+        <div className="h-[400px] bg-white rounded-3xl animate-pulse" />
+      </div>
+    </div>
+  </div>
+);
+
 const InventoryLoading = () => (
   <div className="py-8 container mx-auto px-4">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -49,12 +89,12 @@ const InventorySection = dynamic(
 
 const ShowroomsSection = dynamic(
   () => import("@/components/sections/ShowroomsSection").then((mod) => mod.ShowroomsSection),
-  { loading: LoadingSpinner }
+  { loading: ShowroomLoading }
 );
 
 const ContactPageSection = dynamic(
   () => import("@/components/sections/ContactPageSection").then((mod) => mod.ContactPageSection),
-  { loading: LoadingSpinner }
+  { loading: ContactLoading }
 );
 
 const AdminLogin = dynamic(
