@@ -156,9 +156,22 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
 
           {/* RIGHT COLUMN: Info & Specs */}
           <div className="lg:col-span-5 space-y-8">
+            {/* Header */}
             <div>
-              <h1 className="text-3xl font-bold text-slate-900 mb-2">{car.make} {car.model} {car.year}</h1>
-              <div className="text-sm text-slate-500 mb-4">SKU: {car.id}</div>
+              <div className="flex flex-wrap items-center gap-3 mb-3">
+                <span className="bg-slate-900 text-white text-xs font-bold px-3 py-1 rounded-full">{car.year}</span>
+                <span className="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-blue-100">
+                  {car.status || "Available Now"}
+                </span>
+              </div>
+              <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-2 tracking-tight leading-tight">
+                <span className="text-slate-400 font-bold block text-xl md:text-2xl mb-1">{car.make}</span>
+                {car.model}
+              </h1>
+              <div className="text-sm font-medium text-slate-400 mb-6 flex items-center gap-2">
+                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+                SKU: {car.id}
+              </div>
 
               {/* Simplified Price Display */}
               <div className="flex flex-col gap-1 mb-8">
@@ -175,40 +188,66 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
               </div>
 
               {/* Specifications Grid */}
-              <div className="bg-gray-50 p-6 rounded-lg mb-6">
-                <h3 className="font-bold text-slate-900 mb-4">Vehicle Specifications</h3>
-                <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-                  <div>
-                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><CarFront className="w-3 h-3" /> Manufacturer</div>
-                    <div className="font-semibold text-slate-900">{car.make}</div>
+              {/* Specifications Grid */}
+              <div className="bg-white border border-slate-100 shadow-sm rounded-2xl p-6 mb-8">
+                <h3 className="font-bold text-slate-900 mb-6 flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-slate-400" />
+                  Key Specifications
+                </h3>
+                <div className="grid grid-cols-2 gap-y-8 gap-x-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+                      <CarFront className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-slate-500 font-bold mb-1 uppercase tracking-wider">Make</div>
+                      <div className="font-bold text-slate-900">{car.make}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><FileText className="w-3 h-3" /> Year</div>
-                    <div className="font-semibold text-slate-900">{car.year}</div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center shrink-0">
+                      <Settings className="w-5 h-5 text-violet-600" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-slate-500 font-bold mb-1 uppercase tracking-wider">Model</div>
+                      <div className="font-bold text-slate-900">{car.model}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><Gauge className="w-3 h-3" /> Odometer</div>
-                    <div className="font-semibold text-slate-900">{car.mileage.toLocaleString()} Km</div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+                      <Gauge className="w-5 h-5 text-emerald-600" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-slate-500 font-bold mb-1 uppercase tracking-wider">Mileage</div>
+                      <div className="font-bold text-slate-900">{car.mileage.toLocaleString()} km</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><FileText className="w-3 h-3" /> Chassis</div>
-                    <div className="font-semibold text-slate-900 text-xs truncate" title={car.chassis || "N/A"}>{car.chassis || "N/A"}</div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
+                      <Fuel className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-slate-500 font-bold mb-1 uppercase tracking-wider">Fuel</div>
+                      <div className="font-bold text-slate-900">{car.fuel}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><Palette className="w-3 h-3" /> Exterior Color</div>
-                    <div className="font-semibold text-slate-900">{car.exteriorColor || "N/A"}</div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center shrink-0">
+                      <Palette className="w-5 h-5 text-rose-600" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-slate-500 font-bold mb-1 uppercase tracking-wider">Exterior</div>
+                      <div className="font-bold text-slate-900">{car.exteriorColor || "N/A"}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><Palette className="w-3 h-3" /> Interior Color</div>
-                    <div className="font-semibold text-slate-900">{car.interiorColor || "N/A"}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><Fuel className="w-3 h-3" /> Engine Type</div>
-                    <div className="font-semibold text-slate-900">{car.fuel} {car.engine || ""}</div>
-                  </div>
-                  <div className="col-span-2">
-                    <div className="text-xs text-slate-900 font-bold mb-1 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Body Check</div>
-                    <div className="font-semibold text-slate-900 text-sm">{car.bodyCheck || "N/A"}</div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center shrink-0">
+                      <Zap className="w-5 h-5 text-cyan-600" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-slate-500 font-bold mb-1 uppercase tracking-wider">Engine</div>
+                      <div className="font-bold text-slate-900">{car.engine}</div>
+                    </div>
                   </div>
                 </div>
               </div>
