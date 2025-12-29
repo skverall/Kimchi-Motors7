@@ -85,7 +85,15 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
       <div className="bg-white border-b border-gray-200 py-4 sticky top-0 z-30">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            {/* Logo placeholder if needed or just back button */}
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 text-slate-900 hover:text-blue-600 font-bold transition-colors"
+            >
+              <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-blue-50">
+                <ChevronLeft className="w-5 h-5" />
+              </div>
+              <span className="hidden sm:inline">Back</span>
+            </button>
           </div>
           <div className="flex items-center gap-6 text-sm font-medium text-slate-600">
             <button onClick={onBack} className="hover:text-blue-600">Car List</button>
