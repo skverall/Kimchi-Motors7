@@ -53,7 +53,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
             </a>
             {/* WhatsApp */}
             <a
-              href="https://wa.me/971564742456"
+              href="https://wa.me/971564743456"
               target="_blank"
               rel="noopener noreferrer"
               className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-green-500 transition cursor-pointer"
@@ -130,8 +130,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
                 <Phone className="w-4 h-4 text-blue-500 shrink-0" />
               </div>
               <div className="flex flex-col">
-                <a href="tel:+971564742456" className="hover:text-white transition">
-                  Tel. +971 56 474 2456
+                <a href="tel:+971564743456" className="hover:text-white transition">
+                  Tel. +971 56 474 3456
                 </a>
                 <a href="tel:+97165631137" className="hover:text-white transition text-xs mt-0.5">
                   Office: +971 6 563 1137
@@ -143,10 +143,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
                 <MessageCircle className="w-4 h-4 text-blue-500 shrink-0" />
               </div>
               <a
-                href="mailto:info@kimchimotors.ae"
+                href="mailto:office@kimchimotors.net"
                 className="hover:text-white transition"
               >
-                info@kimchimotors.ae
+                office@kimchimotors.net
               </a>
             </li>
           </ul>

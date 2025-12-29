@@ -21,16 +21,5 @@ export const SHOWROOM_LOCATIONS = [
     image: "/seoul-showroom.png",
     mapQuery: "Gangnam-gu+Seoul",
   },
-  {
-    id: "london",
-    city: "London",
-    country: "United Kingdom",
-    address: "221B Baker Street, London",
-    phone: "+971 56 474 2456",
-    office: "+971 6 563 1137",
-    hours: "9:00 AM - 7:00 PM",
-    image: "/london-showroom.png",
-    mapQuery: "Park+Lane+London",
-  },
 ];
 

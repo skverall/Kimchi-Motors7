@@ -26,8 +26,8 @@ export const ContactPageSection = () => {
                         <p className="text-slate-500 mb-4 text-sm">
                             For inquiries about our inventory or to schedule a viewing.
                         </p>
-                        <a href="tel:+971564742456" className="text-lg font-bold text-slate-900 hover:text-blue-600 transition-colors block">
-                            Tel. +971 56 474 2456
+                        <a href="tel:+971564743456" className="text-lg font-bold text-slate-900 hover:text-blue-600 transition-colors block">
+                            Tel. +971 56 474 3456
                         </a>
                         <a href="tel:+97165631137" className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors block">
                             Office: +971 6 563 1137
@@ -52,7 +52,7 @@ export const ContactPageSection = () => {
                             Instant responses for quick questions and support.
                         </p>
                         <a
-                            href="https://wa.me/971564742456"
+                            href="https://wa.me/971564743456"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors w-full justify-center"

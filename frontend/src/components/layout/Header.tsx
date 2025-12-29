@@ -66,19 +66,19 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, page }) => {
         <div className="flex items-center gap-3">
           <div className="hidden md:flex items-center gap-3 px-4 py-2 rounded-full bg-slate-50 border border-slate-100 relative">
             <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase relative z-10">
-              Dubai • London • Seoul
+              Dubai • Seoul
             </span>
             <motion.div
               className="absolute top-1/2 left-1/2 text-[#1A4AFF] z-20"
-              initial={{ x: "60px", y: "-50%", opacity: 0 }}
+              initial={{ x: "40px", y: "-50%", opacity: 0 }}
               animate={{
-                x: ["60px", "0px", "-60px"], // Seoul (Right) -> London (Center) -> Dubai (Left)
-                y: ["-50%", "-250%", "-50%"], // Arc Upwards
+                x: ["40px", "-40px"], // Seoul (Right) -> Dubai (Left)
+                y: ["-50%", "-200%", "-50%"], // Arc Upwards
                 opacity: [0, 1, 1, 0],
-                rotate: [-15, 0, 15] // Slight tilt to follow the arc
+                rotate: [-15, 15] // Slight tilt to follow the arc
               }}
               transition={{
-                duration: 3,
+                duration: 2.5,
                 repeat: Infinity,
                 ease: "easeInOut",
                 repeatDelay: 2

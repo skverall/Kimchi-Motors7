@@ -62,7 +62,7 @@ export const ShowroomsSection = () => {
                                     </div>
                                     <div>
                                         <p className="text-xs text-blue-200 uppercase font-bold">24/7 Hotline</p>
-                                        <p className="font-mono text-lg">+1 (800) KIMCHI-KM</p>
+                                        <a href="tel:+971564743456" className="font-mono text-lg block hover:text-white/80 transition">+971 56 474 3456</a>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">
@@ -71,7 +71,7 @@ export const ShowroomsSection = () => {
                                     </div>
                                     <div>
                                         <p className="text-xs text-blue-200 uppercase font-bold">Email Us</p>
-                                        <p className="font-medium">concierge@kimchi.com</p>
+                                        <a href="mailto:office@kimchimotors.net" className="font-medium hover:text-white/80 transition">office@kimchimotors.net</a>
                                     </div>
                                 </div>
                             </div>

@@ -236,17 +236,17 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
                 <button
                   onClick={() => {
                     const message = `Hi, I am interested in the ${car.year} ${car.make} ${car.model} (SKU: ${car.id}).`;
-                    window.open(`https://wa.me/971564742456?text=${encodeURIComponent(message)}`, '_blank');
+                    window.open(`https://wa.me/971564743456?text=${encodeURIComponent(message)}`, '_blank');
                   }}
                   className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded shadow-md transition-colors uppercase tracking-wide flex items-center justify-center gap-2"
                 >
                   <MessageCircle className="w-5 h-5" /> WhatsApp
                 </button>
                 <button
-                  onClick={() => window.open('tel:+971564742456')}
+                  onClick={() => window.open('tel:+971564743456')}
                   className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded shadow-md transition-colors uppercase tracking-wide flex items-center justify-center gap-2"
                 >
-                  <Phone className="w-5 h-5" /> +971 56 474 2456
+                  <Phone className="w-5 h-5" /> +971 56 474 3456
                 </button>
               </div>
             </div>

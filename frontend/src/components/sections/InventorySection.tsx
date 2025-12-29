@@ -317,17 +317,17 @@ export const InventorySection: React.FC<InventorySectionProps> = ({ cars, onCarC
                                                 <button
                                                     onClick={() => {
                                                         const message = `Hi, I am looking for a ${selectedMake}, but I see it's not in stock. Can I order one?`;
-                                                        window.open(`https://wa.me/971564742456?text=${encodeURIComponent(message)}`, '_blank');
+                                                        window.open(`https://wa.me/971564743456?text=${encodeURIComponent(message)}`, '_blank');
                                                     }}
                                                     className="flex items-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-slate-800 transition shadow-lg shadow-slate-200"
                                                 >
                                                     <MessageCircle className="w-4 h-4" /> Write in WhatsApp
                                                 </button>
                                                 <button
-                                                    onClick={() => window.open('tel:+971564742456')}
+                                                    onClick={() => window.open('tel:+971564743456')}
                                                     className="flex items-center gap-2 bg-white border border-slate-200 text-slate-900 px-6 py-3 rounded-xl font-bold text-sm hover:bg-slate-50 transition"
                                                 >
-                                                    <Phone className="w-4 h-4" /> +971 56 474 2456
+                                                    <Phone className="w-4 h-4" /> +971 56 474 3456
                                                 </button>
                                             </div>
                                             <button

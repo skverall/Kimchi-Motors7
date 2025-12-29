@@ -68,7 +68,8 @@ export const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose })
             <p className="text-xs text-slate-400 uppercase font-bold tracking-widest mb-2">
               Global Support
             </p>
-            <p className="font-mono text-lg">+1 (800) KIMCHI-KM</p>
+            <a href="tel:+971564743456" className="font-mono text-lg block hover:text-blue-400 transition">+971 56 474 3456</a>
+            <a href="mailto:office@kimchimotors.net" className="text-sm text-slate-300 hover:text-blue-400 transition">office@kimchimotors.net</a>
           </div>
         </div>
 
