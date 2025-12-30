@@ -733,6 +733,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                      Fuel
+                    </label>
+                    <select
+                      className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                      value={formData.fuel || "Petrol"}
+                      onChange={(e) =>
+                        setFormData({ ...formData, fuel: e.target.value })
+                      }
+                    >
+                      <option value="Petrol">Petrol</option>
+                      <option value="Diesel">Diesel</option>
+                      <option value="Hybrid">Hybrid</option>
+                      <option value="Electric">Electric</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
                       Status
                     </label>
                     <select

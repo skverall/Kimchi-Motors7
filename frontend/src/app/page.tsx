@@ -267,8 +267,11 @@ export default function Home() {
           engine: car.engine || "3500 cc",
           shipping: car.shipping || "By Sea Shipping",
           status: car.status || "Available",
-          // Map DB snake_case to frontend camelCase if needed,
-          // though Supabase JS client usually returns what's in DB.
+          // Map DB snake_case to frontend camelCase
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          interiorColor: (car as any).interior_color || car.interiorColor,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          exteriorColor: (car as any).exterior_color || car.exteriorColor,
           // If DB has price_aed, we need to ensure it maps to priceAed
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           priceAed: (car as any).price_aed || car.priceAed,

@@ -29,11 +29,9 @@ export const ContactPageSection = () => {
                         <a href="tel:+971564743456" className="text-lg font-bold text-slate-900 hover:text-blue-600 transition-colors block">
                             Tel. +971 56 474 3456
                         </a>
-                        <a href="tel:+97165631137" className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors block">
-                            Office: +971 6 563 1137
-                        </a>
-                        <a href="mailto:sales@kimchimotors.ae" className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">
-                            sales@kimchimotors.ae
+
+                        <a href="mailto:info@kimchimotors.ae" className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">
+                            info@kimchimotors.ae
                         </a>
                     </div>
 
