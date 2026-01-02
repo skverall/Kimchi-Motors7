@@ -90,7 +90,9 @@ export const CarCard: React.FC<CarCardProps> = ({ car, onClick, imagePriority, i
             {/* Mileage */}
             <div className="flex items-center gap-1.5">
               <Gauge className="w-3.5 h-3.5 text-gray-400" />
-              <span className="text-[11px] font-medium text-gray-600">{car.mileage.toLocaleString()} km</span>
+              <span className="text-[11px] font-medium text-gray-600">
+                {car.mileage && car.mileage > 0 ? `${car.mileage.toLocaleString()} km` : "Mileage: N/A"}
+              </span>
             </div>
 
             {/* Shipping */}

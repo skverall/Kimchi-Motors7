@@ -1,6 +1,96 @@
 "use client";
 
 import { Mail, Phone, MessageCircle, Send, MapPin } from "lucide-react";
+import { useState } from "react";
+
+const ContactForm = () => {
+    const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        subject: "I want to buy a car",
+        message: ""
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const subject = encodeURIComponent(`${formData.subject} - ${formData.firstName} ${formData.lastName}`);
+        const body = encodeURIComponent(`Name: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
+        window.location.href = `mailto:info@kimchimotors.ae?subject=${subject}&body=${body}`;
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">First Name</label>
+                    <input
+                        type="text"
+                        required
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                        placeholder="John"
+                        value={formData.firstName}
+                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Last Name</label>
+                    <input
+                        type="text"
+                        required
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                        placeholder="Doe"
+                        value={formData.lastName}
+                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                    />
+                </div>
+            </div>
+
+            <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
+                <input
+                    type="email"
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                    placeholder="john@example.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Subject</label>
+                <select
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                >
+                    <option>I want to buy a car</option>
+                    <option>I want to sell my car</option>
+                    <option>Financing inquiry</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Message</label>
+                <textarea
+                    rows={4}
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                    placeholder="How can we help you?"
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                ></textarea>
+            </div>
+
+            <button type="submit" className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2">
+                Send Message
+                <Send className="w-4 h-4" />
+            </button>
+        </form>
+    );
+};
 
 export const ContactPageSection = () => {
     return (
@@ -77,43 +167,7 @@ export const ContactPageSection = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
                     <div className="bg-white p-8 md:p-10 rounded-3xl shadow-lg border border-slate-100">
                         <h3 className="text-2xl font-bold text-slate-900 mb-6">Send us a message</h3>
-                        <form className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-bold text-slate-700 mb-2">First Name</label>
-                                    <input type="text" className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all" placeholder="John" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-slate-700 mb-2">Last Name</label>
-                                    <input type="text" className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all" placeholder="Doe" />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
-                                <input type="email" className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all" placeholder="john@example.com" />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Subject</label>
-                                <select className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all">
-                                    <option>I want to buy a car</option>
-                                    <option>I want to sell my car</option>
-                                    <option>Financing inquiry</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Message</label>
-                                <textarea rows={4} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all" placeholder="How can we help you?"></textarea>
-                            </div>
-
-                            <button type="button" className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2">
-                                Send Message
-                                <Send className="w-4 h-4" />
-                            </button>
-                        </form>
+                        <ContactForm />
                     </div>
 
                     <div className="space-y-8 lg:pt-12">

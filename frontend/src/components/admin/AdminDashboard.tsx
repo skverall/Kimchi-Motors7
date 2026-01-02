@@ -585,7 +585,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <h3 className="font-bold text-slate-900 text-lg truncate">{car.make} {car.model}</h3>
-                        <p className="text-xs text-slate-500 font-medium">{car.year} • {car.mileage.toLocaleString()} km</p>
+                        <p className="text-xs text-slate-500 font-medium">{car.year} • {car.mileage && car.mileage > 0 ? `${car.mileage.toLocaleString()} km` : "N/A"}</p>
                       </div>
                     </div>
                     <div className="font-black text-xl text-slate-900">${car.price.toLocaleString()}</div>
@@ -723,17 +723,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     </label>
                     <input
                       type="number"
-                      required
                       className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
                       value={formData.mileage}
                       onChange={(e) =>
                         setFormData({ ...formData, mileage: e.target.value === "" ? "" : parseInt(e.target.value) })
                       }
+                      placeholder="Optional"
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
-                      Fuel
+                      Fuel Type
                     </label>
                     <select
                       className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
