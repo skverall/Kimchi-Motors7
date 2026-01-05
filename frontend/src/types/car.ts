@@ -17,6 +17,7 @@ export interface CarItem {
   engine?: string; // e.g., "3500 cc"
   shipping?: string; // e.g., "By Sea Shipping"
   status?: "Available" | "Sold" | "In Transit";
+  arrivalDate?: string; // e.g., "2024-12-25"
   // Optional client-only field to force image reloads after updates
   imageVersion?: number;
   youtubeUrl?: string;

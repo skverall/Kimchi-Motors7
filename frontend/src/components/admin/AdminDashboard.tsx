@@ -57,6 +57,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     mostWanted: false,
     description: "",
     status: "Available" as "Available" | "In Transit" | "Sold",
+    arrivalDate: "",
     youtubeUrl: "",
     chassis: "",
     engine: "",
@@ -384,6 +385,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       mostWanted: car.mostWanted || false,
       description: car.description || "",
       status: car.status || "Available",
+      arrivalDate: car.arrivalDate || "",
       youtubeUrl: car.youtubeUrl || car.youtube_url || "",
       chassis: car.chassis || "",
       engine: car.engine || "",
@@ -408,6 +410,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         priceAed: safeParseInt(formData.priceAed || 0),
         mileage: safeParseInt(formData.mileage || 0),
         year: safeParseInt(formData.year || 0),
+        arrivalDate: formData.arrivalDate,
         chassis: formData.chassis,
         engine: formData.engine,
         exteriorColor: formData.exteriorColor,
@@ -764,6 +767,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <option value="Sold">Sold</option>
                     </select>
                   </div>
+                  {formData.status === "In Transit" && (
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                        Arrival Date (Est.)
+                      </label>
+                      <input
+                        type="date"
+                        className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-100 outline-none"
+                        value={formData.arrivalDate}
+                        onChange={(e) => setFormData({ ...formData, arrivalDate: e.target.value })}
+                      />
+                    </div>
+                  )}
                   <div className="col-span-2 grid grid-cols-2 lg:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
                     <div className="col-span-2 lg:col-span-4 text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Detailed Specifications</div>
                     <div>

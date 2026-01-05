@@ -3,7 +3,7 @@ export const SHOWROOM_LOCATIONS = [
     id: "ajman",
     city: "Ajman",
     country: "UAE",
-    address: "Ajman, UAE",
+    address: "United Arab Emirates, Ajman car Souq , showroom 230",
     phone: "+971 56 474 2456",
     office: "+971 6 563 1137",
     hours: "9:00 AM - 9:00 PM",

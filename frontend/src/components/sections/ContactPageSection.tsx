@@ -16,7 +16,7 @@ const ContactForm = () => {
         e.preventDefault();
         const subject = encodeURIComponent(`${formData.subject} - ${formData.firstName} ${formData.lastName}`);
         const body = encodeURIComponent(`Name: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
-        window.location.href = `mailto:info@kimchimotors.ae?subject=${subject}&body=${body}`;
+        window.location.href = `mailto:office@kimchimotors.net?subject=${subject}&body=${body}`;
     };
 
     return (
@@ -120,8 +120,8 @@ export const ContactPageSection = () => {
                             Tel. +971 56 474 3456
                         </a>
 
-                        <a href="mailto:info@kimchimotors.ae" className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">
-                            info@kimchimotors.ae
+                        <a href="mailto:office@kimchimotors.net" className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">
+                            office@kimchimotors.net
                         </a>
                     </div>
 
@@ -157,8 +157,8 @@ export const ContactPageSection = () => {
                         <p className="text-slate-500 mb-4 text-sm">
                             For partnership opportunities, careers, and other questions.
                         </p>
-                        <a href="mailto:info@kimchimotors.ae" className="text-lg font-bold text-slate-900 hover:text-blue-600 transition-colors block">
-                            info@kimchimotors.ae
+                        <a href="mailto:office@kimchimotors.net" className="text-lg font-bold text-slate-900 hover:text-blue-600 transition-colors block">
+                            office@kimchimotors.net
                         </a>
                     </div>
                 </div>
@@ -183,7 +183,7 @@ export const ContactPageSection = () => {
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-lg mb-1">Ajman Showroom</h4>
-                                        <p className="text-slate-400 text-sm">Ajman, UAE</p>
+                                        <p className="text-slate-400 text-sm">United Arab Emirates, Ajman car Souq , showroom 230</p>
                                     </div>
                                 </div>
                                 <div className="h-48 rounded-xl overflow-hidden relative">

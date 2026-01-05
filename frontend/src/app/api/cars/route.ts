@@ -85,6 +85,7 @@ export async function POST(request: Request) {
       interior_color: payload.interiorColor ?? null,
       body_check: payload.bodyCheck ?? null,
       features: payload.features ?? null,
+      arrival_date: payload.arrivalDate ?? null,
     };
 
     const { data, error } = await supabase

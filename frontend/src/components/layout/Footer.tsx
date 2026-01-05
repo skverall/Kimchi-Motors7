@@ -122,7 +122,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
                 <span className="block font-bold text-white mb-0.5 group-hover:underline">
                   Find Our Showrooms
                 </span>
-                Ajman, UAE & others
+                Ajman car Souq, Showroom 230
               </span>
             </li>
             <li className="flex items-center gap-3">
@@ -143,7 +143,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
                 href="mailto:info@kimchimotors.ae"
                 className="hover:text-white transition"
               >
-                info@kimchimotors.ae
+                office@kimchimotors.net
               </a>
             </li>
           </ul>
