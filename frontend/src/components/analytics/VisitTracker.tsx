@@ -19,7 +19,8 @@ export function VisitTracker() {
                     localStorage.setItem("km_visitor_id", visitorId);
                 }
 
-                const { error } = await supabase.from("visits").insert({
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const { error } = await (supabase.from("visits") as any).insert({
                     visitor_id: visitorId,
                     page: window.location.pathname,
                     user_agent: navigator.userAgent,
