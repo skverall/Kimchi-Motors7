@@ -542,6 +542,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm col-span-2 md:col-span-4 flex flex-col md:flex-row justify-between md:items-center gap-4">
             <div>
               <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Total Visits</div>
+              {/* Force Update */}
               <div className="text-2xl font-black text-blue-600">{analytics.total.toLocaleString()}</div>
             </div>
             <div className="w-px h-10 bg-slate-100 hidden md:block"></div>
