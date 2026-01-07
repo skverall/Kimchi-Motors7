@@ -12,6 +12,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
+import { VisitTracker } from "@/components/analytics/VisitTracker";
+
 export const metadata: Metadata = {
   title: "KIMCHIMOTORS - Showroom",
   description: "Premium Luxury Car Showroom",
@@ -32,6 +35,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <VisitTracker />
         {children}
       </body>
     </html>

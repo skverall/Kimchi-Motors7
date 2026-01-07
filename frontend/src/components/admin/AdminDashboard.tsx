@@ -6,6 +6,7 @@ import { Plus, Trash2, LogOut, Star, Zap, X, Pencil, Info, UploadCloud, Check, G
 import { motion } from "framer-motion";
 import { CAR_FEATURES } from "@/constants/carFeatures";
 import { prepareImageForUpload, isHeicFile } from "@/lib/imageProcessing";
+import { supabase as supabaseClient } from "@/lib/supabaseClient";
 
 
 interface AdminDashboardProps {
@@ -91,6 +92,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [sortBy, setSortBy] = useState<"newest" | "price_asc" | "price_desc" | "year_newest" | "mileage_asc">("newest");
   const [isConnected, setIsConnected] = useState(true); // Optimistic default
 
+  const [analytics, setAnalytics] = useState({ total: 0, unique: 0, today: 0 });
+
   // Check connection on mount
   useEffect(() => {
     const checkConnection = async () => {
@@ -138,6 +141,31 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const totalCars = cars.length;
   const featuredCount = cars.filter(c => c.featured).length;
   const mostWantedCount = cars.filter(c => c.mostWanted).length;
+
+  // Fetch Analytics
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      if (!authToken) return;
+      try {
+        // Needed to cast to any to bypass current type lack in supabase client if not fully updated yet
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data, error } = await (supabaseClient.from("visits") as any).select("visitor_id, created_at");
+        if (error || !data) return;
+
+        const total = data.length;
+        const unique = new Set(data.map((v: any) => v.visitor_id)).size;
+
+        const oneDayAgo = new Date();
+        oneDayAgo.setHours(oneDayAgo.getHours() - 24);
+        const today = data.filter((v: any) => new Date(v.created_at) > oneDayAgo).length;
+
+        setAnalytics({ total, unique, today });
+      } catch (e) {
+        console.error("Failed to fetch analytics", e);
+      }
+    };
+    fetchAnalytics();
+  }, [authToken]);
 
   // Currency Conversion Rate
   const USD_TO_AED = 3.67;
@@ -510,6 +538,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Most Wanted</div>
             <div className="text-2xl font-black text-purple-600">{mostWantedCount}</div>
+          </div>
+          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm col-span-2 md:col-span-4 flex flex-col md:flex-row justify-between md:items-center gap-4">
+            <div>
+              <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Total Visits</div>
+              <div className="text-2xl font-black text-blue-600">{analytics.total.toLocaleString()}</div>
+            </div>
+            <div className="w-px h-10 bg-slate-100 hidden md:block"></div>
+            <hr className="md:hidden border-slate-100" />
+            <div>
+              <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Unique Visitors</div>
+              <div className="text-2xl font-black text-blue-600">{analytics.unique.toLocaleString()}</div>
+            </div>
+            <div className="w-px h-10 bg-slate-100 hidden md:block"></div>
+            <hr className="md:hidden border-slate-100" />
+            <div>
+              <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Last 24h</div>
+              <div className="text-2xl font-black text-emerald-600">+{analytics.today.toLocaleString()}</div>
+            </div>
           </div>
         </div>
 
