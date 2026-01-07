@@ -154,7 +154,7 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car, relatedCars = [], o
             {/* Thumbnails */}
             {allImages.length > 1 && (
               <div className="grid grid-cols-4 md:grid-cols-5 gap-2">
-                {allImages.slice(0, 10).map((img, i) => (
+                {allImages.map((img, i) => (
                   <div
                     key={i}
                     onClick={() => openLightbox(i)}
