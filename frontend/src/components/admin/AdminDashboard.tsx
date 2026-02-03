@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import { CAR_FEATURES } from "@/constants/carFeatures";
 import { prepareImageForUpload, isHeicFile } from "@/lib/imageProcessing";
 import { supabase as supabaseClient } from "@/lib/supabaseClient";
+import { QRCodeModal } from "./modals/QRCodeModal";
+import { QrCode } from "lucide-react";
 
 
 interface AdminDashboardProps {
@@ -86,6 +88,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [formData, setFormData] = useState<CarFormData>(initialFormState);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const [qrCar, setQrCar] = useState<CarItem | null>(null);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"All" | "Available" | "In Transit" | "Sold">("All");
@@ -646,6 +650,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                   <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-slate-50">
                     <button
+                      onClick={() => setQrCar(car)}
+                      className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition"
+                      title="Generate QR Code"
+                    >
+                      <QrCode className="w-3.5 h-3.5" />
+                      <span className="hidden xl:inline">QR</span>
+                    </button>
+                    <button
                       onClick={() => handleOpenEdit(car)}
                       className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition"
                     >
@@ -1181,6 +1193,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+
+      {qrCar && (
+        <QRCodeModal car={qrCar} onClose={() => setQrCar(null)} />
       )}
     </div>
   );
